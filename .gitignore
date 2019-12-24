@@ -1,0 +1,5 @@
+#Ignore training folder
+Stim/Training/
+
+#Ignore weights file
+ShapeNet_Weights.pth.tar
