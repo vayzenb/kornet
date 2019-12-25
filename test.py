@@ -11,18 +11,39 @@ import torchvision.models as models
 import torchvision.transforms as transforms
 from torch.autograd import Variable
 from PIL import Image
-
+from torchsummary import summary
 import os
 
-os.chdir('C:/Users/vayzenb/Desktop/GitHub Repos/KorNet/')
+os.chdir('C:/Users/vayze/Desktop/GitHub Repos/KorNet/')
 
-pic_one = str("Stim/Training/All/Dog/Dog_4 (2).jpg")
-pic_two = str("Stim/Training/All/Dog/dog_03s.jpg")
+pic_one = str("Stim/Training/Dog/Dog_4 (2).jpg")
+pic_two = str("Stim/Training/All/Dog/Dog_4 (2).jpg")
 
 # Load the pretrained model
 model = models.resnet50(pretrained=True)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = nn.DataParallel(model)
+#model = model.to(device)
+#model = model.to("cpu")
 # Use the model object to select the desired layer
 layer = model._modules.get('avgpool')
+
+#Load shape net
+def load_model():
+
+    model_weghts = "ShapeNet_Weights.pth.tar"
+
+    model = models.resnet50(pretrained=False)
+    model = nn.DataParallel(model)
+    #checkpoint = model_zoo.load_url(moel_weghts)
+    checkpoint = torch.load(model_weghts)
+    model.load_state_dict(checkpoint["state_dict"])
+    #model = nn.Sequential(*list(model.children())[:-2])
+    
+    print("Using the ResNet50 architecture.")
+    return model
+
+
 
 # Set model to evaluation mode
 model.eval()
@@ -44,7 +65,7 @@ def get_vector(image_name):
     my_embedding = torch.zeros([1,2048])
     # 4. Define a function that will copy the output of a layer
     def copy_data(m, i, o):
-        my_embedding.copy_(torch.flatten(o.data,start_dim=1))
+        my_embedding.copy_(o.data.reshape(-1))
     # 5. Attach that function to our selected layer
     h = layer.register_forward_hook(copy_data)
     # 6. Run the model on our transformed image
@@ -56,4 +77,4 @@ def get_vector(image_name):
 
 pic_one_vector = get_vector(pic_one)
 vec = pic_one_vector.numpy()
-pic_two_vector = get_vector(pic_two)
+#pic_two_vector = get_vector(pic_two)
