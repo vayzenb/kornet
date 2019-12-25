@@ -11,6 +11,7 @@ from collections import OrderedDict
 import torch
 import torchvision
 import torchvision.models
+from torch.autograd import Variable
 from torch.utils import model_zoo
 from PIL import Image
 from skimage import io, transform
@@ -20,16 +21,20 @@ import torchvision.transforms as T
 import pandas as pd
 import itertools
 
-os.chdir('C:/Users/vayze/Desktop/GitHub Repos/KorNet/')
+os.chdir('C:/Users/vayzenb/Desktop/GitHub Repos/KorNet/')
 
 IMName = "Stim/Training/Dog/Dog_4 (2).jpg"
 imsize = 224
 loader = T.Compose([T.Resize(imsize), T.ToTensor()])
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-cond = ['Outline', 'Pert', 'IC',  'Silh_Black', 'Pert_White', 'Pert_Black']
-suf = ['', '_ripple', '_IC', '', '_ripple']
+
+device = torch.device("cpu")
+
+#cond = ['Outline', 'Pert', 'IC',  'Silh_Black', 'Pert_White', 'Pert_Black']
+cond = ['Outline', 'Pert', 'IC']
+#suf = ['', '_ripple', '_IC', '', '_ripple']
+suf = ['', '_ripple', '_IC', ]
 #Load ImageNet and KorNet classes
 IN=pd.read_csv('IN_Classes.csv', sep=',',header=None).to_numpy()
 KN=pd.read_csv('KN_Classes.csv', sep=',',header=None).to_numpy() 
@@ -40,20 +45,23 @@ def load_model():
     model_weghts = "ShapeNet_Weights.pth.tar"
 
     model = torchvision.models.resnet50(pretrained=False)
-    model = torch.nn.DataParallel(model).cuda()
+    #model = torch.nn.DataParallel(model).cuda()
     #checkpoint = model_zoo.load_url(model_weghts)
     checkpoint = torch.load(model_weghts)
-    model.load_state_dict(checkpoint["state_dict"])
+    model.load_state_dict(checkpoint)
     print("Using the ResNet50 architecture.")
     return model
 
+scaler = T.Resize((224, 224))
+normalize = T.Normalize(mean=[0.485, 0.456, 0.406],
+                                 std=[0.229, 0.224, 0.225])
+to_tensor = T.ToTensor()
 #Set image loader for model
 def image_loader(image_name):
     """load image, returns cuda tensor"""
     image = Image.open(image_name)
-    image = loader(image).float()
-    image = image.unsqueeze(0)  #this is for VGG, may not be needed for ResNet
-    return image.cuda()  #assumes that you're using GPU    
+    image = Variable(normalize(to_tensor(scaler(image))).unsqueeze(0))
+    return image  #assumes that you're using GPU    
 
 #Predict image class
 def predict(image, model):
@@ -73,7 +81,7 @@ model = load_model()
 model.eval() #Set model into evaluation mode
 
 #Loop through each condition
-for ii in range(0, len(cond)):
+for ii in range(0, len(KN)):
     CNN_Labels = np.empty((len(KN), 6), dtype = object)
     CNN_Labels[:,0] = KN[:,0]    
     
@@ -83,7 +91,7 @@ for ii in range(0, len(cond)):
         IM = image_loader(imFile)
 
         out = predict(IM, model)
-        out = out.cpu().detach().numpy()
+        out = out.numpy()
         out = out.tolist()
         out = list(itertools.chain(*out))
                 

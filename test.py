@@ -14,7 +14,7 @@ from PIL import Image
 from torchsummary import summary
 import os
 
-os.chdir('C:/Users/vayze/Desktop/GitHub Repos/KorNet/')
+os.chdir('C:/Users/vayzenb/Desktop/GitHub Repos/KorNet/')
 
 pic_one = str("Stim/Training/Dog/Dog_4 (2).jpg")
 pic_two = str("Stim/Training/All/Dog/Dog_4 (2).jpg")
@@ -22,9 +22,9 @@ pic_two = str("Stim/Training/All/Dog/Dog_4 (2).jpg")
 # Load the pretrained model
 model = models.resnet50(pretrained=True)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = nn.DataParallel(model)
+#model = nn.DataParallel(model)
 #model = model.to(device)
-#model = model.to("cpu")
+model = model.to("cpu")
 # Use the model object to select the desired layer
 layer = model._modules.get('avgpool')
 
@@ -75,6 +75,6 @@ def get_vector(image_name):
     # 8. Return the feature vector
     return my_embedding
 
-pic_one_vector = get_vector(pic_one)
+pic_one_vector = get_vector(pic_two)
 vec = pic_one_vector.numpy()
 #pic_two_vector = get_vector(pic_two)
