@@ -6,92 +6,81 @@ Created on Mon Dec 23 15:10:34 2019
 """
 
 import os
-import sys
-from collections import OrderedDict
-import torch
-import torchvision
-import torchvision.models
-from torch.autograd import Variable
-from torch.utils import model_zoo
-from PIL import Image
-from skimage import io, transform
-from skimage.viewer import ImageViewer
-import numpy as np
-import torchvision.transforms as T
-import pandas as pd
-import itertools
-
 os.chdir('C:/Users/vayzenb/Desktop/GitHub Repos/KorNet/')
 
-IMName = "Stim/Training/Dog/Dog_4 (2).jpg"
-imsize = 224
-loader = T.Compose([T.Resize(imsize), T.ToTensor()])
+import numpy as np
+import pandas as pd
+import itertools
+import glob
+import random
+from itertools import chain
+from sklearn import svm
+from ShapeNet import load_model
+from ShapeNet import image_loader
+from ShapeNet import get_vector
 
-
-
-device = torch.device("cpu")
-
-#cond = ['Outline', 'Pert', 'IC',  'Silh_Black', 'Pert_White', 'Pert_Black']
+#cond = ['Outline', 'Pert', 'IC',  'Outline_Black', 'Pert_Black', 'IC_Black', 'Outline_Black_Filled', 'Pert_Black_Filled']
 cond = ['Outline', 'Pert', 'IC']
-#suf = ['', '_ripple', '_IC', '', '_ripple']
-suf = ['', '_ripple', '_IC', ]
-#Load ImageNet and KorNet classes
-IN=pd.read_csv('IN_Classes.csv', sep=',',header=None).to_numpy()
+suf = ['', '_ripple', '_IC', '', '_ripple', '_IC','', '_ripple']
+
 KN=pd.read_csv('KN_Classes.csv', sep=',',header=None).to_numpy() 
 
-#Load shape net
-def load_model():
-
-    model_weghts = "ShapeNet_Weights.pth.tar"
-
-    model = torchvision.models.resnet50(pretrained=False)
-    #model = torch.nn.DataParallel(model).cuda()
-    #checkpoint = model_zoo.load_url(model_weghts)
-    checkpoint = torch.load(model_weghts)
-    model.load_state_dict(checkpoint)
-    print("Using the ResNet50 architecture.")
-    return model
-
-scaler = T.Resize((224, 224))
-normalize = T.Normalize(mean=[0.485, 0.456, 0.406],
-                                 std=[0.229, 0.224, 0.225])
-to_tensor = T.ToTensor()
-#Set image loader for model
-def image_loader(image_name):
-    """load image, returns cuda tensor"""
-    image = Image.open(image_name)
-    image = Variable(normalize(to_tensor(scaler(image))).unsqueeze(0))
-    return image     
-
-#Predict image class
-def predict(image, model):
-    # Pass the image through our model
-    output = model.forward(image)
-    
-    # Reverse the log function in our output
-    output = torch.exp(output)
-    
-    # Get the top predicted class, and the output percentage for
-    # that class
-    probs, classes = output.topk(5, dim=1)
-    return classes
-
-def get_vector(image_name):
-    
-    my_embedding = torch.zeros([1,2048])
-    # 4. Define a function that will copy the output of a layer
-    def copy_data(m, i, o):
-        my_embedding.copy_(o.data.reshape(-1))
-    # 5. Attach that function to our selected layer
-    h = layer.register_forward_hook(copy_data)
-    # 6. Run the model on our transformed image
-    t_img = image_loader(image_name)
-    model(t_img)
-    # 7. Detach our copy function from the layer
-    h.remove()
-    # 8. Return the feature vector
-    return my_embedding
-
-
+layer = "avgpool"
 model = load_model() 
 model.eval() #Set model into evaluation mode
+
+IMName = "Stim/Training/All/Dog/Dog_4 (2).jpg"
+
+vec = get_vector(IMName, model, layer).numpy()
+
+train_labels = [np.repeat(1, 20).tolist(), np.repeat(2, 20).tolist()]
+train_labels = list(chain(*train_labels))
+test_labels = [1,2]
+
+trK = 20 #Number of training images to use
+folK = 3 #Number of folds over the training set
+
+for ii in range(0, len(cond)): 
+    AllActs = {"Train" : np.zeros((trK*2, 2048)), "Test" : np.zeros((2, 2048))}
+    
+    #Loop through each possible image combination in a condition 
+    for kk in range(0, len(KN)):
+        #load first image
+        IM1 = "Stim/Test/" + cond[ii] + "/Obj (" + str(KN[kk][1]) + ")" + suf[ii] + ".png"
+        AllActs["Test"][0] = get_vector(IM1, model, layer).numpy() #Extract image vector
+        #load training list
+        imList1 = [os.path.basename(x) for x in glob.glob("Stim/Training/" + KN[kk][0] + "/*.jpg")] #pull image category list
+        
+        for jj in range(kk+1, len(KN)):
+            #pull second image                       
+            if KN[kk][2] == KN[jj][2]: #Check if they are matched for animacy              
+                
+                IM2 = "Stim/Test/" + cond[ii] + "/Obj (" + str(KN[jj][1]) + ")" + suf[ii] + ".png"    
+                AllActs["Test"][1] = get_vector(IM2, model, layer).numpy()
+                imList2 = [os.path.basename(x) for x in glob.glob("Stim/Training/" + KN[jj][0] + "/*.jpg")]
+                
+                for fl in range(0,folK): #loop through folds
+                    #randomize order of image lists every iteration
+                    imList1 = random.sample(imList1, len(imList1))
+                    imList2 = random.sample(imList2, len(imList2))
+                    for tr in range(0,trK): #loop through training images
+                        trIM1= "Stim/Training/" + KN[kk][0] + "/" + imList1[tr]
+                        trIM2= "Stim/Training/" + KN[jj][0] + "/" + imList2[tr]
+                        
+                        #Extract features for each training image
+                        AllActs["Train"][tr] = get_vector(trIM1, model, layer).numpy()
+                        AllActs["Train"][tr+20] = get_vector(trIM2, model, layer).numpy()
+                        
+                    #Run SVM
+                    clf = svm.SVC(kernel='linear', C=1).fit(AllActs["Train"], train_labels)
+                    clf.score(AllActs["Test"], test_labels)
+                    
+                        
+                        
+                
+            else: #move to next iteration
+                continue
+            
+            
+        
+
