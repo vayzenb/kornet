@@ -2,6 +2,8 @@
 """
 Created on Mon Dec 23 15:10:34 2019
 
+Iterates through each KorNet condition and provide top-5 labels
+
 @author: VAYZENB
 """
 
@@ -61,7 +63,7 @@ def image_loader(image_name):
     """load image, returns cuda tensor"""
     image = Image.open(image_name)
     image = Variable(normalize(to_tensor(scaler(image))).unsqueeze(0))
-    return image  #assumes that you're using GPU    
+    return image  
 
 #Predict image class
 def predict(image, model):
