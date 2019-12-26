@@ -42,7 +42,7 @@ for ii in range(0, len(cond)):
         out = predict(IM, model)
         out = out.numpy()
         out = out.tolist()
-        out = list(itertools.chain(*out))
+        out = list(chain(*out))
                 
         CNN_Labels[kk,1:] = [IN[out[0]][0], IN[out[1]][0], IN[out[2]][0], IN[out[3]][0], IN[out[4]][0]]
         
