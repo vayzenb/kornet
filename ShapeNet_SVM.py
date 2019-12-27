@@ -19,8 +19,8 @@ from ShapeNet import load_model
 from ShapeNet import image_loader
 from ShapeNet import get_vector
 
-#cond = ['Outline', 'Pert', 'IC',  'Outline_Black', 'Pert_Black', 'IC_Black', 'Outline_Black_Filled', 'Pert_Black_Filled']
-cond = ['Outline', 'Pert', 'IC']
+cond = ['Outline', 'Pert', 'IC',  'Outline_Black', 'Outline_Black_Filled', 'Pert_Black_Filled']
+#cond = ['Outline', 'Pert', 'IC']
 
 suf = ['', '_ripple', '_IC', '', '_ripple', '_IC','', '_ripple']
 
