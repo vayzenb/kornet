@@ -48,7 +48,7 @@ to_tensor = T.ToTensor()
 #Set image loader for model
 def image_loader(image_name):
     """load image, returns cuda tensor"""
-    image = Image.open(image_name)
+    image = Image.open(image_name).convert("RGB")
     image = Variable(normalize(to_tensor(scaler(image))).unsqueeze(0))
     return image     
 
