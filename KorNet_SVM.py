@@ -19,6 +19,7 @@ import torchvision
 import torchvision.models
 from itertools import chain
 from sklearn import svm
+from ShapeNet import image_loader
 from ShapeNet import load_model
 from ShapeNet import get_vector
 
@@ -35,9 +36,6 @@ models = ['FF_IN', 'R_IN', 'FF_SN', 'R_SN']
 KN=pd.read_csv('KN_Classes.csv', sep=',',header=None).to_numpy() 
 
 
-model = load_model() 
-model.eval() #Set model into evaluation mode
-
 trK = 20 #Number of training images to use
 folK = 5 #Number of folds over the training set
 
@@ -47,27 +45,34 @@ test_labels = [1,2]
 
 for mm in range(0, len(models)):
     
-    if model[mm] == 'FF_IN':
+    #select model to run
+    if models[mm] == 'FF_IN':
         model = torchvision.models.alexnet(pretrained=True)
         new_classifier = nn.Sequential(*list(model.classifier.children())[:-2])
         model.classifier = new_classifier #replace model classifier with stripped version
+        layer = "fc7"
         
-    elif model[mm] == 'R_IN':
+    elif models[mm] == 'R_IN':
         model = torchvision.models.resnet50(pretrained=True)
+        model = nn.Sequential(*list(model.children())[:-1])
         layer = "avgpool"
         
-    elif model[mm] == 'FF_SN':
+    elif models[mm] == 'FF_SN':
         model = torchvision.models.alexnet(pretrained=False)
         checkpoint = torch.load('ShapeNet_AlexNet_Weights.pth.tar')
         model.load_state_dict(checkpoint)
         new_classifier = nn.Sequential(*list(model.classifier.children())[:-2])
         model.classifier = new_classifier #replace model classifier with stripped version
+        layer = "fc7"
         
-    elif model[mm] == 'R_SN':
+    elif models[mm] == 'R_SN':
         model = torchvision.models.resnet50(pretrained=False)
         checkpoint = torch.load('ShapeNet_ResNet50_Weights.pth.tar')
         model.load_state_dict(checkpoint)
+        model = nn.Sequential(*list(model.children())[:-1])
         layer = "avgpool"
+        
+    model.eval() #Set model into evaluation mode
     
     ShapeNet_Acc = np.empty((210, len(cond) + 2), dtype = object)
     for ii in range(0, len(cond)): 
@@ -77,7 +82,9 @@ for mm in range(0, len(models)):
         for kk in range(0, len(KN)):
             #load first image
             IM1 = "Stim/Test/" + cond[ii] + "/Obj (" + str(KN[kk][1]) + ")" + suf[ii] + ".png"
-            AllActs["Test"][0] = get_vector(IM1, model, layer).numpy() #Extract image vector
+            IM = image_loader(IM1)
+            vec = model(IM).detach().numpy() #Extract image vector
+            AllActs["Test"][0] = list(chain.from_iterable(vec))
             #load training list
             imList1 = [os.path.basename(x) for x in glob.glob("Stim/Training/" + KN[kk][0] + "/*.jpg")] #pull image category list
             
