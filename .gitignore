@@ -3,3 +3,5 @@ Stim/Training/
 
 #Ignore weights file
 ShapeNet_Weights.pth.tar
+ShapeNet_ResNet50_Weights.pth.tar
+ShapeNet_AlexNet_Weights.pth.tar
