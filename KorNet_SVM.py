@@ -6,7 +6,7 @@ Created on Mon Dec 23 15:10:34 2019
 """
 
 import os
-os.chdir('C:/Users/vayzenb/Desktop/GitHub Repos/KorNet/')
+os.chdir('C:/Users/vayze/Desktop/GitHub Repos/KorNet/')
 
 import numpy as np
 import pandas as pd
@@ -33,11 +33,11 @@ suf = ['', '_ripple', '_IC']
 #FF = Feedforward; R = Recurrent
 #IN = imagenet trained; SN = shape trained
 #models = ['FF_IN', 'R_IN', 'FF_SN', 'R_SN']
-models = ['R_IN', 'FF_SN', 'R_SN']
+models = ['R_SN']
 
 KN=pd.read_csv('KN_Classes.csv', sep=',',header=None).to_numpy() 
 
-device = torch.device("cpu")
+device = torch.device("cuda")
 trK = 20 #Number of training images to use
 folK = 5 #Number of folds over the training set
 
@@ -74,20 +74,22 @@ for mm in range(0, len(models)):
                 
     elif models[mm] == 'FF_SN':
         model = torchvision.models.alexnet(pretrained=False)
+        model.features = torch.nn.DataParallel(model.features)
         checkpoint = torch.load('ShapeNet_AlexNet_Weights.pth.tar')
         model.load_state_dict(checkpoint)
         new_classifier = nn.Sequential(*list(model.classifier.children())[:-2])
         model.classifier = new_classifier #replace model classifier with stripped version
-        model.to(device)
+        #model.to(device)
         layer = "fc7"
         actNum = 4096
         
     elif models[mm] == 'R_SN':
         model = torchvision.models.resnet50(pretrained=False)
+        #model = torch.nn.DataParallel(model.features)
         checkpoint = torch.load('ShapeNet_ResNet50_Weights.pth.tar')
         model.load_state_dict(checkpoint)
         model = nn.Sequential(*list(model.children())[:-1])
-        model.to(device)
+        #model.to(device)
         layer = "avgpool"
         actNum = 2048
         
