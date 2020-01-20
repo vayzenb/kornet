@@ -37,7 +37,7 @@ models = ['R_IN', 'FF_SN', 'R_SN']
 
 KN=pd.read_csv('KN_Classes.csv', sep=',',header=None).to_numpy() 
 
-
+device = torch.device("cpu")
 trK = 20 #Number of training images to use
 folK = 5 #Number of folds over the training set
 
@@ -78,6 +78,7 @@ for mm in range(0, len(models)):
         model.load_state_dict(checkpoint)
         new_classifier = nn.Sequential(*list(model.classifier.children())[:-2])
         model.classifier = new_classifier #replace model classifier with stripped version
+        model.to(device)
         layer = "fc7"
         actNum = 4096
         
@@ -86,6 +87,7 @@ for mm in range(0, len(models)):
         checkpoint = torch.load('ShapeNet_ResNet50_Weights.pth.tar')
         model.load_state_dict(checkpoint)
         model = nn.Sequential(*list(model.children())[:-1])
+        model.to(device)
         layer = "avgpool"
         actNum = 2048
         
