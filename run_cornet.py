@@ -34,7 +34,7 @@ parser.add_argument('--model', choices=['Z', 'R', 'RT', 'S'], default='S',
                     help='which model to train')
 parser.add_argument('--times', default=5, type=int,
                     help='number of time steps to run the model (only R model)')
-parser.add_argument('--ngpus', default=1, type=int,
+parser.add_argument('--ngpus', default=0, type=int,
                     help='number of GPUs to use; 0 if you want to run on CPU')
 parser.add_argument('-j', '--workers', default=4, type=int,
                     help='number of data loading workers')
@@ -230,13 +230,16 @@ def test(layer='decoder', sublayer='avgpool', time_step=0, imsize=224):
                 raise FileNotFoundError(f'Unable to load {fname}')
             im = transform(im)
             im = im.unsqueeze(0)  # adding extra dimension for batch size of 1
+            if(FLAGS.ngpus ==0):
+                im.to('cpu')
+                
             _model_feats = []
             model(im)
             model_feats.append(_model_feats[time_step])
         model_feats = np.concatenate(model_feats)
 
     if FLAGS.output_path is not None:
-        fname = f'CORnet-{FLAGS.model}_{layer}_{sublayer}_feats.npy'
+        fname = f'CORnet-{FLAGS.model}_{str(FLAGS.times)}_{FLAGS.outname}_acts.npy'
         np.save(os.path.join(FLAGS.output_path, fname), model_feats)
 
 

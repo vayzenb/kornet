@@ -6,7 +6,7 @@ Created on Mon Dec 23 15:10:34 2019
 """
 
 import os
-os.chdir('C:/Users/vayze/Desktop/GitHub Repos/KorNet/')
+os.chdir('C:/Users/vayze/Desktop/GitHub_Repos/KorNet/')
 
 import numpy as np
 import pandas as pd
