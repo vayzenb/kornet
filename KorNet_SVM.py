@@ -12,7 +12,8 @@ import random
 from itertools import chain
 
 cond = ['Outline', 'Pert', 'IC']
-modelType = ['CorNet-S_1','CorNet-S_2', 'CorNet-S_3', 'CorNet-S_4', 'CorNet-S_5', 'FF_IN', 'R_IN', 'FF_SN', 'R_SN']
+modelType = ['CorNet-RT_1','CorNet-RT_2', 'CorNet-RT_3', 'CorNet-RT_4', 'CorNet-RT_5', 'FF_IN', 'R_IN', 'FF_SN', 'R_SN']
+modelType = ['CorNet-RT_1','CorNet-RT_2', 'CorNet-RT_3', 'CorNet-RT_4', 'CorNet-RT_5']
 
 KN=pd.read_csv('KN_Classes.csv', sep=',',header=None).to_numpy()
 

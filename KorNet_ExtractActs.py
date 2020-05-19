@@ -24,6 +24,7 @@ from itertools import chain
 import pandas as pd
 
 modelType = ['CorNet','FF_IN', 'R_IN', 'FF_SN', 'R_SN']
+modelType = ['CorNet']
 cond = ['Outline', 'Pert', 'IC']
 
 suf = ['', '_ripple', '_IC']
@@ -32,7 +33,7 @@ maxTS = 5#Time steps
 #Labels for training images
 KN=pd.read_csv('KN_Classes.csv', sep=',',header=None).to_numpy() 
 
-doTrain = False
+doTrain = True
 doTest = True
 
 
@@ -99,7 +100,7 @@ for mm in range(0, len(modelType)):
                 for tS in range(1,maxTS+1):
                     #I'm not totally confident that the timesteps are different, but will evaluate later
                     CNet_cmd = "--data_path Stim/Test/" + cond[cc] + "/*.png --times " + str(tS) + " -o Activations/Test --ngpus 1 --outname " + cond[cc]
-                    proc = subprocess.Popen("python run_cornet.py test --model S " + CNet_cmd)
+                    proc = subprocess.Popen("python run_cornet.py test --model RT " + CNet_cmd)
                     print(proc.wait())
                     #python run_cornet.py test --model S --data_path stim/test/IC --times 5 -o Activations --ngpus 1 --outname IC
                     #python run_cornet.py test --model S --data_path Stim/Test/IC --times 4 -o Activations --ngpus 1 --outname IC'
@@ -123,11 +124,11 @@ for mm in range(0, len(modelType)):
                     fname = 'Activations/Test/' + modelType[mm] + '_' + cond[cc] + "_acts.npy"
                     np.save(fname, allActs)
                     
-    elif doTrain == True:           
+    if doTrain == True:           
     ####################
     #Extract Acts for train images
     ###################
-        for kk in range(11, len(KN)):
+        for kk in range(0, len(KN)):
             print(modelType[mm], KN[kk][0])
             
             if modelType[mm] == 'CorNet': #Run if CorNet model
@@ -135,7 +136,7 @@ for mm in range(0, len(modelType)):
                     #I'm not totally confident that the timesteps are different, but will evaluate later
                     CNet_cmd = "--data_path Stim/Train/" + KN[kk][0] + "/*.jpg --times " + str(tS) + " -o Activations/Train --ngpus 1 --outname " + KN[kk][0]
                     
-                    proc = subprocess.Popen("python run_cornet.py test --model S " + CNet_cmd)
+                    proc = subprocess.Popen("python run_cornet.py test --model RT " + CNet_cmd)
                     print(proc.wait())
                 
             else: #Non-CorNet models
