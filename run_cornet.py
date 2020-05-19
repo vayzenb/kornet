@@ -220,7 +220,7 @@ def test(layer='decoder', sublayer='avgpool', time_step=0, imsize=224):
     model_feats = []
     with torch.no_grad():
         model_feats = []
-        fnames = sorted(glob.glob(os.path.join(FLAGS.data_path, '*.png')))
+        fnames = sorted(glob.glob(os.path.join(FLAGS.data_path)))
         if len(fnames) == 0:
             raise FileNotFoundError(f'No files found in {FLAGS.data_path}')
         for fname in tqdm.tqdm(fnames):
