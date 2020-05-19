@@ -7,7 +7,7 @@ Using the DiCarlo CORNet model (for now) extract acts for all training and test 
 @author: vayze
 """
 
-
+#os.chdir('C:/Users/vayze/Desktop/GitHub_Repos/KorNet/')
 import subprocess
 import tqdm
 import os
@@ -24,7 +24,6 @@ from itertools import chain
 import pandas as pd
 
 modelType = ['CorNet','FF_IN', 'R_IN', 'FF_SN', 'R_SN']
-modelType = ['CorNet']
 cond = ['Outline', 'Pert', 'IC']
 
 suf = ['', '_ripple', '_IC']
@@ -33,7 +32,8 @@ maxTS = 5#Time steps
 #Labels for training images
 KN=pd.read_csv('KN_Classes.csv', sep=',',header=None).to_numpy() 
 
-#Load acts for test images
+doTrain = False
+doTest = True
 
 
 scaler = T.Resize((224, 224))
@@ -89,72 +89,73 @@ for mm in range(0, len(modelType)):
         model.eval() #Set model into evaluation mode
 
 
-
-##########
-#Extract Acts for test images
-##########
-    for cc in range(0, len(cond)):
-        print(modelType[mm], cond[cc])
-        if modelType[mm] == 'CorNet': #Run if CorNet model
-            for tS in range(1,maxTS+1):
-                #I'm not totally confident that the timesteps are different, but will evaluate later
-                CNet_cmd = "--data_path Stim/Test/" + cond[cc] + "/*.png --times " + str(tS) + " -o Activations/Test --ngpus 1 --outname " + cond[cc]
-                proc = subprocess.Popen("python run_cornet.py test --model S " + CNet_cmd)
-                print(proc.wait())
-                #python run_cornet.py test --model S --data_path stim/test/IC --times 5 -o Activations --ngpus 1 --outname IC
-                #python run_cornet.py test --model S --data_path Stim/Test/IC --times 4 -o Activations --ngpus 1 --outname IC'
-        else: #Non-CorNet models
+    if doTest == True:
+    ##########
+    #Extract Acts for test images
+    ##########
+        for cc in range(0, len(cond)):
+            print(modelType[mm], cond[cc])
+            if modelType[mm] == 'CorNet': #Run if CorNet model
+                for tS in range(1,maxTS+1):
+                    #I'm not totally confident that the timesteps are different, but will evaluate later
+                    CNet_cmd = "--data_path Stim/Test/" + cond[cc] + "/*.png --times " + str(tS) + " -o Activations/Test --ngpus 1 --outname " + cond[cc]
+                    proc = subprocess.Popen("python run_cornet.py test --model S " + CNet_cmd)
+                    print(proc.wait())
+                    #python run_cornet.py test --model S --data_path stim/test/IC --times 5 -o Activations --ngpus 1 --outname IC
+                    #python run_cornet.py test --model S --data_path Stim/Test/IC --times 4 -o Activations --ngpus 1 --outname IC'
+            else: #Non-CorNet models
+                
+                
+                fnames = sorted(glob.glob(os.path.join("Stim/Test/" + cond[cc], '*.png')))
+                allActs = np.zeros((len(fnames), actNum))
+                n = 0
+                for fname in tqdm.tqdm(fnames):
+            
+                    IM = image_loader(fname)
+                    IM = IM.cuda()
             
             
-            fnames = sorted(glob.glob(os.path.join("Stim/Test/" + cond[cc], '*.png')))
-            allActs = np.zeros((len(fnames), actNum))
-            n = 0
-            for fname in tqdm.tqdm(fnames):
-        
-                IM = image_loader(fname)
-                IM = IM.cuda()
-        
-        
-                vec = model(IM).cpu().detach().numpy()
-                vec =  np.reshape(vec, (len(vec), -1))
-                allActs[n,:] = vec
-                n = n+ 1
-                
-                fname = 'Activations/Test/' + modelType[mm] + '_' + cond[cc] + "_acts.npy"
-                np.save(fname, allActs)
-                
-####################
-#Extract Acts for train images
-###################
-    for kk in range(11, len(KN)):
-        print(modelType[mm], KN[kk][0])
-        
-        if modelType[mm] == 'CorNet': #Run if CorNet model
-            for tS in range(1,maxTS+1):
-                #I'm not totally confident that the timesteps are different, but will evaluate later
-                CNet_cmd = "--data_path Stim/Train/" + KN[kk][0] + "/*.jpg --times " + str(tS) + " -o Activations/Train --ngpus 1 --outname " + KN[kk][0]
-                
-                proc = subprocess.Popen("python run_cornet.py test --model S " + CNet_cmd)
-                print(proc.wait())
+                    vec = model(IM).cpu().detach().numpy()
+                    vec =  np.reshape(vec, (len(vec), -1))
+                    allActs[n,:] = vec
+                    n = n+ 1
+                    
+                    fname = 'Activations/Test/' + modelType[mm] + '_' + cond[cc] + "_acts.npy"
+                    np.save(fname, allActs)
+                    
+    elif doTrain == True:           
+    ####################
+    #Extract Acts for train images
+    ###################
+        for kk in range(11, len(KN)):
+            print(modelType[mm], KN[kk][0])
             
-        else: #Non-CorNet models
-            
-            fnames = sorted(glob.glob(os.path.join("Stim/Train/" + KN[kk][0], '*.jpg')))
-            allActs = np.zeros((len(fnames), actNum))
-            n = 0
-            for fname in tqdm.tqdm(fnames):
-        
-                IM = image_loader(fname)
-                IM = IM.cuda()
-        
-        
-                vec = model(IM).cpu().detach().numpy()
-                vec =  np.reshape(vec, (len(vec), -1))
-                allActs[n,:] = vec
-                n = n+ 1
+            if modelType[mm] == 'CorNet': #Run if CorNet model
+                for tS in range(1,maxTS+1):
+                    #I'm not totally confident that the timesteps are different, but will evaluate later
+                    CNet_cmd = "--data_path Stim/Train/" + KN[kk][0] + "/*.jpg --times " + str(tS) + " -o Activations/Train --ngpus 1 --outname " + KN[kk][0]
+                    
+                    proc = subprocess.Popen("python run_cornet.py test --model S " + CNet_cmd)
+                    print(proc.wait())
                 
-                fname = 'Activations/Train/' + modelType[mm] + '_' + KN[kk][0] + "_acts.npy"
-                np.save(fname, allActs)
+            else: #Non-CorNet models
+                
+                fnames = sorted(glob.glob(os.path.join("Stim/Train/" + KN[kk][0], '*.jpg')))
+                allActs = np.zeros((len(fnames), actNum))
+                n = 0
+                for fname in tqdm.tqdm(fnames):
+            
+                    IM = image_loader(fname)
+                    IM = IM.cuda()
+            
+            
+                    vec = model(IM).cpu().detach().numpy()
+                    vec =  np.reshape(vec, (len(vec), -1))
+                    allActs[n,:] = vec
+                    n = n+ 1
+                    
+                    fname = 'Activations/Train/' + modelType[mm] + '_' + KN[kk][0] + "_acts.npy"
+                    np.save(fname, allActs)
     
             
         
