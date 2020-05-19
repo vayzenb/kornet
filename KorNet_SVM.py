@@ -17,7 +17,7 @@ modelType = ['CorNet-S_1','CorNet-S_2', 'CorNet-S_3', 'CorNet-S_4', 'CorNet-S_5'
 KN=pd.read_csv('KN_Classes.csv', sep=',',header=None).to_numpy()
 
 trK = 20 #Number of training images to use
-folK = 5 #Number of folds over the training set
+folK = 10 #Number of folds over the training set
 
 
 train_labels = [np.repeat(1, trK).tolist(), np.repeat(2, trK).tolist()]
@@ -25,10 +25,11 @@ train_labels = list(chain(*train_labels))
 test_labels = [1,2]
 
 for cc in range(0, len(cond)):
-    CNN_Acc = np.empty((len(modelType) * 435, 5), dtype = object)    
+    CNN_Acc = np.empty((1890, 5), dtype = object)    
+    n=0
     for mm in range(0, len(modelType)):
         tsVec = np.load('Activations/Test/' + modelType[mm] + '_' + cond[cc] + '_acts.npy')     
-        n=1
+        
         for kk in range(0, len(KN)):
             trVec1 = np.load('Activations/Train/' + modelType[mm] + '_' + KN[kk][0] + '_acts.npy')
             
@@ -52,13 +53,13 @@ for cc in range(0, len(cond)):
                         CNN_Acc[n,2] = KN[kk][0]
                         CNN_Acc[n,3] = KN[jj][0]
                         CNN_Acc[n,4] = tempScore/folK
-                        print(np.round(n/(len(modelType) * 435modelType[mm])*100,decimals =2), cond[cc], KN[kk][0], KN[jj][0],tempScore/folK)
+                        print(modelType[mm], cond[cc], KN[kk][0], KN[jj][0],tempScore/folK)
                         
-                        n = 1
+                        n = n + 1
                     else:
                         continue
                     
-        np.savetxt('Results/' + cond[cc] + '_SVM_allModels.csv', CNN_Acc, delimiter=',', fmt= '%s')
+    np.savetxt('Results/' + cond[cc] + '_SVM_allModels.csv', CNN_Acc, delimiter=',', fmt= '%s')
                             
                             
                             
