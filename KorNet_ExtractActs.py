@@ -100,7 +100,7 @@ for mm in range(0, len(modelType)):
                 for tS in range(1,maxTS+1):
                     #I'm not totally confident that the timesteps are different, but will evaluate later
                     CNet_cmd = "--data_path Stim/Test/" + cond[cc] + "/*.png --times " + str(tS) + " -o Activations/Test --ngpus 1 --outname " + cond[cc]
-                    proc = subprocess.Popen("python run_cornet.py test --model RT " + CNet_cmd)
+                    proc = subprocess.Popen("python run_cornet.py test --model R " + CNet_cmd)
                     print(proc.wait())
                     #python run_cornet.py test --model S --data_path stim/test/IC --times 5 -o Activations --ngpus 1 --outname IC
                     #python run_cornet.py test --model S --data_path Stim/Test/IC --times 4 -o Activations --ngpus 1 --outname IC'
@@ -136,7 +136,7 @@ for mm in range(0, len(modelType)):
                     #I'm not totally confident that the timesteps are different, but will evaluate later
                     CNet_cmd = "--data_path Stim/Train/" + KN[kk][0] + "/*.jpg --times " + str(tS) + " -o Activations/Train --ngpus 1 --outname " + KN[kk][0]
                     
-                    proc = subprocess.Popen("python run_cornet.py test --model RT " + CNet_cmd)
+                    proc = subprocess.Popen("python run_cornet.py test --model R " + CNet_cmd)
                     print(proc.wait())
                 
             else: #Non-CorNet models

@@ -12,12 +12,12 @@ import random
 from itertools import chain
 
 cond = ['Outline', 'Pert', 'IC']
-modelType = ['CorNet-RT_1','CorNet-RT_2', 'CorNet-RT_3', 'CorNet-RT_4', 'CorNet-RT_5', 'FF_IN', 'R_IN', 'FF_SN', 'R_SN']
-modelType = ['CorNet-RT_1','CorNet-RT_2', 'CorNet-RT_3', 'CorNet-RT_4', 'CorNet-RT_5']
+modelType = ['CorNet-R_1','CorNet-R_2', 'CorNet-R_3', 'CorNet-R_4', 'CorNet-R_5', 'FF_IN', 'R_IN', 'FF_SN', 'R_SN']
+
 
 KN=pd.read_csv('KN_Classes.csv', sep=',',header=None).to_numpy()
 
-trK = 20 #Number of training images to use
+trK = 25 #Number of training images to use
 folK = 10 #Number of folds over the training set
 
 
