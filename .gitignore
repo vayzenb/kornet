@@ -1,9 +1,6 @@
 #Ignore training folder
-Stim/Train/
+stim/Train/
+
 
 #Ignore weights file
-ShapeNet_Weights.pth.tar
-ShapeNet_ResNet50_Weights.pth.tar
-ShapeNet_AlexNet_Weights.pth.tar
-ShapeNet_ResNet50_Weights_Cuda.pth.tar
-ShapeNet_AlexNet_Weights_Cuda.pth.tar
+modelling/weights
