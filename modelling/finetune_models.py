@@ -10,7 +10,7 @@ sys.path.insert(1, vone_dir)
 import os, argparse, shutil
 from collections import OrderedDict
 import vonenet
-from torchvision.models import convnext_large, ConvNeXt_Large_Weights, vit_h_14, ViT_H_14_Weights
+from torchvision.models import convnext_large, ConvNeXt_Large_Weights, vit_b_16, ViT_B_16_Weights
 import torch
 
 import torch.nn as nn
@@ -25,7 +25,7 @@ import model_funcs
 
 import random
 from glob import glob as glob
-from torch.utils.tensorboard import SummaryWriter
+#from torch.utils.tensorboard import SummaryWriter
 
 print('libs loaded')
 
@@ -35,7 +35,7 @@ parser.add_argument('--data', required=False,
                     default=None)
 parser.add_argument('-o', '--output_path', default=None,
                     help='path for storing ')
-parser.add_argument('--arch', default='cornet_z',
+parser.add_argument('--arch', default='cornets',
                     help='which model to train')
 parser.add_argument('--epochs', default=30, type=int,
                     help='number of total epochs to run')
@@ -78,11 +78,12 @@ def save_checkpoint(state, is_best, epoch, filename='checkpoint.pth.tar'):
         shutil.copyfile(f'{out_dir}/{filename}_checkpoint_{args.rand_seed}.pth.tar', f'{out_dir}/{filename}_best_{args.rand_seed}.pth.tar')
 
 #create tensorboard summary writer
+
 image_type = args.data
-image_type=image_type.replace(image_dir, '')
-model_type = f'{args.arch}_{image_type[:-1]}{suf}'
+image_type=image_type.split('/')[-2]
+model_type = f'{args.arch}_{image_type}{suf}'
 print(model_type)
-writer = SummaryWriter(f'runs/{model_type}')
+#writer = SummaryWriter(f'runs/{model_type}')
 best_prec1 = 0
 
 
@@ -105,10 +106,10 @@ def load_model(model_arch):
 
     elif model_arch == 'convnext':
         model = convnext_large(weights=ConvNeXt_Large_Weights.IMAGENET1K_V1)
-        transform = ConvNeXt_Large_Weights.IMAGENET1K_V1.transforms
+        transform = ConvNeXt_Large_Weights.IMAGENET1K_V1.transforms()
     elif model_arch == 'vit':
-        model = vit_h_14(weights=ViT_H_14_Weights.IMAGENET1K_V1)
-        transform = ViT_H_14_Weights.IMAGENET1K_SWAG_E2E_V1.transforms
+        model = vit_b_16(weights=ViT_B_16_Weights.DEFAULT)
+        transform = ViT_B_16_Weights.DEFAULT.transforms()
   
 
 
@@ -119,13 +120,19 @@ def load_model(model_arch):
                 torchvision.transforms.RandomResizedCrop(224),
                 torchvision.transforms.RandomHorizontalFlip(),
                 torchvision.transforms.ToTensor(),
+                torchvision.transforms.RandomInvert(.5),
                 torchvision.transforms.Normalize(mean=norm_mean, std=norm_std)
+            ])
+    else:
+        transform = torchvision.transforms.Compose([
+                transform,
+                torchvision.transforms.RandomInvert(.5) #this is because the test images have white lines
             ])
 
     model = torch.nn.DataParallel(model).cuda()
 
     if model_arch == 'cornets_ff':
-        checkpoint = torch.load('/lab_data/behrmannlab/vlad/kornet/modelling/weights/cornets_ff_imagenet1k.pth.tar')
+        checkpoint = torch.load('/lab_data/behrmannlab/vlad/kornet/modelling/weights/cornets_ff_epoch_70.pth.tar')
         model.load_state_dict(checkpoint['state_dict'])
 
     return model, transform
@@ -179,6 +186,7 @@ nTrain = 1
 nVal = 1
 for epoch in range(start_epoch, n_epochs+1):
 
+
     # keep track of training and validation loss
     train_loss = 0.0
     valid_loss = 0.0
@@ -188,8 +196,10 @@ for epoch in range(start_epoch, n_epochs+1):
     # train the model #
     ###################
     model.train()
+    
     for data, target in trainloader:
         # move tensors to GPU if CUDA is available
+        
         
         data, target = data.cuda(), target.cuda()
             #print('moved to cuda')
@@ -201,8 +211,8 @@ for epoch in range(start_epoch, n_epochs+1):
         # calculate the batch loss
         loss = criterion(output, target)
         #print(loss)
-        writer.add_scalar("Supervised Raw Train Loss", loss, nTrain) #write to tensorboard
-        writer.flush()
+        #writer.add_scalar("Supervised Raw Train Loss", loss, nTrain) #write to tensorboard
+        #writer.flush()
         nTrain = nTrain + 1
         # backward pass: compute gradient of the loss with respect to model parameters
         loss.backward()
@@ -229,8 +239,8 @@ for epoch in range(start_epoch, n_epochs+1):
             output = model(data)
             # calculate the batch loss
             loss = criterion(output, target)
-            writer.add_scalar("Supervised Raw Validation Loss", loss, nVal) #write to tensorboard
-            writer.flush()
+            #writer.add_scalar("Supervised Raw Validation Loss", loss, nVal) #write to tensorboard
+            #writer.flush()
             nVal = nVal + 1
             #print('wrote to tensorboard')
             # update average validation loss 
@@ -239,6 +249,7 @@ for epoch in range(start_epoch, n_epochs+1):
             topP, topClass = output.topk(1, dim=1) #get top 1 response
             equals = topClass == target.view(*topClass.shape) #check how many are right
             accuracy += torch.mean(equals.type(torch.FloatTensor)) #calculate acc; equals needed to made into a flaot first
+            
 
             
 
@@ -255,10 +266,10 @@ for epoch in range(start_epoch, n_epochs+1):
     print('Epoch: {} \tTraining Loss: {:.6f} \tValidation Loss: {:.6f}'.format(
         epoch, train_loss, valid_loss),
         "Test Accuracy: {:.3f}".format(accuracy/len(valloader)))
-    writer.add_scalar("Supervised Average Train Loss", train_loss, epoch) #write to tensorboard
-    writer.add_scalar("Supervised Average Validation Loss", valid_loss, epoch) #write to tensorboard
-    writer.add_scalar("Supervised Average Acc", accuracy/len(valloader), epoch) #write to tensorboard
-    writer.flush()
+    #writer.add_scalar("Supervised Average Train Loss", train_loss, epoch) #write to tensorboard
+    #writer.add_scalar("Supervised Average Validation Loss", valid_loss, epoch) #write to tensorboard
+    #writer.add_scalar("Supervised Average Acc", accuracy/len(valloader), epoch) #write to tensorboard
+    #writer.flush()
     
     # save model if validation loss has decreased
     save_checkpoint({
@@ -270,6 +281,6 @@ for epoch in range(start_epoch, n_epochs+1):
             }, is_best,epoch,filename=f'{model_type}')
 
 
-writer.close()
+#writer.close()
         
 

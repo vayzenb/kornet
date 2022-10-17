@@ -1,0 +1,36 @@
+/lab_data/behrmannlab/image_sets//imagenet_sketch
+libs loaded
+vit_imagenet_sketch
+=> loading checkpoint '/lab_data/behrmannlab/vlad/kornet/modelling/weights/vit_imagenet_sketch_checkpoint_1.pth.tar'
+=> loaded checkpoint '/lab_data/behrmannlab/vlad/kornet/modelling/weights/vit_imagenet_sketch_checkpoint_1.pth.tar' (epoch 16)
+starting training...
+got here
+Epoch: 16 	Training Loss: 0.031879 	Validation Loss: 1.389380 Test Accuracy: 0.714
+got here
+Epoch: 17 	Training Loss: 0.031523 	Validation Loss: 1.394588 Test Accuracy: 0.714
+got here
+Epoch: 18 	Training Loss: 0.030650 	Validation Loss: 1.385277 Test Accuracy: 0.714
+got here
+Epoch: 19 	Training Loss: 0.030591 	Validation Loss: 1.393150 Test Accuracy: 0.713
+got here
+Epoch: 20 	Training Loss: 0.030182 	Validation Loss: 1.392884 Test Accuracy: 0.715
+got here
+Epoch: 21 	Training Loss: 0.029965 	Validation Loss: 1.386781 Test Accuracy: 0.716
+got here
+Epoch: 22 	Training Loss: 0.029686 	Validation Loss: 1.389841 Test Accuracy: 0.714
+got here
+Epoch: 23 	Training Loss: 0.028976 	Validation Loss: 1.394038 Test Accuracy: 0.712
+got here
+Epoch: 24 	Training Loss: 0.028786 	Validation Loss: 1.384250 Test Accuracy: 0.714
+got here
+Epoch: 25 	Training Loss: 0.028134 	Validation Loss: 1.390151 Test Accuracy: 0.715
+got here
+Epoch: 26 	Training Loss: 0.028016 	Validation Loss: 1.388059 Test Accuracy: 0.714
+got here
+Epoch: 27 	Training Loss: 0.028067 	Validation Loss: 1.392253 Test Accuracy: 0.714
+got here
+Epoch: 28 	Training Loss: 0.028080 	Validation Loss: 1.386228 Test Accuracy: 0.716
+got here
+Epoch: 29 	Training Loss: 0.027621 	Validation Loss: 1.388342 Test Accuracy: 0.716
+got here
+Epoch: 30 	Training Loss: 0.027683 	Validation Loss: 1.387946 Test Accuracy: 0.716

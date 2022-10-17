@@ -15,14 +15,16 @@ run_time = "3-00:00:00"
 #subj info
 #stim info
 study_dir = f'/user_data/vayzenbe/GitHub_Repos/kornet/modelling'
-stim_dir = f' /lab_data/tarrlab/common/datasets/ILSVRC/Data/'
+stim_dir = f'/lab_data/tarrlab/common/datasets/ILSVRC/Data/'
+
+stim_dir = f'/lab_data/behrmannlab/image_sets/'
 
 model_dir = f'/user_data/vayzenbe/GitHub_Repos/vonenet'
 
 #training info
-model_arch = 'cornets_ff'
+model_arch = ['cornets_ff']
 
-train_types = [ 'CLS-LOC']
+train_types = [ 'imagenet_sketch']
 
 
 def setup_sbatch(model, train_cat):
@@ -48,18 +50,23 @@ def setup_sbatch(model, train_cat):
 #SBATCH --time {run_time}
 
 # Exclude
-# SBATCH --exclude=mind-1-26,mind-1-30
+#SBATCH --exclude=mind-1-34
 
 # Standard output and error log
 #SBATCH --output={study_dir}/slurm_out/{model}_{train_cat}.out
 
 conda activate ml_new
 
-rsync -a {stim_dir}/{train_type} /scratch/vayzenbe/
-echo "data copied"
+#rsync -a {stim_dir}/{train_type} /scratch/vayzenbe/
+#echo "data copied"
 
+echo {stim_dir}/{train_type}
+#python {model_dir}/train.py --in_path {stim_dir}/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --model_arch {model_arch} --ngpus {gpu_n}
 
-python {model_dir}/train.py --in_path /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --model_arch {model_arch} --ngpus {gpu_n}
+python finetune_models.py --data {stim_dir}/{train_type}/ -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} -b 64 --workers 4 --epochs 30
+
+#python finetune_models.py --data {stim_dir}/{train_type}/ -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} -b 32 --workers 4 --epochs 30 --resume /lab_data/behrmannlab/vlad/kornet/modelling/weights/{model}_{train_cat}_checkpoint_1.pth.tar 
+
 """
     return sbatch_setup
 
@@ -79,22 +86,22 @@ def copy_data(train_type):
 
 
 
-
-for train_type in train_types:
-    
-    job_name = f'{model_arch}_{train_type}'
-    print(job_name)
-    
-    #os.remove(f"{job_name}.sh")
-    
-    f = open(f"{job_name}.sh", "a")
-    f.writelines(setup_sbatch(model_arch, train_type))
-    
-    
-    f.close()
-    
-    subprocess.run(['sbatch', f"{job_name}.sh"],check=True, capture_output=True, text=True)
-    os.remove(f"{job_name}.sh")
+for model in model_arch:
+    for train_type in train_types:
+        
+        job_name = f'{model}_{train_type}'
+        print(job_name)
+        
+        #os.remove(f"{job_name}.sh")
+        
+        f = open(f"{job_name}.sh", "a")
+        f.writelines(setup_sbatch(model, train_type))
+        
+        
+        f.close()
+        
+        subprocess.run(['sbatch', f"{job_name}.sh"],check=True, capture_output=True, text=True)
+        os.remove(f"{job_name}.sh")
 
 
 

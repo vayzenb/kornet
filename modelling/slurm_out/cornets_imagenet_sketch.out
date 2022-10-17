@@ -1,0 +1,40 @@
+/lab_data/behrmannlab/image_sets//imagenet_sketch
+/user_data/vayzenbe/GitHub_Repos/vonenet/vonenet/params.py:59: RuntimeWarning: invalid value encountered in true_divide
+  ny_dist_marg = n_joint_dist / n_joint_dist.sum(axis=1, keepdims=True)
+/home/vayzenbe/anaconda3/envs/ml_new/lib/python3.9/site-packages/torch/functional.py:478: UserWarning: torch.meshgrid: in an upcoming release, it will be required to pass the indexing argument. (Triggered internally at  /opt/conda/conda-bld/pytorch_1659484775609/work/aten/src/ATen/native/TensorShape.cpp:2895.)
+  return _VF.meshgrid(tensors, **kwargs)  # type: ignore[attr-defined]
+libs loaded
+cornets_imagenet_sketch
+Neuronal distributions gabor parameters
+Model:  VOneCORnet-S
+starting training...
+Epoch: 1 	Training Loss: 4.021643 	Validation Loss: 3.866809 Test Accuracy: 0.243
+Epoch: 2 	Training Loss: 3.357784 	Validation Loss: 3.507442 Test Accuracy: 0.300
+Epoch: 3 	Training Loss: 3.064380 	Validation Loss: 3.296962 Test Accuracy: 0.335
+Epoch: 4 	Training Loss: 2.858437 	Validation Loss: 3.202652 Test Accuracy: 0.346
+Epoch: 5 	Training Loss: 2.696177 	Validation Loss: 3.078890 Test Accuracy: 0.366
+Epoch: 6 	Training Loss: 2.570083 	Validation Loss: 3.042327 Test Accuracy: 0.375
+Epoch: 7 	Training Loss: 2.461225 	Validation Loss: 3.016100 Test Accuracy: 0.378
+Epoch: 8 	Training Loss: 2.360925 	Validation Loss: 3.008225 Test Accuracy: 0.390
+Epoch: 9 	Training Loss: 2.295656 	Validation Loss: 2.924746 Test Accuracy: 0.402
+Epoch: 10 	Training Loss: 2.203834 	Validation Loss: 2.903754 Test Accuracy: 0.408
+Epoch: 11 	Training Loss: 1.709721 	Validation Loss: 2.406928 Test Accuracy: 0.487
+Epoch: 12 	Training Loss: 1.558960 	Validation Loss: 2.332804 Test Accuracy: 0.505
+Epoch: 13 	Training Loss: 1.496694 	Validation Loss: 2.309719 Test Accuracy: 0.508
+Epoch: 14 	Training Loss: 1.442943 	Validation Loss: 2.301024 Test Accuracy: 0.513
+Epoch: 15 	Training Loss: 1.422551 	Validation Loss: 2.275197 Test Accuracy: 0.514
+Epoch: 16 	Training Loss: 1.386978 	Validation Loss: 2.277274 Test Accuracy: 0.517
+Epoch: 17 	Training Loss: 1.364408 	Validation Loss: 2.274606 Test Accuracy: 0.519
+Epoch: 18 	Training Loss: 1.335611 	Validation Loss: 2.281160 Test Accuracy: 0.522
+Epoch: 19 	Training Loss: 1.314950 	Validation Loss: 2.266793 Test Accuracy: 0.522
+Epoch: 20 	Training Loss: 1.294793 	Validation Loss: 2.236428 Test Accuracy: 0.527
+Epoch: 21 	Training Loss: 1.246950 	Validation Loss: 2.223245 Test Accuracy: 0.528
+Epoch: 22 	Training Loss: 1.235258 	Validation Loss: 2.229520 Test Accuracy: 0.524
+Epoch: 23 	Training Loss: 1.234972 	Validation Loss: 2.249293 Test Accuracy: 0.527
+Epoch: 24 	Training Loss: 1.230808 	Validation Loss: 2.219770 Test Accuracy: 0.534
+Epoch: 25 	Training Loss: 1.220045 	Validation Loss: 2.207614 Test Accuracy: 0.530
+Epoch: 26 	Training Loss: 1.212519 	Validation Loss: 2.225520 Test Accuracy: 0.532
+Epoch: 27 	Training Loss: 1.217810 	Validation Loss: 2.212855 Test Accuracy: 0.529
+Epoch: 28 	Training Loss: 1.203598 	Validation Loss: 2.192683 Test Accuracy: 0.536
+Epoch: 29 	Training Loss: 1.208506 	Validation Loss: 2.214661 Test Accuracy: 0.535
+Epoch: 30 	Training Loss: 1.214309 	Validation Loss: 2.203838 Test Accuracy: 0.533
