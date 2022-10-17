@@ -4,3 +4,4 @@ stim/Train/
 
 #Ignore weights file
 modelling/weights
+modelling/acts
