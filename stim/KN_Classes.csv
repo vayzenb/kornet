@@ -1,7 +1,8 @@
+object,num,category
 airplane,1,inam
 apple,4,inam
 bear,6,anim
-bicycle,7,inam
+bike,7,inam
 bird,8,anim
 butterfly,10,anim
 cat,11,anim

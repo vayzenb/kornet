@@ -10,12 +10,14 @@ from torchvision import datasets
 import natsort
 from PIL import Image
 
+
 class load_stim(Dataset):
     def __init__(self, main_dir, transform):
         self.main_dir = main_dir
         self.transform = transform
         all_imgs = os.listdir(main_dir)
         self.total_imgs = natsort.natsorted(all_imgs)
+        print(self.total_imgs)
         
 
 

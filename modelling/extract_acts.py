@@ -15,16 +15,17 @@ import torch.nn as nn
 import torchvision
 import load_stim
 from glob import glob as glob
+import pdb
 
 curr_dir = '/user_data/vayzenbe/GitHub_Repos/kornet'
-stim_dir = f'{curr_dir}/stim/_things'
+stim_dir = f'{curr_dir}/stim/test'
 weights_dir = '/lab_data/behrmannlab/vlad/kornet/modelling/weights'
 train_set = 'imagenet_sketch'
 
 layer = ['ln','avgpool','avgpool',['decoder','avgpool']]
 
 
-model_archs = ['vit','convnext','cornets','cornets_ff']
+model_archs = ['cornets','cornets_ff','vit','convnext']
 
 stim_folder = glob(f'{stim_dir}/*')
 
@@ -65,7 +66,7 @@ def load_model(model_arch):
     model = torch.nn.DataParallel(model).cuda()
 
     
-    checkpoint = torch.load(f'{weights_dir}/{model_arch}_{train_set}_best_1'.pth.tar')
+    checkpoint = torch.load(f'{weights_dir}/{model_arch}_{train_set}_best_1.pth.tar')
     model.load_state_dict(checkpoint['state_dict'])
 
     return model, transform, layer_call
@@ -83,7 +84,7 @@ def extract_acts(model, image_dir, transform, layer_call):
         """
         #avgpool = nn.AdaptiveAvgPool2d(output_size=(1,768))
         #output = avgpool(output)
-        print(output.shape)
+        
 
         output = output.cpu().numpy()
         
@@ -108,11 +109,12 @@ def extract_acts(model, image_dir, transform, layer_call):
 
     
     test_dataset = load_stim.load_stim(image_dir, transform=transform)
-    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=5, shuffle=False, num_workers = 4, pin_memory=True)
+    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=12, shuffle=False, num_workers = 4, pin_memory=True)
     
 
 
     with torch.no_grad():
+        
         for data, _ in testloader:
             # move tensors to GPU if CUDA is available
             
@@ -127,8 +129,10 @@ def extract_acts(model, image_dir, transform, layer_call):
 
             if n == 0:
                 acts = out
+                #label_list = label
             else:
                 acts= np.append(acts, out,axis = 0)
+                #label_list = np.append(label_list, label)
                 
             
             n = n + 1
@@ -144,4 +148,7 @@ for model_type in model_archs:
         acts = extract_acts(model, cat_dir, transform, layer_call)
 
         cat_name = cat_dir.split('/')[-1]
+        
         np.save(f'{curr_dir}/modelling/acts/{model_type}_{cat_name}.npy', acts)
+        #np.savetxt(f'{curr_dir}/modelling/acts/{model_type}_{cat_name}_labels.txt', label_list)
+        print(model_type, cat_name)
