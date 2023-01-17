@@ -15,8 +15,6 @@ act_dir = f'{curr_dir}/modelling/acts'
 results_dir = f'{curr_dir}/results'
 test_label = np.asanyarray([0, 1])
 
-
-
 #load classes from csv
 class_list = pd.read_csv(f'{curr_dir}/stim/KN_Classes.csv')
 #determine categories (animate, inanimate, etc)
@@ -25,6 +23,10 @@ categories = class_list['category'].unique()
 conditions = ['Outline', 'Pert', 'IC']
 
 model_archs = ['cornets','cornets_ff','convnext', 'vit']
+model_archs = ['cornet_s_pretrained', 'cornet_z_pretrained', 'cornets_pretrained']
+
+k_folds = 10
+train_n = 50
 
 for model in model_archs:
 
@@ -62,38 +64,54 @@ for model in model_archs:
                     if cat_name1 == cat_name2:
                         continue
                     else:
-
-                        clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
-                        
                         #load second training acts
                         train_acts2 = np.load(f'{act_dir}/{model}_{cat_name2}.npy')
-                        train_acts = np.vstack((train_acts1, train_acts2))
 
-                        #create empty train array for labels
-                        label_list = np.zeros((1,train_acts1.shape[0]))
-                        label_list = np.hstack((label_list, np.zeros((1,train_acts2.shape[0]))+1))
-                        label_list = label_list.flatten()
-                        
-                        #determine image num for test object
-                        img_num2 = class_list_cat[class_list_cat['object']==cat_name2].index[0]
-                        
+                        fold_acc = []
+                        fold_train_acc = []
+                        for k in range(0,k_folds):
+                            
 
-                        #read test act for that num
-                        test_ims[1,:] = test_acts[img_num2,:]
 
-                        
+                            #shuffle training acts
+                            np.random.shuffle(train_acts1)
+                            np.random.shuffle(train_acts2)
 
-                        #train classifier
-                        clf.fit(train_acts, label_list)
 
-                        #test classifier
-                        score = clf.score(test_ims, test_label)
-                        train_score = clf.score(train_acts, label_list)
+                            train_acts = np.vstack((train_acts1[0:train_n,:], train_acts2[0:train_n,:]))
+                            clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
+                            
+                            
+                            #create empty train array for labels
+                            label_list = np.zeros((1,train_n))
+                            label_list = np.hstack((label_list, np.zeros((1,train_n))+1))
+                            label_list = label_list.flatten()
+                            
+                            #determine image num for test object
+                            img_num2 = class_list_cat[class_list_cat['object']==cat_name2].index[0]
+                            
 
-                        
+                            #read test act for that num
+                            test_ims[1,:] = test_acts[img_num2,:]
+
+                            
+
+                            #train classifier
+                            clf.fit(train_acts, label_list)
+
+                            #test classifier
+                            score = clf.score(test_ims, test_label)
+                            train_score = clf.score(train_acts, label_list)
+
+                            fold_acc.append(score)
+                            fold_train_acc.append(train_score)
+
+                            
 
                         #add results to summary
-                        curr_data = pd.Series([model, cat_name1, cat_name2, cond, train_score, score], index = summary_df.columns)
+                        avg_test = np.mean(fold_acc)
+                        avg_train = np.mean(fold_train_acc)
+                        curr_data = pd.Series([model, cat_name1, cat_name2, cond, avg_train, avg_test], index = summary_df.columns)
                         summary_df = pd.concat([summary_df, curr_data.to_frame().T],ignore_index=True)
 
         summary_df.to_csv(f'{results_dir}/{model}_{cond}_summary.csv', index = False)

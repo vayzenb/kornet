@@ -1,0 +1,7 @@
+Duration,resp.keys,resp.corr,resp.rt,pracTrials.thisRepN,pracTrials.thisTrialN,pracTrials.thisN,pracTrials.thisIndex,pracTrials.ran,objLabel,imFile,distractLabel,corr,participant,date,expName,psychopyVersion,OS,frameRate,,Corr,objDistract,py_duration,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,objNum,animType,condition
+0.3,left,0,23.010705,0,0,0,1,1,castle,Stim/Prac (2).png,car,right,6032,2021-04-16_12h33.10.778,KorNet_kid_deleted,2020.2.4,Win32,60,6032,,,,,,,,,,,
+0.3,left,0,8.336695,0,1,1,2,1,balloon,Stim/Prac (3).jpg,computer,right,6032,2021-04-16_12h33.10.778,KorNet_kid_deleted,2020.2.4,Win32,60,6032,,,,,,,,,,,
+0.35,right,0,7.416405,0,2,2,3,1,motorcycle,Stim/Prac (4).jpg,skateboard,left,6032,2021-04-16_12h33.10.778,KorNet_kid_deleted,2020.2.4,Win32,60,6032,,,,,,,,,,,
+0.35,right,0,7.20007,0,3,3,0,1,shoe,Stim/Prac (1).jpg,phone,left,6032,2021-04-16_12h33.10.778,KorNet_kid_deleted,2020.2.4,Win32,60,6032,,,,,,,,,,,
+0.3,right,0,96.36654,,,,,,rabbit,Stim/OBJ (38)_IC.png,,,6032,2021-04-16_12h33.10.778,KorNet_kid_deleted,2020.2.4,Win32,60,6032,left,kangaroo,0.299425,0,0,0,23,1,38,Animate,3
+0.3,right,0,92.008195,,,,,,bear,Stim/OBJ (6)_IC.png,,,6032,2021-04-16_12h33.10.778,KorNet_kid_deleted,2020.2.4,Win32,60,6032,left,squirrel,0.310165,0,1,1,2,1,6,Animate,3

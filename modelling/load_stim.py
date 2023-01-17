@@ -17,7 +17,7 @@ class load_stim(Dataset):
         self.transform = transform
         all_imgs = os.listdir(main_dir)
         self.total_imgs = natsort.natsorted(all_imgs)
-        print(self.total_imgs)
+        
         
 
 

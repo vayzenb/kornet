@@ -5,9 +5,12 @@ import pandas as pd
 import numpy as np
 import sys
 vone_dir = '/user_data/vayzenbe/GitHub_Repos/vonenet'
+cornet_dir = '/user_data/vayzenbe/GitHub_Repos/CORnet'
 
 sys.path.insert(1, vone_dir)
+sys.path.insert(1, cornet_dir)
 import vonenet
+import cornet
 from torchvision.models import convnext_large, ConvNeXt_Large_Weights, vit_b_16, ViT_B_16_Weights
 import torch
 
@@ -17,29 +20,41 @@ import load_stim
 from glob import glob as glob
 import pdb
 
+print('libraries loaded...')
+
 curr_dir = '/user_data/vayzenbe/GitHub_Repos/kornet'
 stim_dir = f'{curr_dir}/stim/test'
+#stim_dir = f'/user_data/vayzenbe/image_sets/kornet_images'
 weights_dir = '/lab_data/behrmannlab/vlad/kornet/modelling/weights'
 train_set = 'imagenet_sketch'
 
-layer = ['ln','avgpool','avgpool',['decoder','avgpool']]
-
+#layer = ['avgpool','avgpool','ln',['decoder','avgpool']]
 
 model_archs = ['cornets','cornets_ff','vit','convnext']
+model_archs = ['cornet_s','cornet_z', 'cornets']
 
 stim_folder = glob(f'{stim_dir}/*')
+suf = '_pretrained'
 
 def load_model(model_arch):    
     """
     load model
     """
     if model_arch == 'cornets':
-        model = vonenet.get_model(model_arch='cornets', pretrained=False).module
+        model = vonenet.get_model(model_arch='cornets', pretrained=True).module
         layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
 
     elif model_arch == 'cornets_ff':
         model = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
         layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
+
+    elif model_arch == 'cornet_s':
+        model = cornet.get_model('s', pretrained=True).module
+        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
+
+    elif model_arch == 'cornet_z':
+        model = cornet.get_model('z', pretrained=True).module
+        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
         
 
     elif model_arch == 'convnext':
@@ -53,7 +68,7 @@ def load_model(model_arch):
         #layer_call = "getattr(getattr(getattr(getattr(getattr(getattr(model,'module'),'encoder'),'layers'),'encoder_layer_11'),'mlp'),'3')"
 
 
-    if model_arch == 'cornets' or model_arch == 'cornets_ff':
+    if 'cornet' in model_arch:
 
         transform = torchvision.transforms.Compose([
                 torchvision.transforms.Resize(256),
@@ -66,8 +81,8 @@ def load_model(model_arch):
     model = torch.nn.DataParallel(model).cuda()
 
     
-    checkpoint = torch.load(f'{weights_dir}/{model_arch}_{train_set}_best_1.pth.tar')
-    model.load_state_dict(checkpoint['state_dict'])
+    #checkpoint = torch.load(f'{weights_dir}/{model_arch}_{train_set}_best_1.pth.tar')
+    #model.load_state_dict(checkpoint['state_dict'])
 
     return model, transform, layer_call
 
@@ -145,10 +160,12 @@ for model_type in model_archs:
     model, transform, layer_call = load_model(model_type)
 
     for cat_dir in stim_folder:
+        cat_name = cat_dir.split('/')[-1]
+        print(model_type, cat_name)
         acts = extract_acts(model, cat_dir, transform, layer_call)
 
-        cat_name = cat_dir.split('/')[-1]
         
-        np.save(f'{curr_dir}/modelling/acts/{model_type}_{cat_name}.npy', acts)
+        
+        np.save(f'{curr_dir}/modelling/acts/{model_type}{suf}_{cat_name}.npy', acts)
         #np.savetxt(f'{curr_dir}/modelling/acts/{model_type}_{cat_name}_labels.txt', label_list)
-        print(model_type, cat_name)
+        

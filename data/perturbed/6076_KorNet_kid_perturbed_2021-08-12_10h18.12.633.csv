@@ -1,0 +1,9 @@
+Duration,resp.keys,resp.corr,resp.rt,pracTrials.thisRepN,pracTrials.thisTrialN,pracTrials.thisN,pracTrials.thisIndex,pracTrials.ran,objLabel,imFile,distractLabel,corr,participant,date,expName,psychopyVersion,OS,frameRate,Corr,objDistract,py_duration,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,objNum,animType,condition,trials.order
+0.3,right,0,7.786,0,0,0,3,1,motorcycle,Stim/Prac (4).jpg,skateboard,left,6076,2021-08-12_10h18.12.633,KorNet_kid_perturbed,2020.2.4,Win32,60,,,,,,,,,,,,
+0.3,right,1,5.222,0,1,1,2,1,balloon,Stim/Prac (3).jpg,computer,right,6076,2021-08-12_10h18.12.633,KorNet_kid_perturbed,2020.2.4,Win32,60,,,,,,,,,,,,
+0.3,left,1,5.509,0,2,2,0,1,shoe,Stim/Prac (1).jpg,phone,left,6076,2021-08-12_10h18.12.633,KorNet_kid_perturbed,2020.2.4,Win32,60,,,,,,,,,,,,
+0.3,left,0,9.422,0,3,3,1,1,castle,Stim/Prac (2).png,car,right,6076,2021-08-12_10h18.12.633,KorNet_kid_perturbed,2020.2.4,Win32,60,,,,,,,,,,,,
+0.3,right,0,7.346,,,,,,umbrella,Stim/OBJ (47)_ripple.png,,,6076,2021-08-12_10h18.12.633,KorNet_kid_perturbed,2020.2.4,Win32,60,left,lamp,0.294,0,0,0,29,1,47,Inanimate,2,
+0.3,left,1,6.739,,,,,,tree,Stim/OBJ (44)_ripple.png,,,6076,2021-08-12_10h18.12.633,KorNet_kid_perturbed,2020.2.4,Win32,60,left,flower,0.306,0,1,1,26,1,44,Inanimate,2,
+0.3,right,0,7.354,,,,,,leaf,Stim/OBJ (32)_ripple.png,,,6076,2021-08-12_10h18.12.633,KorNet_kid_perturbed,2020.2.4,Win32,60,left,flower,0.304,0,2,2,22,1,32,Inanimate,2,
+,,,,,,,,,elephant,Stim/OBJ (18)_ripple.png,,,6076,2021-08-12_10h18.12.633,KorNet_kid_perturbed,2020.2.4,Win32,60,left,lamp,,1,0,30,11,1,18,Animate,2,29
