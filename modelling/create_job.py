@@ -10,24 +10,24 @@ import pdb
 
 mem = 36
 gpu_n = 2
-run_time = "3-00:00:00"
+run_time = "5-00:00:00"
 
 #subj info
 #stim info
 study_dir = f'/user_data/vayzenbe/GitHub_Repos/kornet/modelling'
-stim_dir = f'/lab_data/tarrlab/common/datasets/ILSVRC/Data/'
+
 
 stim_dir = f'/lab_data/behrmannlab/image_sets/'
 
 model_dir = f'/user_data/vayzenbe/GitHub_Repos/vonenet'
 
 #training info
-model_arch = ['cornets_ff']
+model_arch = ['cornets_r']
 
-train_types = [ 'imagenet_sketch']
+train_types = ['stylized-ecoset']
+suf = '_blur'
 
-
-def setup_sbatch(job_name):
+def setup_sbatch(job_name, script_name):
     sbatch_setup = f"""#!/bin/bash -l
 
 
@@ -40,7 +40,7 @@ def setup_sbatch(job_name):
 # Submit job to cpu queue                
 #SBATCH -p gpu
 
-#SBATCH --cpus-per-task=2
+#SBATCH --cpus-per-task=4
 #SBATCH --gres=gpu:{gpu_n}
 
 # Job memory request
@@ -55,11 +55,11 @@ def setup_sbatch(job_name):
 # Standard output and error log
 #SBATCH --output={study_dir}/slurm_out/{job_name}.out
 
-conda activate ml_new
+conda activate ml
 
 
 
-python {study_dir}/extract_acts.py
+{script_name}
 
 
 """
@@ -79,7 +79,7 @@ def copy_data(train_type):
     return train_dir
 
 
-
+""" 
 job_name = f'extract_acts'
 print(job_name)
 
@@ -92,20 +92,21 @@ f.writelines(setup_sbatch(job_name))
 f.close()
 
 subprocess.run(['sbatch', f"{job_name}.sh"],check=True, capture_output=True, text=True)
-os.remove(f"{job_name}.sh")
+os.remove(f"{job_name}.sh") """
 
-'''
-model training batch
+
+
 for model in model_arch:
     for train_type in train_types:
         
-        job_name = f'{model}_{train_type}'
+        job_name = f'{model}_{train_type}{suf}'
         print(job_name)
         
         #os.remove(f"{job_name}.sh")
         
         f = open(f"{job_name}.sh", "a")
-        f.writelines(setup_sbatch(model, train_type))
+        script_name = f'python {study_dir}/train.py --data {stim_dir}/{train_type}/ -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --workers 4 --blur True'
+        f.writelines(setup_sbatch(job_name,script_name))
         
         
         f.close()
@@ -120,7 +121,7 @@ for model in model_arch:
 
 #python finetune_models.py --data {stim_dir}/{train_type}/ -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} -b 32 --workers 4 --epochs 30 --resume /lab_data/behrmannlab/vlad/kornet/modelling/weights/{model}_{train_cat}_checkpoint_1.pth.tar 
 
-'''
+
 
 
 

@@ -9,7 +9,7 @@ import torchvision.transforms as transforms
 from torchvision import datasets
 import natsort
 from PIL import Image
-
+import cv2
 
 class load_stim(Dataset):
     def __init__(self, main_dir, transform):
@@ -17,7 +17,6 @@ class load_stim(Dataset):
         self.transform = transform
         all_imgs = os.listdir(main_dir)
         self.total_imgs = natsort.natsorted(all_imgs)
-        
         
 
 
@@ -28,6 +27,11 @@ class load_stim(Dataset):
         img_loc = os.path.join(self.main_dir, self.total_imgs[idx])
         
         image = Image.open(img_loc).convert("RGB")
+        #image = cv2.imread(img_loc)
+        #image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         tensor_image = self.transform(image)
+        
+
+
         
         return tensor_image, self.total_imgs[idx]
