@@ -5,12 +5,15 @@ Train models on ecoset with developmental constraints
 curr_dir = '/user_data/vayzenbe/GitHub_Repos/kornet'
 import sys
 vone_dir = '/user_data/vayzenbe/GitHub_Repos/vonenet'
+cornet_dir = '/user_data/vayzenbe/GitHub_Repos/CORnet'
 
 sys.path.insert(1, vone_dir)
+sys.path.insert(1, cornet_dir)
 sys.path.insert(1, curr_dir)
 import os, argparse, shutil
 from collections import OrderedDict
 import vonenet
+import cornet
 
 import torch
 
@@ -27,11 +30,15 @@ import model_funcs
 import random
 from glob import glob as glob
 from torch.utils.tensorboard import SummaryWriter
+from datetime import datetime
+now = datetime.now()
+curr_date=now.strftime("%Y%m%d")
 
 print('libs loaded')
 
 #Example call:
-#python modelling/train.py --data /lab_data/behrmannlab/image_sets/test_ims -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} -b 64 --workers 4 --epochs 30
+#python modelling/train.py --data /user_data/vayzenbe/image_sets/ecoset -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch cornet_s -b 128 --blur True
+#python modelling/train.py --data /lab_data/behrmannlab/image_sets/stylized-ecoset -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch cornet_ff --blur True
 
 parser = argparse.ArgumentParser(description='Model Training')
 parser.add_argument('--data', required=False,
@@ -43,11 +50,11 @@ parser.add_argument('--arch', default='cornets',
                     help='which model to train')
 parser.add_argument('--epochs', default=70, type=int,
                     help='number of total epochs to run')
-parser.add_argument('-b', '--batch-size', default=256, type=int,
+parser.add_argument('-b', '--batch-size', default=128, type=int,
                     metavar='N', help='mini-batch size')
 parser.add_argument('--blur', default=False, type=bool,
                     help='whether to train with blur')
-parser.add_argument('--workers', default=20, type=int,
+parser.add_argument('--workers', default=4, type=int,
                     help='how many data loading workers to use')
 parser.add_argument('--rand_seed', default=1, type=int,
                     help='Seed to use for reproducible results')
@@ -57,31 +64,28 @@ parser.add_argument('--resume', default='', type=str, metavar='PATH',
 suf=''
 
 
-
 out_dir = '/lab_data/behrmannlab/vlad/kornet/modelling/weights'
-
 
 
 global args, best_prec1
 args = parser.parse_args()
 
 image_type = args.data
-image_type=image_type.split('/')[-2]
+image_type=image_type.split('/')[-1]
 model_type = f'{args.arch}_{image_type}{suf}'
+print(model_type)
 
 model_funcs.reproducible_results(args.rand_seed)
 
 #These are all the default learning parameters from the vonenet paper
 start_epoch = 1
 lr = .1 #Starting learning rate
-step_size = 20 #How often (epochs)the learning rate should decrease by a factor of 10
+step_size = 10 #How often (epochs)the learning rate should decrease by a factor of 10
 weight_decay = 1e-4
 momentum = .9
 n_epochs = args.epochs
 n_save = 5 #save model every X epochs
 
-norm_mean = [0.5, 0.5, 0.5]
-norm_std = [0.5, 0.5, 0.5]
 
 #default set of transformations for late in model training
 #start blur
@@ -98,16 +102,10 @@ else:
     saturate = 1
     end_epoch = 10
 
-transform  = torchvision.transforms.Compose([
-    torchvision.transforms.RandomResizedCrop(224),
-    torchvision.transforms.RandomHorizontalFlip(),
-    torchvision.transforms.GaussianBlur(kernal_size, sigma=sigma),
-    torchvision.transforms.ToTensor(),
-    torchvision.transforms.Normalize(mean=norm_mean, std=norm_std)])
 
 
 print(model_type)
-writer = SummaryWriter(f'{curr_dir}/modelling/runs/{model_type}')
+writer = SummaryWriter(f'{curr_dir}/modelling/runs/{model_type}_{curr_date}')
 best_prec1 = 0
 
 def save_checkpoint(state, is_best, epoch, filename='checkpoint.pth.tar'):
@@ -125,23 +123,35 @@ def load_model(model_arch):
     """
     load model
     """
-    if model_arch == 'cornets_r':
+    if model_arch == 'vonenet_r':
         model = vonenet.get_model(model_arch='cornets', pretrained=False).module
+        norm_mean = [0.5, 0.5, 0.5]
+        norm_std = [0.5, 0.5, 0.5]
 
-    elif model_arch == 'cornets_ff':
+    elif model_arch == 'vonenet_ff':
         model = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
+        norm_mean = [0.5, 0.5, 0.5]
+        norm_std = [0.5, 0.5, 0.5]
  
-    
-    
+    elif model_arch == 'cornet_s':
+        model = cornet.get_model('s',pretrained=False).module
+        norm_mean=[0.485, 0.456, 0.406]
+        norm_std=[0.229, 0.224, 0.225]
 
+    elif model_arch == 'cornet_ff':
+        model = cornet.get_model('ff',pretrained=False).module
+        norm_mean=[0.485, 0.456, 0.406]
+        norm_std=[0.229, 0.224, 0.225]
+
+    
     model = torch.nn.DataParallel(model).cuda()
 
-    return model
+    return model, norm_mean, norm_std
 
 '''
 load model
 '''
-model= load_model(args.arch)
+model, norm_mean, norm_std= load_model(args.arch)
 
 optimizer = torch.optim.SGD(model.parameters(),
                                          lr,
@@ -153,6 +163,14 @@ optimizer = torch.optim.SGD(model.parameters(),
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size)
 criterion = nn.CrossEntropyLoss()
 criterion.cuda()
+
+transform  = torchvision.transforms.Compose([
+    torchvision.transforms.RandomResizedCrop(224),
+    torchvision.transforms.RandomHorizontalFlip(),
+    torchvision.transforms.GaussianBlur(kernal_size, sigma=sigma),
+    torchvision.transforms.ToTensor(),
+    torchvision.transforms.Normalize(mean=norm_mean, std=norm_std)])
+
 
 # optionally resume from a checkpoint
 if args.resume:
@@ -170,8 +188,8 @@ if args.resume:
 
 
 
-train_dir = args.data + 'train'
-val_dir = args.data + 'val'
+train_dir = args.data + '/train'
+val_dir = args.data + '/val'
 
 # setup val dataloader
 # train dataloader is set up in the training loop
@@ -185,6 +203,8 @@ print('starting training...')
 valid_loss_min = np.Inf # track change in validation loss
 nTrain = 1
 nVal = 1
+
+
 for epoch in range(start_epoch, n_epochs+1):
 
     #sets transforms for blur training
@@ -250,8 +270,8 @@ for epoch in range(start_epoch, n_epochs+1):
         # calculate the batch loss
         loss = criterion(output, target)
         #print(loss)
-        #writer.add_scalar("Supervised Raw Train Loss", loss, nTrain) #write to tensorboard
-        #writer.flush()
+        writer.add_scalar("Supervised Raw Train Loss", loss, nTrain) #write to tensorboard
+        writer.flush()
         nTrain = nTrain + 1
         # backward pass: compute gradient of the loss with respect to model parameters
         loss.backward()
@@ -260,6 +280,9 @@ for epoch in range(start_epoch, n_epochs+1):
         
         # update training loss
         train_loss += loss.item()*data.size(0)
+
+
+    
         #print(train_loss)
     
 
@@ -278,6 +301,8 @@ for epoch in range(start_epoch, n_epochs+1):
             output = model(data)
             # calculate the batch loss
             loss = criterion(output, target)
+
+
             #writer.add_scalar("Supervised Raw Validation Loss", loss, nVal) #write to tensorboard
             #writer.flush()
             nVal = nVal + 1

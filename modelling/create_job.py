@@ -7,9 +7,12 @@ from glob import glob
 import os
 import time
 import pdb
+from datetime import datetime
+now = datetime.now()
+curr_date=now.strftime("%Y%m%d")
 
 mem = 36
-gpu_n = 2
+gpu_n = 1
 run_time = "5-00:00:00"
 
 #subj info
@@ -18,14 +21,16 @@ study_dir = f'/user_data/vayzenbe/GitHub_Repos/kornet/modelling'
 
 
 stim_dir = f'/lab_data/behrmannlab/image_sets/'
+stim_dir =f'/user_data/vayzenbe/image_sets/'
 
 model_dir = f'/user_data/vayzenbe/GitHub_Repos/vonenet'
 
 #training info
-model_arch = ['cornets_r']
+model_arch = ['cornet_ff','cornet_s']
 
-train_types = ['stylized-ecoset']
-suf = '_blur'
+train_types = ['imagenet-sketch']
+train_types = ['ecoset']
+suf = ''
 
 def setup_sbatch(job_name, script_name):
     sbatch_setup = f"""#!/bin/bash -l
@@ -50,7 +55,7 @@ def setup_sbatch(job_name, script_name):
 #SBATCH --time {run_time}
 
 # Exclude
-#SBATCH --exclude=mind-1-34
+#SBATCH --exclude=mind-1-1
 
 # Standard output and error log
 #SBATCH --output={study_dir}/slurm_out/{job_name}.out
@@ -99,13 +104,13 @@ os.remove(f"{job_name}.sh") """
 for model in model_arch:
     for train_type in train_types:
         
-        job_name = f'{model}_{train_type}{suf}'
+        job_name = f'{model}_{train_type}{suf}_{curr_date}'
         print(job_name)
         
         #os.remove(f"{job_name}.sh")
         
         f = open(f"{job_name}.sh", "a")
-        script_name = f'python {study_dir}/train.py --data {stim_dir}/{train_type}/ -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --workers 4 --blur True'
+        script_name = f'python {study_dir}/train.py --data {stim_dir}/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --workers 4 -b 128'
         f.writelines(setup_sbatch(job_name,script_name))
         
         
