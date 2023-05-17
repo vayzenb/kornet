@@ -1,6 +1,0 @@
-Duration,resp.keys,resp.corr,resp.rt,pracTrials.thisRepN,pracTrials.thisTrialN,pracTrials.thisN,pracTrials.thisIndex,pracTrials.ran,objLabel,imFile,distractLabel,corr,participant,date,expName,psychopyVersion,OS,frameRate,,Corr,objDistract,py_duration,trials.thisRepN,trials.thisTrialN,trials.thisN,trials.thisIndex,trials.ran,objNum,animType,condition
-0.3,left,1,18.09338,0,0,0,3,1,motorcycle,Stim/Prac (4).jpg,skateboard,left,1003,2021-06-02_12h41.35.693,KorNet_kid_deleted,2020.2.4,MacIntel,60,1003,,,,,,,,,,,
-0.3,right,1,1.651605,0,1,1,1,1,castle,Stim/Prac (2).png,car,right,1003,2021-06-02_12h41.35.693,KorNet_kid_deleted,2020.2.4,MacIntel,60,1003,,,,,,,,,,,
-0.3,right,0,1.47056,0,2,2,0,1,shoe,Stim/Prac (1).jpg,phone,left,1003,2021-06-02_12h41.35.693,KorNet_kid_deleted,2020.2.4,MacIntel,60,1003,,,,,,,,,,,
-0.3,right,1,77.52505,0,3,3,2,1,balloon,Stim/Prac (3).jpg,computer,right,1003,2021-06-02_12h41.35.693,KorNet_kid_deleted,2020.2.4,MacIntel,60,1003,,,,,,,,,,,
-0.3,right,1,5.2441,,,,,,umbrella,Stim/OBJ (47)_IC.png,,,1003,2021-06-02_12h41.35.693,KorNet_kid_deleted,2020.2.4,MacIntel,60,1003,right,kite,0.30022,0,0,0,29,1,47,Inanimate,3
