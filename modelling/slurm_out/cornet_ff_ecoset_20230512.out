@@ -302,3 +302,54 @@ Epoch: 15 	Training Loss: 2.581179 	Validation Loss: 137.976650 Test Accuracy: 0
 /home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
   warnings.warn(str(msg))
 Epoch: 16 	Training Loss: 2.569970 	Validation Loss: 134.353791 Test Accuracy: 0.002
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/Image.py:3167: DecompressionBombWarning: Image size (100000000 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/Image.py:3167: DecompressionBombWarning: Image size (111224503 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+Epoch: 17 	Training Loss: 2.558091 	Validation Loss: 118.296171 Test Accuracy: 0.002
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/Image.py:3167: DecompressionBombWarning: Image size (111224503 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/Image.py:3167: DecompressionBombWarning: Image size (100000000 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+Epoch: 18 	Training Loss: 2.546878 	Validation Loss: 114.934076 Test Accuracy: 0.002
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/Image.py:3167: DecompressionBombWarning: Image size (100000000 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/Image.py:3167: DecompressionBombWarning: Image size (89603607 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/Image.py:3167: DecompressionBombWarning: Image size (111224503 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+slurmstepd: error: *** JOB 1601444 ON mind-1-3 CANCELLED AT 2023-05-17T12:02:27 DUE TO TIME LIMIT ***

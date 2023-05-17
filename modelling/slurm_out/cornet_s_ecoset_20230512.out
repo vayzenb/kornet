@@ -168,3 +168,25 @@ Epoch: 8 	Training Loss: 3.045085 	Validation Loss: 24.513966 Test Accuracy: 0.0
   warnings.warn(str(msg))
 /home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/Image.py:3167: DecompressionBombWarning: Image size (111224503 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
   warnings.warn(
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+Epoch: 9 	Training Loss: 3.021243 	Validation Loss: 26.631961 Test Accuracy: 0.003
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/Image.py:3167: DecompressionBombWarning: Image size (111224503 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/Image.py:3167: DecompressionBombWarning: Image size (100000000 pixels) exceeds limit of 89478485 pixels, could be decompression bomb DOS attack.
+  warnings.warn(
+slurmstepd: error: *** JOB 1601445 ON mind-1-3 CANCELLED AT 2023-05-17T12:02:27 DUE TO TIME LIMIT ***

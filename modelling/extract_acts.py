@@ -12,6 +12,8 @@ sys.path.insert(1, cornet_dir)
 import vonenet
 import cornet
 from torchvision.models import convnext_large, ConvNeXt_Large_Weights, vit_b_16, ViT_B_16_Weights
+from torchvision.models import resnet50, ResNet50_Weights, resnext50_32x4d, ResNeXt50_32x4d_Weights
+from torchvision.models import alexnet, AlexNet_Weights, vgg19, VGG19_Weights
 import torch
 
 import torch.nn as nn
@@ -30,11 +32,10 @@ train_set = 'imagenet_sketch'
 
 #layer = ['avgpool','avgpool','ln',['decoder','avgpool']]
 
-model_archs = ['cornets','cornets_ff','vit','convnext']
-model_archs = ['cornet_s','cornet_z', 'cornets']
+model_arch = sys.argv[1]
 
 stim_folder = glob(f'{stim_dir}/*')
-suf = '_pretrained'
+suf = ''
 
 def load_model(model_arch):    
     """
@@ -43,40 +44,66 @@ def load_model(model_arch):
     if model_arch == 'cornets':
         model = vonenet.get_model(model_arch='cornets', pretrained=True).module
         layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
-
-    elif model_arch == 'cornets_ff':
-        model = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
-        layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
+        transform = torchvision.transforms.Compose([
+                torchvision.transforms.Resize(224),
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
+                                                 std=[0.5, 0.5, 0.5])])
 
     elif model_arch == 'cornet_s':
         model = cornet.get_model('s', pretrained=True).module
         layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
 
-    elif model_arch == 'cornet_z':
-        model = cornet.get_model('z', pretrained=True).module
-        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
-        
+        transform = torchvision.transforms.Compose([
+                torchvision.transforms.Resize(224),
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                 std=[0.229, 0.224, 0.225])])
 
     elif model_arch == 'convnext':
-        model = convnext_large(weights=None)
+        model = convnext_large(weights=ConvNeXt_Large_Weights.DEFAULT)
         transform = ConvNeXt_Large_Weights.IMAGENET1K_V1.transforms()
         layer_call = "getattr(getattr(model,'module'),'avgpool')"
+
     elif model_arch == 'vit':
-        model = vit_b_16(weights=None)
+        model = vit_b_16(weights=ViT_B_16_Weights.DEFAULT)
         transform = ViT_B_16_Weights.DEFAULT.transforms()
         layer_call = "getattr(getattr(getattr(model,'module'),'encoder'),'ln')"
         #layer_call = "getattr(getattr(getattr(getattr(getattr(getattr(model,'module'),'encoder'),'layers'),'encoder_layer_11'),'mlp'),'3')"
 
+    elif model_arch == 'resnet50':
+        model = resnet50(weights=ResNet50_Weights.DEFAULT)
+        transform = ResNet50_Weights.DEFAULT.transforms()
+        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
+    
+    elif model_arch == 'resnext50':
+        model = resnext50_32x4d(weights=ResNeXt50_32x4d_Weights.DEFAULT)
+        transform = ResNeXt50_32x4d_Weights.DEFAULT.transforms()
+        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
+    
+    elif model_arch == 'alexnet':
+        model = alexnet(weights=AlexNet_Weights.DEFAULT)
+        transform = AlexNet_Weights.DEFAULT.transforms()
 
-    if 'cornet' in model_arch:
+    elif model_arch == 'vgg19':
+        model = vgg19(weights=VGG19_Weights.DEFAULT)
+        transform = VGG19_Weights.DEFAULT.transforms()
 
-        transform = torchvision.transforms.Compose([
-                torchvision.transforms.Resize(256),
-                torchvision.transforms.CenterCrop(224),
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                                                 std=[0.5, 0.5, 0.5]),
-            ])
+    elif model_arch == 'ShapeNet':
+        model = resnet50(weights=None)
+        checkpoint = torch.load('Weights/ShapeNet_ResNet50_Weights.pth.tar')
+        model.load_state_dict(checkpoint)
+        transform = ResNet50_Weights.DEFAULT.transforms()
+        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
+
+    elif model_arch == 'SayCam':
+        model = resnext50_32x4d(weights=None)
+        #model = torch.nn.DataParallel(model)
+        #model.fc = torch.nn.Linear(in_features=2048, out_features=n_out, bias=True)
+        checkpoint = torch.load('Weights/SayCam_ResNext_Weights.pth.tar')
+        model.load_state_dict(checkpoint)
+
+        
 
     model = torch.nn.DataParallel(model).cuda()
 
@@ -156,16 +183,16 @@ def extract_acts(model, image_dir, transform, layer_call):
 
 
 
-for model_type in model_archs:
-    model, transform, layer_call = load_model(model_type)
 
-    for cat_dir in stim_folder:
-        cat_name = cat_dir.split('/')[-1]
-        print(model_type, cat_name)
-        acts = extract_acts(model, cat_dir, transform, layer_call)
+model, transform, layer_call = load_model(model_arch)
 
-        
-        
-        np.save(f'{curr_dir}/modelling/acts/{model_type}{suf}_{cat_name}.npy', acts)
-        #np.savetxt(f'{curr_dir}/modelling/acts/{model_type}_{cat_name}_labels.txt', label_list)
-        
+for cat_dir in stim_folder:
+    cat_name = cat_dir.split('/')[-1]
+    print(model_arch, cat_name)
+    acts = extract_acts(model, cat_dir, transform, layer_call)
+
+    
+    
+    np.save(f'{curr_dir}/modelling/acts/{model_arch}{suf}_{cat_name}.npy', acts)
+    #np.savetxt(f'{curr_dir}/modelling/acts/{model_type}_{cat_name}_labels.txt', label_list)
+    
