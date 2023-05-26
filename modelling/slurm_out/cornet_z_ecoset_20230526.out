@@ -1,0 +1,12 @@
+libs loaded
+cornet_z_ecoset
+cornet_z_ecoset
+starting training...
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Truncated File Read
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))
+/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/PIL/TiffImagePlugin.py:858: UserWarning: Corrupt EXIF data.  Expecting to read 2 bytes but only got 0. 
+  warnings.warn(str(msg))

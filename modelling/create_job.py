@@ -24,7 +24,7 @@ study_dir = f'/user_data/vayzenbe/GitHub_Repos/kornet/modelling'
 
 stim_dir = f'/lab_data/behrmannlab/image_sets/'
 stim_dir =f'/user_data/vayzenbe/image_sets/'
-stim_dir =f'/lab_data/plautlab/imagesets/ecoset'
+stim_dir =f'/lab_data/plautlab/imagesets/'
 
 model_dir = f'/user_data/vayzenbe/GitHub_Repos/vonenet'
 
@@ -112,7 +112,7 @@ if decode_script == True:
             time.sleep(wait_time*60)
             n_job = 0
 
-model_arch = ['cornet_ff']
+model_arch = ['cornet_z']
 
 train_script = True
 if train_script == True:

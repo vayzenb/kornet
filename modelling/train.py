@@ -146,6 +146,11 @@ def load_model(model_arch):
         norm_mean=[0.485, 0.456, 0.406]
         norm_std=[0.229, 0.224, 0.225]
 
+    elif model_arch == 'cornet_z':
+        model = cornet.get_model('z',pretrained=False).module
+        norm_mean=[0.485, 0.456, 0.406]
+        norm_std=[0.229, 0.224, 0.225]
+
     
     model = torch.nn.DataParallel(model).cuda()
 
