@@ -31,6 +31,9 @@ import random
 from glob import glob as glob
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
+
+from model_loader import load_model as load_model
+
 now = datetime.now()
 curr_date=now.strftime("%Y%m%d")
 

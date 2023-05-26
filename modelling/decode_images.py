@@ -6,6 +6,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.svm import SVC
 from sklearn.naive_bayes import GaussianNB
+from sklearn.linear_model import RidgeClassifierCV
 import pdb
 import scipy.stats as stats
 from glob import glob as glob
@@ -22,10 +23,10 @@ categories = class_list['category'].unique()
 
 conditions = ['Outline', 'Pert', 'IC']
 
-model_archs = ['cornets','cornets_ff','convnext', 'vit']
-model_archs = ['cornet_s_pretrained', 'cornet_z_pretrained', 'cornets_pretrained']
+model_archs = ['vonecornet_s','cornet_s','voneresnet', 'vit','convnext','resnet50','resnext50','alexnet','vgg19', 'ShapeNet','SayCam']
+model_archs = ['SayCam']
 
-k_folds = 10
+k_folds = 15
 train_n = 50
 
 for model in model_archs:
@@ -79,8 +80,8 @@ for model in model_archs:
 
 
                             train_acts = np.vstack((train_acts1[0:train_n,:], train_acts2[0:train_n,:]))
-                            clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
-                            
+                            #clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
+                            clf = RidgeClassifierCV()
                             
                             #create empty train array for labels
                             label_list = np.zeros((1,train_n))

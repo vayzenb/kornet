@@ -1,0 +1,13 @@
+libraries loaded...
+Traceback (most recent call last):
+  File "/user_data/vayzenbe/GitHub_Repos/kornet/modelling/extract_acts.py", line 199, in <module>
+    model, transform, layer_call = load_model(model_arch)
+  File "/user_data/vayzenbe/GitHub_Repos/kornet/modelling/extract_acts.py", line 105, in load_model
+    checkpoint = torch.load(f'{weights_dir}/ShapeNet_ResNet50_Weights.pth.tar')
+  File "/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/torch/serialization.py", line 699, in load
+    with _open_file_like(f, 'rb') as opened_file:
+  File "/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/torch/serialization.py", line 230, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+  File "/home/vayzenbe/anaconda3/envs/ml/lib/python3.9/site-packages/torch/serialization.py", line 211, in __init__
+    super(_open_file, self).__init__(open(name, mode))
+FileNotFoundError: [Errno 2] No such file or directory: '/lab_data/behrmannlab/vlad/kornet/modelling/weights/ShapeNet_ResNet50_Weights.pth.tar'
