@@ -1,0 +1,38 @@
+libs loaded
+vonenet_ff_ecoset
+vonenet_ff_ecoset
+Neuronal distributions gabor parameters
+Model:  VOneCORnet-S feedforward
+=> loading checkpoint '/lab_data/behrmannlab/vlad/kornet/modelling/weights/vonenet_ff_ecoset_checkpoint_1.pth.tar'
+=> loaded checkpoint '/lab_data/behrmannlab/vlad/kornet/modelling/weights/vonenet_ff_ecoset_checkpoint_1.pth.tar' (epoch 7)
+starting training...
+Epoch: 7 	Training Loss: 3.173031 	Validation Loss: 3.639249 Test Accuracy: 0.265
+Epoch: 8 	Training Loss: 3.162319 	Validation Loss: 3.753172 Test Accuracy: 0.251
+Epoch: 9 	Training Loss: 3.157543 	Validation Loss: 3.687727 Test Accuracy: 0.259
+Epoch: 10 	Training Loss: 3.151448 	Validation Loss: 3.717716 Test Accuracy: 0.256
+Epoch: 11 	Training Loss: 3.145013 	Validation Loss: 3.579130 Test Accuracy: 0.268
+Epoch: 12 	Training Loss: 3.140299 	Validation Loss: 3.701102 Test Accuracy: 0.257
+Epoch: 13 	Training Loss: 3.136640 	Validation Loss: 3.657978 Test Accuracy: 0.260
+Epoch: 14 	Training Loss: 3.132226 	Validation Loss: 3.694296 Test Accuracy: 0.256
+Epoch: 15 	Training Loss: 3.130217 	Validation Loss: 3.470260 Test Accuracy: 0.289
+Epoch: 16 	Training Loss: 3.125646 	Validation Loss: 3.556184 Test Accuracy: 0.275
+Epoch: 17 	Training Loss: 2.540441 	Validation Loss: 2.692009 Test Accuracy: 0.426
+Epoch: 18 	Training Loss: 2.411708 	Validation Loss: 2.612928 Test Accuracy: 0.438
+Epoch: 19 	Training Loss: 2.373187 	Validation Loss: 2.614507 Test Accuracy: 0.439
+Epoch: 20 	Training Loss: 2.355699 	Validation Loss: 2.633241 Test Accuracy: 0.436
+Epoch: 21 	Training Loss: 2.348217 	Validation Loss: 2.641006 Test Accuracy: 0.433
+Epoch: 22 	Training Loss: 2.341316 	Validation Loss: 2.642530 Test Accuracy: 0.436
+Epoch: 23 	Training Loss: 2.335619 	Validation Loss: 2.601975 Test Accuracy: 0.443
+Epoch: 24 	Training Loss: 2.330552 	Validation Loss: 2.630034 Test Accuracy: 0.436
+Epoch: 25 	Training Loss: 2.322846 	Validation Loss: 2.596894 Test Accuracy: 0.444
+Epoch: 26 	Training Loss: 2.316587 	Validation Loss: 2.594464 Test Accuracy: 0.443
+Epoch: 27 	Training Loss: 2.073531 	Validation Loss: 2.321274 Test Accuracy: 0.498
+Epoch: 28 	Training Loss: 2.019778 	Validation Loss: 2.289884 Test Accuracy: 0.504
+Epoch: 29 	Training Loss: 1.996819 	Validation Loss: 2.263159 Test Accuracy: 0.509
+Epoch: 30 	Training Loss: 1.976634 	Validation Loss: 2.235402 Test Accuracy: 0.514
+Epoch: 31 	Training Loss: 1.963075 	Validation Loss: 2.235336 Test Accuracy: 0.516
+Epoch: 32 	Training Loss: 1.949667 	Validation Loss: 2.239775 Test Accuracy: 0.515
+Epoch: 33 	Training Loss: 1.938126 	Validation Loss: 2.212172 Test Accuracy: 0.518
+Epoch: 34 	Training Loss: 1.927756 	Validation Loss: 2.202443 Test Accuracy: 0.518
+Epoch: 35 	Training Loss: 1.918304 	Validation Loss: 2.201536 Test Accuracy: 0.523
+slurmstepd: error: *** JOB 1610189 ON mind-1-1 CANCELLED AT 2023-06-03T20:36:01 DUE TO TIME LIMIT ***

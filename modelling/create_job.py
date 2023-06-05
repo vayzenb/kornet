@@ -11,8 +11,9 @@ from datetime import datetime
 now = datetime.now()
 curr_date=now.strftime("%Y%m%d")
 
-mem = 36
-gpu_n = 1
+mem = 48
+gpu_n = 2
+cpu_n = 8
 run_time = "5-00:00:00"
 n_jobs = 5
 wait_time = 30
@@ -32,8 +33,7 @@ model_dir = f'/user_data/vayzenbe/GitHub_Repos/vonenet'
 model_arch = ['cornet_ff','cornet_s']
 
 train_types = ['imagenet-sketch']
-train_types = ['ecoset']
-suf = ''
+
 
 def setup_sbatch(job_name, script_name):
     sbatch_setup = f"""#!/bin/bash -l
@@ -48,7 +48,7 @@ def setup_sbatch(job_name, script_name):
 # Submit job to cpu queue                
 #SBATCH -p gpu
 
-#SBATCH --cpus-per-task=4
+#SBATCH --cpus-per-task={cpu_n}
 #SBATCH --gres=gpu:{gpu_n}
 
 # Job memory request
@@ -58,10 +58,17 @@ def setup_sbatch(job_name, script_name):
 #SBATCH --time {run_time}
 
 # Exclude
-#SBATCH --exclude=mind-1-1
+#SBATCH --exclude=mind-1-28
+
+#to use
+# SBATCH--nodelist=mind-1-7
 
 # Standard output and error log
 #SBATCH --output={study_dir}/slurm_out/{job_name}.out
+
+
+mkdir -p /scratch/vayzenbe/
+rsync -a {stim_dir}/{train_type} /scratch/vayzenbe/
 
 conda activate ml
 
@@ -112,7 +119,12 @@ if decode_script == True:
             time.sleep(wait_time*60)
             n_job = 0
 
-model_arch = ['cornet_z']
+
+stim_dir =f'/user_data/vayzenbe/image_sets/'
+#stim_dir =f'/lab_data/plautlab/imagesets/'
+train_types = ['stylized-ecoset']
+suf = ''
+model_arch = ['vonenet_ff']
 
 train_script = True
 if train_script == True:
@@ -125,7 +137,8 @@ if train_script == True:
             #os.remove(f"{job_name}.sh")
             
             f = open(f"{job_name}.sh", "a")
-            script_name = f'python {study_dir}/train.py --data {stim_dir}/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 5 --workers 4 -b 128'
+            script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128'
+            #script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128 --resume /lab_data/behrmannlab/vlad/kornet/modelling/weights/{model}_{train_type}_checkpoint_1.pth.tar'
             f.writelines(setup_sbatch(job_name,script_name))
             
             

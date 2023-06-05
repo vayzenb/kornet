@@ -1,0 +1,17 @@
+libs loaded
+vonenet_ff_ecoset
+vonenet_ff_ecoset
+Neuronal distributions gabor parameters
+Model:  VOneCORnet-S feedforward
+=> loading checkpoint '/lab_data/behrmannlab/vlad/kornet/modelling/weights/vonenet_ff_ecoset_checkpoint_1.pth.tar'
+=> loaded checkpoint '/lab_data/behrmannlab/vlad/kornet/modelling/weights/vonenet_ff_ecoset_checkpoint_1.pth.tar' (epoch 35)
+starting training...
+Epoch: 35 	Training Loss: 1.908259 	Validation Loss: 2.212660 Test Accuracy: 0.518
+Epoch: 36 	Training Loss: 1.899738 	Validation Loss: 2.188312 Test Accuracy: 0.521
+Epoch: 37 	Training Loss: 1.891958 	Validation Loss: 2.191891 Test Accuracy: 0.523
+Epoch: 38 	Training Loss: 1.885287 	Validation Loss: 2.186071 Test Accuracy: 0.526
+Epoch: 39 	Training Loss: 1.879774 	Validation Loss: 2.197438 Test Accuracy: 0.522
+Epoch: 40 	Training Loss: 1.872096 	Validation Loss: 2.185240 Test Accuracy: 0.522
+Epoch: 41 	Training Loss: 1.867532 	Validation Loss: 2.188330 Test Accuracy: 0.524
+Epoch: 42 	Training Loss: 1.860422 	Validation Loss: 2.182980 Test Accuracy: 0.524
+Epoch: 43 	Training Loss: 1.853457 	Validation Loss: 2.186269 Test Accuracy: 0.523

@@ -1,0 +1,11 @@
+libs loaded
+vonenet_ff_ecoset
+vonenet_ff_ecoset
+Neuronal distributions gabor parameters
+Model:  VOneCORnet-S feedforward
+starting training...
+Epoch: 1 	Training Loss: 4.458398 	Validation Loss: 4.634678 Test Accuracy: 0.123
+Epoch: 2 	Training Loss: 3.744714 	Validation Loss: 4.260282 Test Accuracy: 0.172
+Epoch: 3 	Training Loss: 3.494761 	Validation Loss: 3.901910 Test Accuracy: 0.223
+Epoch: 4 	Training Loss: 3.378251 	Validation Loss: 3.738986 Test Accuracy: 0.246
+Epoch: 5 	Training Loss: 3.311640 	Validation Loss: 3.990050 Test Accuracy: 0.215

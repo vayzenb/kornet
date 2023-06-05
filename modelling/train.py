@@ -23,6 +23,8 @@ from torchvision import transforms
 from torchvision import datasets
 import numpy as np
 import torchvision.transforms.functional as TF
+import warnings
+warnings.filterwarnings("ignore")
 
 import pdb
 import model_funcs
@@ -108,7 +110,7 @@ else:
 
 
 print(model_type)
-writer = SummaryWriter(f'{curr_dir}/modelling/runs/{model_type}_{curr_date}')
+writer = SummaryWriter(f'{curr_dir}/modelling/runs/{model_type}')
 best_prec1 = 0
 
 def save_checkpoint(state, is_best, epoch, filename='checkpoint.pth.tar'):
@@ -120,7 +122,7 @@ def save_checkpoint(state, is_best, epoch, filename='checkpoint.pth.tar'):
 
 #Image directory
 
-n_classes = len(glob(f'{args.data}/train/*'))
+
 
 def load_model(model_arch):    
     """
@@ -175,7 +177,6 @@ criterion.cuda()
 transform  = torchvision.transforms.Compose([
     torchvision.transforms.RandomResizedCrop(224),
     torchvision.transforms.RandomHorizontalFlip(),
-    torchvision.transforms.GaussianBlur(kernal_size, sigma=sigma),
     torchvision.transforms.ToTensor(),
     torchvision.transforms.Normalize(mean=norm_mean, std=norm_std)])
 
@@ -245,7 +246,6 @@ for epoch in range(start_epoch, n_epochs+1):
         transform  = torchvision.transforms.Compose([
                 torchvision.transforms.RandomResizedCrop(224),
                 torchvision.transforms.RandomHorizontalFlip(),
-                torchvision.transforms.GaussianBlur(kernal_size, sigma=sigma),
                 torchvision.transforms.ToTensor(),
                 torchvision.transforms.Normalize(mean=norm_mean, std=norm_std)
             ])
@@ -263,10 +263,10 @@ for epoch in range(start_epoch, n_epochs+1):
     model.train()
     
     for data, target in trainloader:
-        data = TF.adjust_saturation(data, saturate)
+        #data = TF.adjust_saturation(data, saturate)
 
         # move tensors to GPU if CUDA is available       
-        data, target = data.cuda(), target.cuda()
+        data, target = data.cuda(non_blocking = True), target.cuda(non_blocking = True)
             
         # clear the gradients of all optimized variables
         optimizer.zero_grad()
@@ -304,7 +304,7 @@ for epoch in range(start_epoch, n_epochs+1):
         for data, target in valloader:
             # move tensors to GPU if CUDA is available
             
-            data, target = data.cuda(), target.cuda()
+            data, target = data.cuda(non_blocking = True), target.cuda(non_blocking = True)
             # forward pass: compute predicted outputs by passing inputs to the model
             output = model(data)
             # calculate the batch loss

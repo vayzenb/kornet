@@ -1,0 +1,26 @@
+libs loaded
+vonenet_r_ecoset
+vonenet_r_ecoset
+Neuronal distributions gabor parameters
+Model:  VOneCORnet-S
+=> loading checkpoint '/lab_data/behrmannlab/vlad/kornet/modelling/weights/vonenet_r_ecoset_checkpoint_1.pth.tar'
+=> loaded checkpoint '/lab_data/behrmannlab/vlad/kornet/modelling/weights/vonenet_r_ecoset_checkpoint_1.pth.tar' (epoch 4)
+starting training...
+Epoch: 4 	Training Loss: 2.875101 	Validation Loss: 3.282576 Test Accuracy: 0.313
+Epoch: 5 	Training Loss: 2.824511 	Validation Loss: 3.466663 Test Accuracy: 0.292
+Epoch: 6 	Training Loss: 2.786597 	Validation Loss: 3.427961 Test Accuracy: 0.295
+Epoch: 7 	Training Loss: 2.759543 	Validation Loss: 3.237246 Test Accuracy: 0.324
+Epoch: 8 	Training Loss: 2.740398 	Validation Loss: 3.709579 Test Accuracy: 0.272
+Epoch: 9 	Training Loss: 2.723026 	Validation Loss: 3.139727 Test Accuracy: 0.342
+Epoch: 10 	Training Loss: 2.710776 	Validation Loss: 3.214682 Test Accuracy: 0.327
+Epoch: 11 	Training Loss: 2.698537 	Validation Loss: 3.179617 Test Accuracy: 0.334
+Epoch: 12 	Training Loss: 2.688797 	Validation Loss: 3.050941 Test Accuracy: 0.357
+Epoch: 13 	Training Loss: 2.679169 	Validation Loss: 3.038227 Test Accuracy: 0.355
+Epoch: 14 	Training Loss: 2.026995 	Validation Loss: 2.131528 Test Accuracy: 0.528
+Epoch: 15 	Training Loss: 1.889532 	Validation Loss: 2.061070 Test Accuracy: 0.540
+Epoch: 16 	Training Loss: 1.847397 	Validation Loss: 2.071639 Test Accuracy: 0.539
+Epoch: 17 	Training Loss: 1.827245 	Validation Loss: 2.062261 Test Accuracy: 0.543
+Epoch: 18 	Training Loss: 1.819682 	Validation Loss: 2.045498 Test Accuracy: 0.545
+Epoch: 19 	Training Loss: 1.810012 	Validation Loss: 2.045615 Test Accuracy: 0.544
+Epoch: 20 	Training Loss: 1.803794 	Validation Loss: 2.061188 Test Accuracy: 0.544
+Epoch: 21 	Training Loss: 1.795534 	Validation Loss: 2.084562 Test Accuracy: 0.538
