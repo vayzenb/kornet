@@ -78,6 +78,7 @@ args = parser.parse_args()
 image_type = args.data
 image_type=image_type.split('/')[-1]
 model_type = f'{args.arch}_{image_type}{suf}'
+
 print(model_type)
 
 model_funcs.reproducible_results(args.rand_seed)
@@ -171,6 +172,8 @@ optimizer = torch.optim.SGD(model.parameters(),
 
 #lr updated given some rule
 scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size)
+
+
 criterion = nn.CrossEntropyLoss()
 criterion.cuda()
 
@@ -190,8 +193,11 @@ if args.resume:
         best_prec1 = checkpoint['best_prec1']
         model.load_state_dict(checkpoint['state_dict'])
         optimizer.load_state_dict(checkpoint['optimizer'])
+        scheduler.load_state_dict(checkpoint['scheduler'])
         print("=> loaded checkpoint '{}' (epoch {})"
                 .format(args.resume, checkpoint['epoch']))
+        
+        
     else:
         print("=> no checkpoint found at '{}'".format(args.resume))
 
@@ -350,6 +356,7 @@ for epoch in range(start_epoch, n_epochs+1):
                 'state_dict': model.state_dict(),
                 'best_prec1': best_prec1,
                 'optimizer' : optimizer.state_dict(),
+                'scheduler' : scheduler.state_dict()
             }, is_best,epoch,filename=f'{model_type}')
 
 

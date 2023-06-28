@@ -14,7 +14,14 @@ curr_date=now.strftime("%Y%m%d")
 mem = 48
 gpu_n = 2
 cpu_n = 8
-run_time = "5-00:00:00"
+run_time = "10-00:00:00"
+n_jobs = 5
+wait_time = 30
+
+mem = 24
+gpu_n = 1
+cpu_n = 4
+run_time = "1-00:00:00"
 n_jobs = 5
 wait_time = 30
 
@@ -26,6 +33,7 @@ study_dir = f'/user_data/vayzenbe/GitHub_Repos/kornet/modelling'
 stim_dir = f'/lab_data/behrmannlab/image_sets/'
 stim_dir =f'/user_data/vayzenbe/image_sets/'
 stim_dir =f'/lab_data/plautlab/imagesets/'
+stim_dir = f'/lab_data/behrmannlab/image_sets/'
 
 model_dir = f'/user_data/vayzenbe/GitHub_Repos/vonenet'
 
@@ -60,15 +68,14 @@ def setup_sbatch(job_name, script_name):
 # Exclude
 #SBATCH --exclude=mind-1-28
 
-#to use
+# to use
 # SBATCH--nodelist=mind-1-7
 
 # Standard output and error log
 #SBATCH --output={study_dir}/slurm_out/{job_name}.out
 
 
-mkdir -p /scratch/vayzenbe/
-rsync -a {stim_dir}/{train_type} /scratch/vayzenbe/
+
 
 conda activate ml
 
@@ -97,8 +104,8 @@ def copy_data(train_type):
 
 
 model_arch = ['vonecornet_s','cornet_s','voneresnet', 'vit','convnext','resnet50','resnext50','alexnet','vgg19', 'ShapeNet','SayCam']
-
-decode_script = False
+model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset']
+decode_script = True
 if decode_script == True:
     n_job = 0
     for model in model_arch:
@@ -120,13 +127,13 @@ if decode_script == True:
             n_job = 0
 
 
-stim_dir =f'/user_data/vayzenbe/image_sets/'
+stim_dir = f'/lab_data/behrmannlab/image_sets/'
 #stim_dir =f'/lab_data/plautlab/imagesets/'
 train_types = ['stylized-ecoset']
 suf = ''
 model_arch = ['vonenet_ff']
 
-train_script = True
+train_script = False
 if train_script == True:
     for model in model_arch:
         for train_type in train_types:
@@ -135,9 +142,12 @@ if train_script == True:
             print(job_name)
             
             #os.remove(f"{job_name}.sh")
+            #mkdir -p /scratch/vayzenbe/
+            #rsync -a {stim_dir}/{train_type} /scratch/vayzenbe/
+            #echo "copied {stim_dir}/{train_type}"
             
             f = open(f"{job_name}.sh", "a")
-            script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128'
+            script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128 --rand_seed 2'
             #script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128 --resume /lab_data/behrmannlab/vlad/kornet/modelling/weights/{model}_{train_type}_checkpoint_1.pth.tar'
             f.writelines(setup_sbatch(job_name,script_name))
             

@@ -1,0 +1,35 @@
+copied /lab_data/behrmannlab/image_sets//stylized-ecoset
+libs loaded
+vonenet_ff_stylized-ecoset
+vonenet_ff_stylized-ecoset
+Neuronal distributions gabor parameters
+Model:  VOneCORnet-S feedforward
+=> loading checkpoint '/lab_data/behrmannlab/vlad/kornet/modelling/weights/vonenet_ff_stylized-ecoset_checkpoint_1.pth.tar'
+=> loaded checkpoint '/lab_data/behrmannlab/vlad/kornet/modelling/weights/vonenet_ff_stylized-ecoset_checkpoint_1.pth.tar' (epoch 45)
+starting training...
+Epoch: 45 	Training Loss: 3.750255 	Validation Loss: 4.061023 Test Accuracy: 0.221
+Epoch: 46 	Training Loss: 3.751045 	Validation Loss: 4.052784 Test Accuracy: 0.222
+Epoch: 47 	Training Loss: 3.752435 	Validation Loss: 4.071075 Test Accuracy: 0.221
+Epoch: 48 	Training Loss: 3.752653 	Validation Loss: 4.068782 Test Accuracy: 0.221
+Epoch: 49 	Training Loss: 3.750641 	Validation Loss: 4.062258 Test Accuracy: 0.221
+Epoch: 50 	Training Loss: 3.749367 	Validation Loss: 4.052471 Test Accuracy: 0.222
+Epoch: 51 	Training Loss: 3.750318 	Validation Loss: 4.050293 Test Accuracy: 0.223
+Epoch: 52 	Training Loss: 3.749223 	Validation Loss: 4.066298 Test Accuracy: 0.220
+Epoch: 53 	Training Loss: 3.746657 	Validation Loss: 4.063117 Test Accuracy: 0.222
+Epoch: 54 	Training Loss: 3.743454 	Validation Loss: 4.058073 Test Accuracy: 0.225
+Epoch: 55 	Training Loss: 3.746408 	Validation Loss: 4.054339 Test Accuracy: 0.225
+Epoch: 56 	Training Loss: 3.742323 	Validation Loss: 4.068200 Test Accuracy: 0.221
+Epoch: 57 	Training Loss: 3.738059 	Validation Loss: 4.051411 Test Accuracy: 0.222
+Epoch: 58 	Training Loss: 3.734092 	Validation Loss: 4.070725 Test Accuracy: 0.221
+Epoch: 59 	Training Loss: 3.727751 	Validation Loss: 4.069582 Test Accuracy: 0.221
+Epoch: 60 	Training Loss: 3.719395 	Validation Loss: 4.059613 Test Accuracy: 0.222
+Epoch: 61 	Training Loss: 3.710919 	Validation Loss: 4.070716 Test Accuracy: 0.219
+Epoch: 62 	Training Loss: 3.695061 	Validation Loss: 4.054942 Test Accuracy: 0.225
+Epoch: 63 	Training Loss: 3.678144 	Validation Loss: 4.057575 Test Accuracy: 0.222
+Epoch: 64 	Training Loss: 3.649672 	Validation Loss: 4.063030 Test Accuracy: 0.222
+Epoch: 65 	Training Loss: 3.733087 	Validation Loss: 4.064586 Test Accuracy: 0.222
+Epoch: 66 	Training Loss: 3.729826 	Validation Loss: 4.048240 Test Accuracy: 0.225
+Epoch: 67 	Training Loss: 3.729189 	Validation Loss: 4.062256 Test Accuracy: 0.224
+Epoch: 68 	Training Loss: 3.726235 	Validation Loss: 4.064710 Test Accuracy: 0.221
+Epoch: 69 	Training Loss: 3.722757 	Validation Loss: 4.066804 Test Accuracy: 0.222
+Epoch: 70 	Training Loss: 3.720816 	Validation Loss: 4.052350 Test Accuracy: 0.224

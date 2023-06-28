@@ -24,3 +24,16 @@ Epoch: 18 	Training Loss: 1.819682 	Validation Loss: 2.045498 Test Accuracy: 0.5
 Epoch: 19 	Training Loss: 1.810012 	Validation Loss: 2.045615 Test Accuracy: 0.544
 Epoch: 20 	Training Loss: 1.803794 	Validation Loss: 2.061188 Test Accuracy: 0.544
 Epoch: 21 	Training Loss: 1.795534 	Validation Loss: 2.084562 Test Accuracy: 0.538
+Epoch: 22 	Training Loss: 1.785787 	Validation Loss: 2.057084 Test Accuracy: 0.544
+Epoch: 23 	Training Loss: 1.777572 	Validation Loss: 2.070472 Test Accuracy: 0.543
+Epoch: 24 	Training Loss: 1.515751 	Validation Loss: 1.743198 Test Accuracy: 0.611
+Epoch: 25 	Training Loss: 1.452004 	Validation Loss: 1.719239 Test Accuracy: 0.618
+Epoch: 26 	Training Loss: 1.423326 	Validation Loss: 1.689381 Test Accuracy: 0.623
+Epoch: 27 	Training Loss: 1.400698 	Validation Loss: 1.664348 Test Accuracy: 0.628
+Epoch: 28 	Training Loss: 1.386536 	Validation Loss: 1.658878 Test Accuracy: 0.628
+Epoch: 29 	Training Loss: 1.371009 	Validation Loss: 1.664262 Test Accuracy: 0.628
+Epoch: 30 	Training Loss: 1.359891 	Validation Loss: 1.643277 Test Accuracy: 0.632
+Epoch: 31 	Training Loss: 1.346459 	Validation Loss: 1.633906 Test Accuracy: 0.633
+Epoch: 32 	Training Loss: 1.335641 	Validation Loss: 1.643745 Test Accuracy: 0.629
+Epoch: 33 	Training Loss: 1.326123 	Validation Loss: 1.640130 Test Accuracy: 0.633
+slurmstepd: error: *** JOB 1610542 ON mind-1-7 CANCELLED AT 2023-06-07T11:56:19 DUE TO TIME LIMIT ***

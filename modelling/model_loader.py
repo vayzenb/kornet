@@ -17,11 +17,46 @@ import torch
 import torchvision
 
 
-weights_dir = f'{curr_dir}/modelling/weights'
+weights_dir = f'/lab_data/behrmannlab/vlad/kornet/modelling/weights/modelling/weights'
 def load_model(model_arch):    
     """
     load model
     """
+    
+
+    if model_arch == 'vonenet_r_ecoset' or model_arch =='vonenet_r_stylized-ecoset':
+        model = vonenet.get_model(model_arch='cornets', pretrained=False).module
+        layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
+        transform = torchvision.transforms.Compose([
+                torchvision.transforms.Resize((224,224)),
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
+                                                 std=[0.5, 0.5, 0.5])])
+        
+
+    elif model_arch == 'vonenet_ff_ecoset' or model_arch =='vonenet_ff_stylized-ecoset':
+        model = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
+        layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
+        transform = torchvision.transforms.Compose([
+                torchvision.transforms.Resize((224,224)),
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
+                                                 std=[0.5, 0.5, 0.5])])
+
+
+    elif model_arch == 'vonenet_r_stylized-ecoset':
+
+        model = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
+        layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
+        transform = torchvision.transforms.Compose([
+                torchvision.transforms.Resize((224,224)),
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
+                                                 std=[0.5, 0.5, 0.5])])
+       
+
+    
+
     if model_arch == 'vonecornet_s':
         model = vonenet.get_model(model_arch='cornets', pretrained=True).module
         layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
@@ -40,7 +75,8 @@ def load_model(model_arch):
                 torchvision.transforms.ToTensor(),
                 torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                                  std=[0.229, 0.224, 0.225])])
-    
+        
+
     if model_arch == 'voneresnet':
         model = vonenet.get_model(model_arch='resnet50', pretrained=True).module
         layer_call = "getattr(getattr(getattr(model,'module'),'model'),'avgpool')"
@@ -101,7 +137,8 @@ def load_model(model_arch):
     model = torch.nn.DataParallel(model).cuda()
 
     
-    #checkpoint = torch.load(f'{weights_dir}/{model_arch}_{train_set}_best_1.pth.tar')
-    #model.load_state_dict(checkpoint['state_dict'])
+    if model_arch == 'vonenet_r_ecoset' or model_arch =='vonenet_r_stylized-ecoset' or model_arch =='vonenet_ff_ecoset' or model_arch =='vonenet_ff_stylized-ecoset':
+        checkpoint = torch.load(f'{weights_dir}/{model_arch}_best_1.pth.tar')
+        model.load_state_dict(checkpoint['state_dict'])
 
     return model, transform, layer_call
