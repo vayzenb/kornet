@@ -24,14 +24,17 @@ categories = class_list['category'].unique()
 conditions = ['Outline', 'Pert', 'IC']
 
 model_archs = ['vonecornet_s','cornet_s','voneresnet', 'vit','convnext','resnet50','resnext50','alexnet','vgg19', 'ShapeNet','SayCam']
-model_archs = ['SayCam']
-
+model_archs = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset']
+print(model_archs)
 k_folds = 15
 train_n = 50
+
+
 
 for model in model_archs:
 
     for cond in conditions:
+
         summary_df = pd.DataFrame(columns = ['model','obj1', 'obj2','condition','train_acc','acc'])
         #load acts
         test_acts = np.load(f'{act_dir}/{model}_{cond}.npy')

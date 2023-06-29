@@ -17,7 +17,7 @@ import torch
 import torchvision
 
 
-weights_dir = f'/lab_data/behrmannlab/vlad/kornet/modelling/weights/modelling/weights'
+weights_dir = f'/lab_data/behrmannlab/vlad/kornet/modelling/weights'
 def load_model(model_arch):    
     """
     load model

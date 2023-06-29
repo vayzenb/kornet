@@ -18,10 +18,10 @@ from model_loader import load_model as load_model
 print('libraries loaded...')
 
 
-stim_dir = f'{curr_dir}/stim/test'
-#stim_dir = f'/user_data/vayzenbe/image_sets/kornet_images'
+#stim_dir = f'{curr_dir}/stim/test'
+stim_dir = f'/user_data/vayzenbe/image_sets/kornet_images'
 
-train_set = 'imagenet_sketch'
+#train_set = 'imagenet_sketch'
 
 #layer = ['avgpool','avgpool','ln',['decoder','avgpool']]
 
