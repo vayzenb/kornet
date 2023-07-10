@@ -17,13 +17,14 @@ cpu_n = 8
 run_time = "10-00:00:00"
 n_jobs = 5
 wait_time = 30
-
+'''
 mem = 24
 gpu_n = 1
 cpu_n = 4
 run_time = "1-00:00:00"
 n_jobs = 5
 wait_time = 30
+'''
 
 #subj info
 #stim info
@@ -105,7 +106,7 @@ def copy_data(train_type):
 
 model_arch = ['vonecornet_s','cornet_s','voneresnet', 'vit','convnext','resnet50','resnext50','alexnet','vgg19', 'ShapeNet','SayCam']
 model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset']
-decode_script = True
+decode_script = False
 if decode_script == True:
     n_job = 0
     for model in model_arch:
@@ -133,7 +134,7 @@ train_types = ['stylized-ecoset']
 suf = ''
 model_arch = ['vonenet_ff']
 
-train_script = False
+train_script = True
 if train_script == True:
     for model in model_arch:
         for train_type in train_types:
