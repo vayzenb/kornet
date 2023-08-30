@@ -109,9 +109,9 @@ rdm_summary = pd.DataFrame(columns = ['obj1','obj2'] + summary_cols)
 
 n = 0
 #loop through all stim pairs
-for stim1 in stim_classes['object']:
-    for stim2 in stim_classes['object']:
-        if stim1 != stim2:
+for stim1, cat1 in zip(stim_classes['object'], stim_classes['category']):
+    for stim2, cat2 in zip(stim_classes['object'], stim_classes['category']):
+        if stim1 != stim2 and cat1 == cat2:
             # set object for that row
             rdm_summary.loc[n,'obj1'] = stim1
             rdm_summary.loc[n,'obj2'] = stim2
