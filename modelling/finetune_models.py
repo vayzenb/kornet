@@ -25,6 +25,7 @@ import model_funcs
 
 import random
 from glob import glob as glob
+from model_loader import load_model as load_model
 #from torch.utils.tensorboard import SummaryWriter
 
 print('libs loaded')
@@ -94,53 +95,12 @@ best_prec1 = 0
 
 n_classes = len(glob(f'{args.data}/train/*'))
 
-def load_model(model_arch):    
-    """
-    load model
-    """
-    if model_arch == 'cornets':
-        model = vonenet.get_model(model_arch='cornets', pretrained=True).module
 
-    elif model_arch == 'cornets_ff':
-        model = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
-
-    elif model_arch == 'convnext':
-        model = convnext_large(weights=ConvNeXt_Large_Weights.IMAGENET1K_V1)
-        transform = ConvNeXt_Large_Weights.IMAGENET1K_V1.transforms()
-    elif model_arch == 'vit':
-        model = vit_b_16(weights=ViT_B_16_Weights.DEFAULT)
-        transform = ViT_B_16_Weights.DEFAULT.transforms()
-  
-
-
-    if model_arch == 'cornets' or model_arch == 'cornets_ff':
-        norm_mean = [0.5, 0.5, 0.5]
-        norm_std = [0.5, 0.5, 0.5]
-        transform = torchvision.transforms.Compose([
-                torchvision.transforms.RandomResizedCrop(224),
-                torchvision.transforms.RandomHorizontalFlip(),
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.RandomInvert(.5),
-                torchvision.transforms.Normalize(mean=norm_mean, std=norm_std)
-            ])
-    else:
-        transform = torchvision.transforms.Compose([
-                transform,
-                torchvision.transforms.RandomInvert(.5) #this is because the test images have white lines
-            ])
-
-    model = torch.nn.DataParallel(model).cuda()
-
-    if model_arch == 'cornets_ff':
-        checkpoint = torch.load('/lab_data/behrmannlab/vlad/kornet/modelling/weights/cornets_ff_epoch_70.pth.tar')
-        model.load_state_dict(checkpoint['state_dict'])
-
-    return model, transform
 
 '''
 load model
 '''
-model, transform = load_model(args.arch)
+model, transform, _ = load_model(args.arch)
 
 optimizer = torch.optim.SGD(model.parameters(),
                                          lr,
@@ -178,7 +138,7 @@ trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_s
 valloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, num_workers =  args.workers, pin_memory=True)
 
 
- 
+
 
 print('starting training...')
 valid_loss_min = np.Inf # track change in validation loss

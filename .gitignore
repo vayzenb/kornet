@@ -5,3 +5,6 @@ stim/Train/
 #Ignore weights file
 modelling/weights
 modelling/acts
+
+#ignore slurm file
+modelling/slurm_out

@@ -11,13 +11,15 @@ import pdb
 import scipy.stats as stats
 from glob import glob as glob
 
+
+suf = '_imagenet_sketch'
 curr_dir = '/user_data/vayzenbe/GitHub_Repos/kornet'
 act_dir = f'{curr_dir}/modelling/acts'
 results_dir = f'{curr_dir}/results'
 test_label = np.asanyarray([0, 1])
 
 #load classes from csv
-class_list = pd.read_csv(f'{curr_dir}/stim/KN_Classes.csv')
+class_list = pd.read_csv(f'{curr_dir}/stim/kornet_classes.csv')
 #determine categories (animate, inanimate, etc)
 categories = class_list['category'].unique()
 
@@ -25,6 +27,8 @@ conditions = ['Outline', 'Pert', 'IC']
 
 model_archs = ['vonecornet_s','cornet_s','voneresnet', 'vit','convnext','resnet50','resnext50','alexnet','vgg19', 'ShapeNet','SayCam']
 model_archs = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset']
+model_archs = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext']
+
 print(model_archs)
 k_folds = 15
 train_n = 50
@@ -32,6 +36,7 @@ train_n = 50
 
 
 for model in model_archs:
+    model= model + suf
 
     for cond in conditions:
 
@@ -83,8 +88,8 @@ for model in model_archs:
 
 
                             train_acts = np.vstack((train_acts1[0:train_n,:], train_acts2[0:train_n,:]))
-                            #clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
-                            clf = RidgeClassifierCV()
+                            clf = make_pipeline(StandardScaler(), SVC(gamma='auto'))
+                            #clf = RidgeClassifierCV()
                             
                             #create empty train array for labels
                             label_list = np.zeros((1,train_n))
@@ -118,7 +123,7 @@ for model in model_archs:
                         curr_data = pd.Series([model, cat_name1, cat_name2, cond, avg_train, avg_test], index = summary_df.columns)
                         summary_df = pd.concat([summary_df, curr_data.to_frame().T],ignore_index=True)
 
-        summary_df.to_csv(f'{results_dir}/{model}_{cond}_summary.csv', index = False)
+        summary_df.to_csv(f'{results_dir}/models/{model}_{cond}_summary.csv', index = False)
         
                     
 

@@ -18,14 +18,30 @@ from model_loader import load_model as load_model
 print('libraries loaded...')
 
 
-#stim_dir = f'{curr_dir}/stim/test'
+stim_dir = f'{curr_dir}/stim/test'
 stim_dir = f'/user_data/vayzenbe/image_sets/kornet_images'
 
 #train_set = 'imagenet_sketch'
 
 #layer = ['avgpool','avgpool','ln',['decoder','avgpool']]
 
+#check length of sys.argv
+if len(sys.argv) < 2:
+    print('please specify model architecture and weights')
+    sys.exit()
+
 model_arch = sys.argv[1]
+
+#specify weights file
+if len(sys.argv) == 2:
+    weights = None
+    model_name = model_arch
+elif len(sys.argv) == 3:
+    weights = sys.argv[2]
+    model_name = model_arch + '_' + weights
+
+
+    
 
 stim_folder = glob(f'{stim_dir}/*')
 suf = ''
@@ -110,6 +126,6 @@ for cat_dir in stim_folder:
 
     
     
-    np.save(f'{curr_dir}/modelling/acts/{model_arch}{suf}_{cat_name}.npy', acts)
+    np.save(f'{curr_dir}/modelling/acts/{model_name}{suf}_{cat_name}.npy', acts)
     #np.savetxt(f'{curr_dir}/modelling/acts/{model_type}_{cat_name}_labels.txt', label_list)
     

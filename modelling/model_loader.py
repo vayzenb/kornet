@@ -18,7 +18,7 @@ import torchvision
 
 
 weights_dir = f'/lab_data/behrmannlab/vlad/kornet/modelling/weights'
-def load_model(model_arch):    
+def load_model(model_arch, weights=None):    
     """
     load model
     """
@@ -42,18 +42,7 @@ def load_model(model_arch):
                 torchvision.transforms.ToTensor(),
                 torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
                                                  std=[0.5, 0.5, 0.5])])
-
-
-    elif model_arch == 'vonenet_r_stylized-ecoset':
-
-        model = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
-        layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
-        transform = torchvision.transforms.Compose([
-                torchvision.transforms.Resize((224,224)),
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                                                 std=[0.5, 0.5, 0.5])])
-       
+      
 
     
 
@@ -75,6 +64,25 @@ def load_model(model_arch):
                 torchvision.transforms.ToTensor(),
                 torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                                  std=[0.229, 0.224, 0.225])])
+    elif model_arch == 'cornet_ff':
+        model = cornet.get_model('ff', pretrained=True).module
+        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
+
+        transform = torchvision.transforms.Compose([
+                torchvision.transforms.Resize((224,224)),
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                 std=[0.229, 0.224, 0.225])])
+        
+    elif model_arch == 'cornet_z':
+        model = cornet.get_model('z', pretrained=True).module
+        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
+
+        transform = torchvision.transforms.Compose([
+                torchvision.transforms.Resize((224,224)),
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                    std=[0.229, 0.224, 0.225])])
         
 
     if model_arch == 'voneresnet':
@@ -139,6 +147,10 @@ def load_model(model_arch):
     
     if model_arch == 'vonenet_r_ecoset' or model_arch =='vonenet_r_stylized-ecoset' or model_arch =='vonenet_ff_ecoset' or model_arch =='vonenet_ff_stylized-ecoset':
         checkpoint = torch.load(f'{weights_dir}/{model_arch}_best_1.pth.tar')
+        model.load_state_dict(checkpoint['state_dict'])
+
+    if weights is not None:
+        checkpoint = torch.load(f'{weights_dir}/{model_arch}_{weights}_best_1.pth.tar')
         model.load_state_dict(checkpoint['state_dict'])
 
     return model, transform, layer_call
