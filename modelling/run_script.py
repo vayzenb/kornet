@@ -91,10 +91,10 @@ if decode_script == True:
                 os.remove(f"{study_dir}/{job_name}.sh")
                 n_job += 1
 
-                if n >= pause_crit:
+                if n_job >= pause_crit:
                     #wait X minutes
                     time.sleep(pause_time*60)
-                    n = 0 
+                    n_job = 0 
 
 
 
