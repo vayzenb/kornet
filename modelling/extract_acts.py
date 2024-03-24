@@ -31,6 +31,7 @@ if len(sys.argv) < 2:
     sys.exit()
 
 model_arch = sys.argv[1]
+model_name = model_arch
 
 '''
 #specify weights file
@@ -118,15 +119,23 @@ def extract_acts(model, image_dir, transform, layer_call):
 
 
 
-model, transform, layer_call = load_model(model_arch)
+
 
 for cat_dir in stim_folder:
+    model, transform, layer_call = load_model(model_arch)
     cat_name = cat_dir.split('/')[-1]
     print(model_arch, cat_name)
     acts = extract_acts(model, cat_dir, transform, layer_call)
 
     
+
+    
     
     np.save(f'{curr_dir}/modelling/acts/{model_name}{suf}_{cat_name}.npy', acts)
+    #clear memory
+    del acts
+    del model
+    #clear cache
+    torch.cuda.empty_cache()
     #np.savetxt(f'{curr_dir}/modelling/acts/{model_type}_{cat_name}_labels.txt', label_list)
     
