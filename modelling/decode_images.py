@@ -24,9 +24,10 @@ from glob import glob as glob
 
 #load args
 model_arch = sys.argv[1] #which architecture to use
-train_n = int(sys.argv[2]) #how many images to use t otrain the classifier
-classifier = sys.argv[3] #which classifier to use
-k_folds = int(sys.argv[4]) #how many folds to use for cross validation
+weights = sys.argv[2] #which weights to use
+train_n = int(sys.argv[3]) #how many images to use t otrain the classifier
+classifier = sys.argv[4] #which classifier to use
+k_folds = int(sys.argv[5]) #how many folds to use for cross validation
 print(model_arch)
 
 

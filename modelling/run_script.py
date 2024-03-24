@@ -17,8 +17,7 @@ from datetime import datetime
 
 mem = 24
 run_time = "2-00:00:00"
-pause_time = 6 #how much time (minutes) to wait between jobs
-pause_crit = 4 #how many jobs to do before pausing
+
 
 study_dir = f'{git_dir}/modelling'
 
@@ -79,14 +78,20 @@ conda activate ml
 model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
 model_arch = model_arch + model_arch
 #create list of of len(model_arch) with imagenet_sketch in each element
-weights = [''] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
+model_weights = [None] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
 
 
 acts_script = True
+
+pause_time = 6 #how much time (minutes) to wait between jobs
+pause_crit = 4 #how many jobs to do before pausing
 if acts_script == True:
     n_job = 0
-    for model in model_arch:
-        job_name = f'{model}{weights}_extract_acts'
+    for model, weights in zip(model_arch, model_weights):
+        if weights != None:
+            job_name = f'{model}_{weights}_extract_acts'
+        else:
+            job_name = f'{model}_extract_acts'
         print(job_name)
         #os.remove(f"{job_name}.sh")
 
@@ -106,12 +111,13 @@ if acts_script == True:
 
 
 
-decode_script = False
+decode_script = True
 
 model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
-model_arch = model_arch + model_arch
-#create list of of len(model_arch) with imagenet_sketch in each element
-weights = [''] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
+
+#append '_imagenet_sketch' to each string in model_arch
+model_arch = model_arch+ [f'{model}_imagenet_sketch' for model in model_arch]
+
 
 
 classifiers = ['SVM', 'Ridge', 'NB', 'KNN', 'logistic', 'NC']
@@ -119,9 +125,12 @@ classifiers = ['SVM', 'Ridge', 'NB', 'KNN', 'logistic', 'NC']
 train_ns = [50, 100, 150, 200, 250, 300]
 fold_n = 20 
 
+pause_time = 15 #how much time (minutes) to wait between jobs
+pause_crit = 10 #how many jobs to do before pausing
+
 if decode_script == True:
     n_job = 0
-    for model in model_arch:
+    for model in model_arch, weights:
         for classifier in classifiers:
             for train_n in train_ns:
             
