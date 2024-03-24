@@ -15,10 +15,10 @@ import time
 import pdb
 from datetime import datetime
 
-mem = 24
-run_time = "1-00:00:00"
-pause_time = 15 #how much time (minutes) to wait between jobs
-pause_crit = 10 #how many jobs to do before pausing
+mem = 48
+run_time = "2-00:00:00"
+pause_time = 30 #how much time (minutes) to wait between jobs
+pause_crit = 4 #how many jobs to do before pausing
 
 study_dir = f'{git_dir}/modelling'
 
@@ -29,9 +29,9 @@ def setup_sbatch(job_name, script_name):
 #SBATCH --mail-type=ALL
 #SBATCH --mail-user=vayzenb@cmu.edu
 # Submit job to cpu queue                
-#SBATCH -p cpu
-#SBATCH --cpus-per-task=2
-#SBATCH --gres=gpu:0
+#SBATCH -p gpu
+#SBATCH --cpus-per-task=4
+#SBATCH --gres=gpu:1
 # Job memory request
 #SBATCH --mem={mem}gb
 # Time limit days-hrs:min:sec
@@ -52,7 +52,7 @@ conda activate ml
 model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'vit','convnext']
 
 
-acts_script = False
+acts_script = True
 if acts_script == True:
     n_job = 0
     for model in model_arch:
@@ -61,10 +61,22 @@ if acts_script == True:
         #os.remove(f"{job_name}.sh")
 
         script_name = f'python {study_dir}/extract_acts.py {model} imagenet_sketch'
-        subprocess.run(script_name, check=True)
+        f = open(f'{study_dir}/{job_name}.sh', 'a')
+        f.writelines(setup_sbatch(job_name, script_name))
+        f.close()
+
+        subprocess.run(['sbatch', f"{study_dir}/{job_name}.sh"],check=True, capture_output=True, text=True)
+        os.remove(f"{study_dir}/{job_name}.sh")
+        n_job += 1
+
+        if n_job >= pause_crit:
+            #wait X minutes
+            time.sleep(pause_time*60)
+            n_job = 0 
 
 
-decode_script = True
+
+decode_script = False
 
 classifiers = ['SVM', 'Ridge', 'NB', 'KNN', 'logistic', 'NC']
 

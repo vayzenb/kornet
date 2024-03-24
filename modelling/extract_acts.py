@@ -27,11 +27,12 @@ stim_dir = f'/user_data/vayzenbe/image_sets/kornet_images'
 
 #check length of sys.argv
 if len(sys.argv) < 2:
-    print('please specify model architecture and weights')
+    print('please specify model architecture')
     sys.exit()
 
 model_arch = sys.argv[1]
 
+'''
 #specify weights file
 if len(sys.argv) == 2:
     weights = None
@@ -39,7 +40,7 @@ if len(sys.argv) == 2:
 elif len(sys.argv) == 3:
     weights = sys.argv[2]
     model_name = model_arch + '_' + weights
-
+'''
 
     
 
@@ -84,7 +85,7 @@ def extract_acts(model, image_dir, transform, layer_call):
 
     
     test_dataset = load_stim.load_stim(image_dir, transform=transform)
-    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=12, shuffle=False, num_workers = 4, pin_memory=True)
+    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers = 4, pin_memory=True)
     
 
 
