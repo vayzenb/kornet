@@ -41,11 +41,11 @@ for obj_class, source in zip(classlist['object'], classlist['source1']):
     #check number of images in target folder
     if os.path.exists(f'{target_dir}/{obj_class}'):
         target_num = len(glob(f'{target_dir}/{obj_class}/*'))
+        print(f'{obj_class} has {target_num} images')
         if target_num >= im_num:
             print(f'{obj_class} has {target_num} images, skipping')
             continue
-        else:
-            im_num = im_num - target_num
+        
 
 
     #check if im_list is empty or folder exists
@@ -56,6 +56,7 @@ for obj_class, source in zip(classlist['object'], classlist['source1']):
     else:
         print('Copying images for: ' + obj_class)
 
+
         #make target folder
         os.makedirs(f'{target_dir}/{obj_class}', exist_ok=True)        
 
@@ -63,9 +64,19 @@ for obj_class, source in zip(classlist['object'], classlist['source1']):
         random.shuffle(im_list)
         #pdb.set_trace()
         #copy first N objects
-        for im in im_list[:im_num]:
-            #copy image to target
-            shutil.copy(im, f'{target_dir}/{obj_class}')
+        
+        for im in im_list:
+            #check if target has correct number of images
+            #if not, keepy copying
+            target_num = len(glob(f'{target_dir}/{obj_class}/*'))
+            if target_num >= im_num:
+                print(f'{obj_class} has {target_num} images, skipping')
+                break
+            else:
+                #copy image to target
+                shutil.copy(im, f'{target_dir}/{obj_class}')
+
+
             
 
 

@@ -33,7 +33,7 @@ if len(sys.argv) < 2:
 model_arch = sys.argv[1]
 model_name = model_arch
 
-'''
+
 #specify weights file
 if len(sys.argv) == 2:
     weights = None
@@ -41,11 +41,14 @@ if len(sys.argv) == 2:
 elif len(sys.argv) == 3:
     weights = sys.argv[2]
     model_name = model_arch + '_' + weights
-'''
+
 
     
 
 stim_folder = glob(f'{stim_dir}/*')
+#only keep folder with bicycle
+stim_folder = [x for x in stim_folder if 'bicycle' in x]
+
 suf = ''
 
 
