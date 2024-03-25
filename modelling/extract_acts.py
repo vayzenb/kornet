@@ -33,7 +33,7 @@ if len(sys.argv) < 2:
 model_arch = sys.argv[1]
 model_name = model_arch
 
-
+'''
 #specify weights file
 if len(sys.argv) == 2:
     weights = None
@@ -41,13 +41,13 @@ if len(sys.argv) == 2:
 elif len(sys.argv) == 3:
     weights = sys.argv[2]
     model_name = model_arch + '_' + weights
-
+'''
 
     
 
 stim_folder = glob(f'{stim_dir}/*')
 #only keep folder with bicycle
-stim_folder = [x for x in stim_folder if 'bicycle' in x]
+#stim_folder = [x for x in stim_folder if 'bicycle' in x]
 
 suf = ''
 
@@ -89,7 +89,7 @@ def extract_acts(model, image_dir, transform, layer_call):
 
     
     test_dataset = load_stim.load_stim(image_dir, transform=transform)
-    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=1, shuffle=False, num_workers = 4, pin_memory=True)
+    testloader = torch.utils.data.DataLoader(test_dataset, batch_size=24, shuffle=False, num_workers = 4, pin_memory=True)
     
 
 
@@ -121,11 +121,15 @@ def extract_acts(model, image_dir, transform, layer_call):
 
 
 
-
+model, transform, layer_call = load_model(model_arch)
 
 
 for cat_dir in stim_folder:
-    model, transform, layer_call = load_model(model_arch)
+    #VIT runs out of memory quickly, so we delete and reload it after every iteration
+    if model_arch == 'vit':
+        model, transform, layer_call = load_model(model_arch)
+
+    
     cat_name = cat_dir.split('/')[-1]
     print(model_arch, cat_name)
     acts = extract_acts(model, cat_dir, transform, layer_call)
@@ -137,8 +141,11 @@ for cat_dir in stim_folder:
     np.save(f'{curr_dir}/modelling/acts/{model_name}{suf}_{cat_name}.npy', acts)
     #clear memory
     del acts
-    del model
+    
     #clear cache
     torch.cuda.empty_cache()
+
+    if model_arch == 'vit':
+        del model
     #np.savetxt(f'{curr_dir}/modelling/acts/{model_type}_{cat_name}_labels.txt', label_list)
     

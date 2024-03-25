@@ -419,3 +419,5 @@ vonenet_r_ecoset,NB,200,IC,anim,turtle,frog,0.6
 vonenet_r_ecoset,NB,200,IC,anim,turtle,hand,0.25
 vonenet_r_ecoset,NB,200,IC,anim,turtle,rabbit,0.5
 vonenet_r_ecoset,NB,200,IC,anim,turtle,squirrel,0.5
+  nim,turtle,rabbit,0.5
+vonenet_r_ecoset,NB,200,IC,anim,turtle,squirrel,0.475

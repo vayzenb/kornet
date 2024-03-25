@@ -419,3 +419,10 @@ vonenet_r_ecoset,NC,250,IC,anim,turtle,frog,1.0
 vonenet_r_ecoset,NC,250,IC,anim,turtle,hand,0.925
 vonenet_r_ecoset,NC,250,IC,anim,turtle,rabbit,1.0
 vonenet_r_ecoset,NC,250,IC,anim,turtle,squirrel,1.0
+                                                                                      IC,anim,turtle,elephant,0.6
+vonenet_r_ecoset,NC,250,IC,anim,turtle,fish,0.625
+vonenet_r_ecoset,NC,250,IC,anim,turtle,foot,0.45
+vonenet_r_ecoset,NC,250,IC,anim,turtle,frog,0.625
+vonenet_r_ecoset,NC,250,IC,anim,turtle,hand,0.6
+vonenet_r_ecoset,NC,250,IC,anim,turtle,rabbit,0.5
+vonenet_r_ecoset,NC,250,IC,anim,turtle,squirrel,0.6
