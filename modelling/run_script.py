@@ -16,7 +16,7 @@ import pdb
 from datetime import datetime
 
 mem = 24
-run_time = "2-00:00:00"
+run_time = "4-00:00:00"
 
 
 study_dir = f'{git_dir}/modelling'
@@ -113,47 +113,51 @@ decode_script = True
 
 model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
+model_arch = ['vit']
 
 #append '_imagenet_sketch' to each string in model_arch
 #model_arch = model_arch+ [f'{model}_imagenet_sketch' for model in model_arch]
 
-
+conds = ['Outline', 'Pert', 'IC']
 
 classifiers = ['SVM', 'Ridge', 'NB', 'KNN', 'logistic', 'NC']
+classifiers = ['SVM', 'logistic']
 
 train_ns = [5, 10, 25, 50, 100, 150, 200, 250, 300]
-train_ns = [150, 200, 250, 300]
+train_ns = [100, 150, 200, 250, 300]
 #train_ns = [5, 10, 25, 50, 100]
 fold_n = 20 
 
-pause_time = 10 #how much time (minutes) to wait between jobs
+pause_time = 30 #how much time (minutes) to wait between jobs
 pause_crit = 10 #how many jobs to do before pausing
 
 if decode_script == True:
     n_job = 0
-    for model in model_arch:
-        for classifier in classifiers:
-            for train_n in train_ns:
+    for cond in conds:
             
-                job_name = f'decode_{model}{classifier}_train{train_n}_fold{fold_n}'
-                print(job_name)
-                #os.remove(f"{job_name}.sh")
+        for model in model_arch:
+            for classifier in classifiers:
+                for train_n in train_ns:
+                
+                    job_name = f'decode_{model}{classifier}_train{train_n}_fold{fold_n}_{cond}'
+                    print(job_name)
+                    #os.remove(f"{job_name}.sh")
 
-                script_name = f'python {study_dir}/decode_images.py {model} {train_n} {classifier} {fold_n}'
+                    script_name = f'python {study_dir}/decode_images.py {model} {train_n} {classifier} {fold_n} {cond}'
 
-                f = open(f'{study_dir}/{job_name}.sh', 'a')
-                f.writelines(setup_sbatch_cpu(job_name, script_name))
-                f.close()
+                    f = open(f'{study_dir}/{job_name}.sh', 'a')
+                    f.writelines(setup_sbatch_cpu(job_name, script_name))
+                    f.close()
 
-                subprocess.run(['sbatch', f"{study_dir}/{job_name}.sh"],check=True, capture_output=True, text=True)
-                os.remove(f"{study_dir}/{job_name}.sh")
-                n_job += 1
+                    subprocess.run(['sbatch', f"{study_dir}/{job_name}.sh"],check=True, capture_output=True, text=True)
+                    os.remove(f"{study_dir}/{job_name}.sh")
+                    n_job += 1
 
-                if n_job >= pause_crit:
-                    #wait X minutes
-                    time.sleep(pause_time*60)
-                    n_job = 0 
+                    if n_job >= pause_crit:
+                        #wait X minutes
+                        time.sleep(pause_time*60)
+                        n_job = 0 
 
 
 
-        
+            
