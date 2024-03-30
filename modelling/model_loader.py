@@ -2,10 +2,13 @@ curr_dir = '/user_data/vayzenbe/GitHub_Repos/kornet'
 import sys
 vone_dir = '/user_data/vayzenbe/GitHub_Repos/vonenet'
 cornet_dir = '/user_data/vayzenbe/GitHub_Repos/CORnet'
-
+vit_dir = '/user_data/vayzenbe/GitHub_Repos/Cream/EfficientViT'
+sys.path.insert(1, curr_dir)
 sys.path.insert(1, vone_dir)
 sys.path.insert(1, cornet_dir)
-sys.path.insert(1,curr_dir)
+sys.path.insert(1, vit_dir)
+
+
 import vonenet
 import cornet
 from torchvision.models import convnext_large, ConvNeXt_Large_Weights, vit_b_16, ViT_B_16_Weights
@@ -139,6 +142,18 @@ def load_model(model_arch, weights=None):
         checkpoint = torch.load(f'{weights_dir}/SayCam_ResNext_Weights.pth.tar')
         model.load_state_dict(checkpoint)
         layer_call = "getattr(getattr(model,'module'),'avgpool')"
+
+    elif model_arch == 'Efficientvit':
+        from classification.model.build import EfficientViT_M0
+        model = EfficientViT_M0()
+
+        layer_call = "getattr(getattr(getattr(model,'module'),'head'),'bn')"
+        transform = torchvision.transforms.Compose([
+                        torchvision.transforms.Resize((224,224)),
+                        torchvision.transforms.ToTensor(),
+                        torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                            std=[0.229, 0.224, 0.225])])
+
 
         
 
