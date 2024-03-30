@@ -13,25 +13,23 @@ import torch.nn as nn
 import torch
 from classification.model.build import EfficientViT_M0
 import vonenet
+import pdb
 
 
 
 
-class MyEnsemble(nn.Module):
+class TwoStream(nn.Module):
     def __init__(self):
-        super(MyEnsemble, self).__init__()
+        super(TwoStream, self).__init__()
 
         #define dorsal model
         dorsal = EfficientViT_M0()
-        classifier = nn.Sequential(*list(dorsal.children())[-1])[:-1]
-        dorsal = nn.Sequential(*list(dorsal.children())[:-1])
-        #recomvbine model and classifier
-        dorsal = nn.Sequential(dorsal, classifier)
-        print(dorsal)
+        dorsal.head = nn.BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+        
 
         #define ventral model
         ventral = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
-        ventral = nn.Sequential(*list(ventral.children())[:-1], nn.Sequential(*list(ventral.model.children())[:-1]),nn.AdaptiveAvgPool2d(output_size=1))
+        ventral.model.decoder = nn.AdaptiveAvgPool2d(output_size=1)
 
 
         self.dorsal = dorsal
@@ -40,11 +38,12 @@ class MyEnsemble(nn.Module):
         
     def forward(self, x1, x2):
         x1 = self.ventral(x1)
-        print('ventral out', x1.shape)
+        x1 = torch.flatten(x1, 1)
+        
         x2 = self.dorsal(x2)
         
-        print('dorsal out', x2.shape)
+        
         x = torch.cat((x1, x2), dim=1)
-        print('concat out', x.shape)
+        
         x = self.classifier(x)
         return x
