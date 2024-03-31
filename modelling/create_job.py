@@ -33,15 +33,15 @@ study_dir = f'/user_data/vayzenbe/GitHub_Repos/kornet/modelling'
 
 stim_dir = f'/lab_data/behrmannlab/image_sets/'
 stim_dir =f'/user_data/vayzenbe/image_sets/'
-stim_dir =f'/lab_data/plautlab/imagesets/'
-stim_dir = f'/lab_data/behrmannlab/image_sets/'
+#stim_dir =f'/lab_data/plautlab/imagesets/'
+
 
 model_dir = f'/user_data/vayzenbe/GitHub_Repos/vonenet'
 
 #training info
 model_arch = ['cornet_ff','cornet_s']
 
-train_types = ['imagenet-sketch']
+train_types = ['ecoset','stylized-ecoset']
 
 
 def setup_sbatch(job_name, script_name):
@@ -69,9 +69,6 @@ def setup_sbatch(job_name, script_name):
 # Exclude
 #SBATCH --exclude=mind-1-28
 
-# to use
-# SBATCH--nodelist=mind-1-7
-
 # Standard output and error log
 #SBATCH --output={study_dir}/slurm_out/{job_name}.out
 
@@ -90,6 +87,12 @@ conda activate ml
 
 
 def copy_data(train_type):
+    #check whether train_type exists
+    if not os.path.exists(f'{stim_dir}/{train_type}'):
+        print(f'{stim_dir}/{train_type} does not exist')
+        return
+    
+
     try:
         #copy data
         subprocess.run(f'rsync -a {stim_dir}/{train_type} /scratch/vayzenbe/', shell=True, check=True)
@@ -107,7 +110,7 @@ model_arch = ['vonecornet_s','cornet_s','voneresnet', 'vit','convnext','resnet50
 model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'vit','convnext']
 
 model_arch = ['vit']
-acts_script = True
+acts_script = False
 if acts_script == True:
     n_job = 0
     for model in model_arch:
@@ -129,7 +132,7 @@ if acts_script == True:
             n_job = 0
 
 
-stim_dir = f'/lab_data/behrmannlab/image_sets/'
+
 #stim_dir =f'/lab_data/plautlab/imagesets/'
 train_types = ['ecoset','stylized-ecoset']
 suf = ''
@@ -179,7 +182,32 @@ if train_script == True:
 
 
 
-
+'''
+run two stream model
+'''
+train_type = 'ecoset'
+train_dir = copy_data(train_type)
+twostream_script = True
+if twostream_script == True:
+    job_name = f'twostream_ecoset_{curr_date}'
+    print(job_name)
+    
+    #os.remove(f"{job_name}.sh")
+    #mkdir -p /scratch/vayzenbe/
+    #rsync -a {stim_dir}/{train_type} /scratch/vayzenbe/
+    #echo "copied {stim_dir}/{train_type}"
+    
+    f = open(f"{job_name}.sh", "a")
+    #script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128 --rand_seed 2'
+    #script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128 --resume /lab_data/behrmannlab/vlad/kornet/modelling/weights/{model}_{train_type}_checkpoint_1.pth.tar'
+    script_name = f'python modelling/train_twostream.py --data {train_dir} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --epochs 30 --workers 8 -b 128'
+    f.writelines(setup_sbatch(job_name,script_name))
+    
+    
+    f.close()
+    
+    subprocess.run(['sbatch', f"{job_name}.sh"],check=True, capture_output=True, text=True)
+    os.remove(f"{job_name}.sh")
 
 
 

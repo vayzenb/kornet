@@ -47,7 +47,7 @@ parser.add_argument('--data', required=False,
                     default=None)
 parser.add_argument('-o', '--output_path', default=None,
                     help='path for storing ')
-parser.add_argument('--epochs', default=70, type=int,
+parser.add_argument('--epochs', default=50, type=int,
                     help='number of total epochs to run')
 parser.add_argument('-b', '--batch-size', default=128, type=int,
                     metavar='N', help='mini-batch size')
@@ -102,7 +102,8 @@ def save_checkpoint(state, is_best, epoch, filename='checkpoint.pth.tar'):
 #Image directory
 
 model = two_stream_nn.TwoStream()
-model = torch.nn.DataParallel(model).cuda()
+model = model.cuda()
+#model = torch.nn.DataParallel(model).cuda()
 
 '''
 load model
@@ -231,15 +232,12 @@ for epoch in range(start_epoch, n_epochs+1):
             
             ventral_data,dorsal_data, target = ventral_data.cuda(), dorsal_data.cuda(), target.cuda()
 
-            print(ventral_data.shape, dorsal_data.shape, target.shape)
+            
             # forward pass: compute predicted outputs by passing inputs to the model
             output = model(ventral_data, dorsal_data)
-            print(output.shape)
+            
             # calculate the batch loss
             loss = criterion(output, target)
-
-            print('got here')
-
 
             #writer.add_scalar("Supervised Raw Validation Loss", loss, nVal) #write to tensorboard
             #writer.flush()
@@ -277,7 +275,7 @@ for epoch in range(start_epoch, n_epochs+1):
     # save model if validation loss has decreased
     save_checkpoint({
                 'epoch': epoch,
-                'arch': args.arch,
+                'arch': model_type,
                 'state_dict': model.state_dict(),
                 'best_prec1': best_prec1,
                 'optimizer' : optimizer.state_dict(),
