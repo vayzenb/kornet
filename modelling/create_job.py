@@ -14,7 +14,7 @@ curr_date=now.strftime("%Y%m%d")
 mem = 48
 gpu_n = 1
 cpu_n = 4
-run_time = "10-00:00:00"
+run_time = "1-00:00:00"
 n_jobs = 4
 wait_time = 5
 '''
@@ -67,7 +67,7 @@ def setup_sbatch(job_name, script_name):
 #SBATCH --time {run_time}
 
 # Exclude
-#SBATCH --exclude=mind-1-28
+#SBATCH --exclude=mind-1-11,mind-1-23
 
 # Standard output and error log
 #SBATCH --output={study_dir}/slurm_out/{job_name}.out
@@ -186,10 +186,12 @@ if train_script == True:
 run two stream model
 '''
 train_type = 'ecoset'
-train_dir = copy_data(train_type)
+#train_dir = copy_data(train_type)
+train_dir = '/user_data/vayzenbe/image_sets/ecoset'
+suf = '_parallel'
 twostream_script = True
 if twostream_script == True:
-    job_name = f'twostream_ecoset_{curr_date}'
+    job_name = f'twostream{suf}_ecoset_{curr_date}'
     print(job_name)
     
     #os.remove(f"{job_name}.sh")

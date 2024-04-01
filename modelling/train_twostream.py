@@ -58,7 +58,7 @@ parser.add_argument('--rand_seed', default=1, type=int,
 parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 
-suf=''
+suf='_parallel'
 
 
 out_dir = '/lab_data/behrmannlab/vlad/kornet/modelling/weights'
@@ -69,7 +69,7 @@ args = parser.parse_args()
 
 image_type = args.data
 image_type=image_type.split('/')[-1]
-model_type = 'two_stream_nn'
+model_type = f'two_stream_nn{suf}'
 
 print(image_type)
 
@@ -102,8 +102,8 @@ def save_checkpoint(state, is_best, epoch, filename='checkpoint.pth.tar'):
 #Image directory
 
 model = two_stream_nn.TwoStream()
-model = model.cuda()
-#model = torch.nn.DataParallel(model).cuda()
+#model = model.cuda()
+model = torch.nn.DataParallel(model).cuda()
 
 '''
 load model
@@ -186,8 +186,11 @@ for epoch in range(start_epoch, n_epochs+1):
     # train the model #
     ###################
     model.train()
+    n = 0
     
     for ventral_data,dorsal_data, target in trainloader:
+        
+        n = n + 1
         #data = TF.adjust_saturation(data, saturate)
 
         # move tensors to GPU if CUDA is available       
