@@ -12,9 +12,9 @@ now = datetime.now()
 curr_date=now.strftime("%Y%m%d")
 
 mem = 48
-gpu_n = 1
-cpu_n = 4
-run_time = "1-00:00:00"
+gpu_n = 4
+cpu_n = 16
+run_time = "10-00:00:00"
 n_jobs = 4
 wait_time = 5
 '''
@@ -188,7 +188,7 @@ run two stream model
 train_type = 'ecoset'
 #train_dir = copy_data(train_type)
 train_dir = '/user_data/vayzenbe/image_sets/ecoset'
-suf = '_parallel'
+suf = ''
 twostream_script = True
 if twostream_script == True:
     job_name = f'twostream{suf}_ecoset_{curr_date}'
@@ -202,7 +202,7 @@ if twostream_script == True:
     f = open(f"{job_name}.sh", "a")
     #script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128 --rand_seed 2'
     #script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128 --resume /lab_data/behrmannlab/vlad/kornet/modelling/weights/{model}_{train_type}_checkpoint_1.pth.tar'
-    script_name = f'python modelling/train_twostream.py --data {train_dir} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --epochs 30 --workers 8 -b 128'
+    script_name = f'python modelling/train_twostream.py --data {train_dir} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --epochs 30 --workers 16 -b 128'
     f.writelines(setup_sbatch(job_name,script_name))
     
     

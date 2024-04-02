@@ -39,7 +39,7 @@ print('libs loaded')
 #Example call:
 #python modelling/train.py --data /user_data/vayzenbe/image_sets/ecoset -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch cornet_s -b 128 --blur True
 #python modelling/train.py --data /lab_data/behrmannlab/image_sets/stylized-ecoset -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch cornet_ff --blur True
-#python modelling/train_twostream.py --data '/user_data/vayzenbe/image_sets/development_images -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --epochs 10
+#python modelling/train_twostream.py --data /user_data/vayzenbe/image_sets/development_images -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --epochs 10
 
 parser = argparse.ArgumentParser(description='Model Training')
 parser.add_argument('--data', required=False,
@@ -149,9 +149,9 @@ transform_ventral = torchvision.transforms.Compose([
 
 transform_dorsal = torchvision.transforms.Compose([
                 torchvision.transforms.Resize((224,224)),
-                torchvision.transforms.ToTensor(),
                 torchvision.transforms.Grayscale(num_output_channels=3),
                 torchvision.transforms.GaussianBlur(kernel_size=35, sigma=15),
+                torchvision.transforms.ToTensor(),
                 torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                                  std=[0.229, 0.224, 0.225])])
 
