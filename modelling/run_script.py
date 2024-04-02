@@ -113,7 +113,7 @@ decode_script = True
 
 model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
-model_arch = ['vit']
+model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset']
 
 #append '_imagenet_sketch' to each string in model_arch
 #model_arch = model_arch+ [f'{model}_imagenet_sketch' for model in model_arch]
@@ -121,14 +121,15 @@ model_arch = ['vit']
 conds = ['Outline', 'Pert', 'IC']
 
 classifiers = ['SVM', 'Ridge', 'NB', 'KNN', 'logistic', 'NC']
-classifiers = ['SVM', 'logistic']
+classifiers = ['Ridge', 'NB', 'KNN', 'logistic', 'NC']
+#classifiers = ['SVM', 'logistic']
 
 train_ns = [5, 10, 25, 50, 100, 150, 200, 250, 300]
-train_ns = [100, 150, 200, 250, 300]
+#train_ns = [100, 150, 200, 250, 300]
 #train_ns = [5, 10, 25, 50, 100]
 fold_n = 20 
 
-pause_time = 30 #how much time (minutes) to wait between jobs
+pause_time = 2 #how much time (minutes) to wait between jobs
 pause_crit = 10 #how many jobs to do before pausing
 
 if decode_script == True:

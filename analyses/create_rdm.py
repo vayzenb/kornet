@@ -20,7 +20,7 @@ warnings.filterwarnings("ignore")
 data_dir = f'{git_dir}/data'
 results_dir = f'{git_dir}/results'
 fig_dir = f'{git_dir}/figures'
-
+model_dir = f'{git_dir}/modelling'
 
 sub_info = pd.read_csv(f'{data_dir}/sub_info.csv' )
 #remove subjects with NaNs in code field
@@ -97,6 +97,7 @@ def concat_all_subs():
 
 def compute_sub_rdm():
     print('Computing RDMs for all subs')
+    
 
     #load sub summary
     sub_summary = pd.read_csv(f'{results_dir}/all_sub_data.csv')
@@ -174,13 +175,53 @@ def compute_sub_rdm():
             
 
 
-concat_all_subs()
-compute_sub_rdm()
 
-'''
-Create model RDMs by calculating correlaiton between model activations for each object pair
-'''
 
-model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'ShapeNet','SayCam','convnext', 'vit']
+def compute_model_rdm():
 
-for model in model_arch:
+    '''
+    Create model RDMs by calculating correlaiton between model activations for each object pair
+    '''
+
+    model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'ShapeNet','SayCam','convnext', 'vit']
+
+    conds = ['Outline','Pert','IC']
+    cond_names = ['complete','perturbed','deleted']
+    #load rdm_summary
+    rdm_summary = pd.read_csv(f'{results_dir}/rdms/rdm_summary.csv')
+
+    for model in model_arch:
+        #loop through objects and calculate correlation between model activations
+
+        #load kornet objects 
+        for cond in conds:
+            #load objects act for that cat
+            acts = np.load(f'{model_dir}/acts/{model}_{cond}.npy')
+            
+
+            
+            model_corrs = []
+            for obj1, obj2 in zip(rdm_summary['obj1'], rdm_summary['obj2']):
+                #look up index from stim_classes for  obj1 and obj2
+                obj1_idx = stim_classes[stim_classes['object']==obj1].index[0]
+                acts1 = acts[obj1_idx,:]
+                obj2_idx = stim_classes[stim_classes['object']==obj2].index[0]
+                acts2 = acts[obj2_idx,:]
+
+
+                
+
+                #calculate correlation
+                corr = np.corrcoef(acts1, acts2)[0,1]*-1
+                #pdb.set_trace()
+
+                model_corrs.append(corr)
+
+            rdm_summary[f'{model}_{cond_names[conds.index(cond)]}'] = model_corrs
+
+    rdm_summary.to_csv(f'{results_dir}/rdms/rdm_summary.csv', index=False)
+
+
+#concat_all_subs()
+#compute_sub_rdm()
+compute_model_rdm()

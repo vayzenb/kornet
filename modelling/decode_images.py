@@ -138,6 +138,10 @@ for category in categories:
                     test_ims[1,:] = test_acts[img_num2,:]
 
 
+                    #run classify in parallel
+
+
+
                     #evaluate fold
                     score = classify(classifier, train_acts, label_list, test_ims, test_label)
 
