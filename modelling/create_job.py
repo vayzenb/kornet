@@ -12,8 +12,8 @@ now = datetime.now()
 curr_date=now.strftime("%Y%m%d")
 
 mem = 48
-gpu_n = 4
-cpu_n = 16
+gpu_n = 3
+cpu_n = 12
 run_time = "10-00:00:00"
 n_jobs = 4
 wait_time = 5
