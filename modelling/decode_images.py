@@ -45,7 +45,7 @@ class_list = pd.read_csv(f'{git_dir}/stim/kornet_classes.csv')
 #determine categories (animate, inanimate, etc)
 categories = class_list['category'].unique()
 
-conditions = ['Outline', 'Pert', 'IC']
+conditions = ['Outline_Black', 'Pert_Black', 'IC_Black']
 
 def classify(classifier, train_data, train_labels, test_data, test_labels):
     

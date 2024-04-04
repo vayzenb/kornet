@@ -18,8 +18,8 @@ from model_loader import load_model as load_model
 print('libraries loaded...')
 
 
-stim_dir = f'{curr_dir}/stim/test'
-stim_dir = f'/user_data/vayzenbe/image_sets/kornet_images'
+#stim_dir = f'{curr_dir}/stim/test'
+#stim_dir = f'/user_data/vayzenbe/image_sets/kornet_images'
 
 #train_set = 'imagenet_sketch'
 
@@ -32,6 +32,8 @@ if len(sys.argv) < 2:
 
 model_arch = sys.argv[1]
 model_name = model_arch
+
+stim_dir = sys.argv[2]
 
 '''
 #specify weights file
@@ -95,7 +97,8 @@ def extract_acts(model, image_dir, transform, layer_call):
 
     with torch.no_grad():
         
-        for data, _ in testloader:
+        for data, label in testloader:
+            print(label)
             # move tensors to GPU if CUDA is available
             
             data= data.cuda()
@@ -125,6 +128,7 @@ model, transform, layer_call = load_model(model_arch)
 
 
 for cat_dir in stim_folder:
+    print(cat_dir)
     #VIT runs out of memory quickly, so we delete and reload it after every iteration
     if model_arch == 'vit':
         model, transform, layer_call = load_model(model_arch)

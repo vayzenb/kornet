@@ -29,7 +29,7 @@ def setup_sbatch_cpu(job_name, script_name):
 #SBATCH --mail-user=vayzenb@cmu.edu
 # Submit job to cpu queue                
 #SBATCH -p cpu
-#SBATCH --cpus-per-task=1
+#SBATCH --cpus-per-task=2
 #SBATCH --gres=gpu:0
 # Job memory request
 #SBATCH --mem=24gb
@@ -83,17 +83,18 @@ model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset
 
 acts_script = False
 
+stim_dir = f'{git_dir}/stim/test'
 pause_time = 6 #how much time (minutes) to wait between jobs
 pause_crit = 4 #how many jobs to do before pausing
 if acts_script == True:
     n_job = 0
     for model in model_arch:
         
-        job_name = f'extract_acts_{model}'
+        job_name = f'extract_acts_{model}_{stim_dir.split("/")[-1]}'
         print(job_name)
         #os.remove(f"{job_name}.sh")
 
-        script_name = f'python {study_dir}/extract_acts.py {model}'
+        script_name = f'python {study_dir}/extract_acts.py {model} {stim_dir}'
         f = open(f'{study_dir}/{job_name}.sh', 'a')
         f.writelines(setup_sbatch_gpu(job_name, script_name))
         f.close()
@@ -112,16 +113,15 @@ if acts_script == True:
 decode_script = True
 
 model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
-model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
-model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset']
+
 
 #append '_imagenet_sketch' to each string in model_arch
 #model_arch = model_arch+ [f'{model}_imagenet_sketch' for model in model_arch]
 
-conds = ['Outline', 'Pert', 'IC']
+conds = ['Outline_Black', 'Pert_Black', 'IC_Black']
 
 classifiers = ['SVM', 'Ridge', 'NB', 'KNN', 'logistic', 'NC']
-classifiers = ['Ridge', 'NB', 'KNN', 'logistic', 'NC']
+#classifiers = ['Ridge', 'NB', 'KNN', 'logistic', 'NC']
 #classifiers = ['SVM', 'logistic']
 
 train_ns = [5, 10, 25, 50, 100, 150, 200, 250, 300]
@@ -129,7 +129,7 @@ train_ns = [5, 10, 25, 50, 100, 150, 200, 250, 300]
 #train_ns = [5, 10, 25, 50, 100]
 fold_n = 20 
 
-pause_time = 2 #how much time (minutes) to wait between jobs
+pause_time = 5 #how much time (minutes) to wait between jobs
 pause_crit = 10 #how many jobs to do before pausing
 
 if decode_script == True:
