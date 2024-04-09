@@ -202,7 +202,7 @@ if twostream_script == True:
     f = open(f"{job_name}.sh", "a")
     #script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128 --rand_seed 2'
     #script_name = f'python {study_dir}/train.py --data /scratch/vayzenbe/{train_type} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch {model} --epochs 70 --workers 8 -b 128 --resume /lab_data/behrmannlab/vlad/kornet/modelling/weights/{model}_{train_type}_checkpoint_1.pth.tar'
-    script_name = f'python modelling/train_twostream.py --data {train_dir} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --epochs 30 --workers 16 -b 128'
+    script_name = f'python modelling/train_twostream.py --data {train_dir} -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --epochs 30 --workers 8 -b 128'
     f.writelines(setup_sbatch(job_name,script_name))
     
     

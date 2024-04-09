@@ -31,6 +31,9 @@ from model_loader import load_model as load_model
 import two_stream_dataloader
 import two_stream_nn
 
+import torch.distributed as dist
+from torch.nn.parallel import DistributedDataParallel as DDP
+
 now = datetime.now()
 curr_date=now.strftime("%Y%m%d")
 
@@ -101,9 +104,16 @@ def save_checkpoint(state, is_best, epoch, filename='checkpoint.pth.tar'):
 
 #Image directory
 
+
+#load model and set up parellelization
+n_gpus = torch.cuda.device_count()
+
+torch.distributed.init_process_group(backend='nccl', world = n_gpus)
+rank = dist.get_rank()
+device_id = rank % torch.cuda.device_count()
 model = two_stream_nn.TwoStream()
-#model = model.cuda()
-model = torch.nn.DataParallel(model).cuda()
+model = model.to(device_id)
+model = DDP(model, device_ids=[device_id])
 
 '''
 load model
@@ -176,7 +186,7 @@ nVal = 1
 
 
 for epoch in range(start_epoch, n_epochs+1):
-   
+    model = torch.nn.parallel.DistributedDataParallel(model)
     # keep track of training and validation loss
     train_loss = 0.0
     valid_loss = 0.0
@@ -217,6 +227,8 @@ for epoch in range(start_epoch, n_epochs+1):
         # update training loss
         train_loss += loss.item()*ventral_data.size(0)
 
+        dist.destroy_process_group()
+
 
     
         #print(train_loss)
@@ -226,6 +238,7 @@ for epoch in range(start_epoch, n_epochs+1):
     ######################    
     # validate the model #
     ######################
+    model = model.module
     model.eval()
     accuracy = 0
     print('starting eval')
