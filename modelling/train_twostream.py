@@ -2,10 +2,11 @@
 Train models on ecoset with developmental constraints
 """
 
-curr_dir = '/user_data/vayzenbe/GitHub_Repos/kornet'
+curr_dir = '/mnt/DataDrive2/vlad/git_repos/kornet'
 import sys
 
 import os, argparse, shutil
+os.environ["NCCL_DEBUG"] = "INFO"
 from collections import OrderedDict
 
 import torch
@@ -27,13 +28,9 @@ from glob import glob as glob
 from torch.utils.tensorboard import SummaryWriter
 from datetime import datetime
 
-from model_loader import load_model as load_model
+#from model_loader import load_model as load_model
 import two_stream_dataloader
 import two_stream_nn
-
-from accelerate import Accelerator
-
-accelerator = Accelerator()
 
 now = datetime.now()
 curr_date=now.strftime("%Y%m%d")
@@ -44,8 +41,6 @@ print('libs loaded')
 #python modelling/train.py --data /user_data/vayzenbe/image_sets/ecoset -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch cornet_s -b 128 --blur True
 #python modelling/train.py --data /lab_data/behrmannlab/image_sets/stylized-ecoset -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch cornet_ff --blur True
 #python modelling/train_twostream.py --data /user_data/vayzenbe/image_sets/development_images -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --epochs 10
-#accelerate launch modelling/train_twostream.py --data /user_data/vayzenbe/image_sets/development_images -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --epochs 10 -b 4
-
 
 parser = argparse.ArgumentParser(description='Model Training')
 parser.add_argument('--data', required=False,
@@ -64,10 +59,10 @@ parser.add_argument('--rand_seed', default=1, type=int,
 parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 
-suf='_parallel'
+suf=''
 
 
-out_dir = '/lab_data/behrmannlab/vlad/kornet/modelling/weights'
+out_dir = '/mnt/DataDrive2/vlad/kornet/modelling/weights'
 
 
 global args, best_prec1
@@ -91,7 +86,6 @@ n_epochs = args.epochs
 n_save = 5 #save model every X epochs
 
 
-device = accelerator.device
 
 
 
@@ -99,11 +93,8 @@ print(model_type)
 writer = SummaryWriter(f'{curr_dir}/modelling/runs/{model_type}')
 best_prec1 = 0
 
-def save_checkpoint(accelerator, filename='checkpoint.pth.tar'):
-    #torch.save(state, f'{out_dir}/{filename}_checkpoint_{args.rand_seed}.pth.tar')
-
-    accelerator.save_state(f'{out_dir}/{filename}_checkpoint_{args.rand_seed}')
-
+def save_checkpoint(state, is_best, epoch, filename='checkpoint.pth.tar'):
+    torch.save(state, f'{out_dir}/{filename}_checkpoint_{args.rand_seed}.pth.tar')
     if (epoch) == 1 or (epoch) % n_save  == 0:
         shutil.copyfile(f'{out_dir}/{filename}_checkpoint_{args.rand_seed}.pth.tar', f'{out_dir}/{filename}_{epoch}_{args.rand_seed}.pth.tar')
     if is_best:
@@ -111,15 +102,15 @@ def save_checkpoint(accelerator, filename='checkpoint.pth.tar'):
 
 #Image directory
 
-
-
-
+model = two_stream_nn.TwoStream()
+#model = model.cuda()
+#model = torch.nn.DataParallel(model).cuda()
+model = model.cuda()
 
 '''
 load model
 '''
-#load model and set up training s tuff
-model = two_stream_nn.TwoStream()
+
 
 optimizer = torch.optim.SGD(model.parameters(),
                                          lr,
@@ -132,23 +123,21 @@ scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=step_size)
 
 
 criterion = nn.CrossEntropyLoss()
-#criterion.cuda()
+criterion.cuda()
 
 
 # optionally resume from a checkpoint
 if args.resume:
     if os.path.isfile(args.resume):
         print("=> loading checkpoint '{}'".format(args.resume))
-
-        accelerator.load_state(args.resume)
-        # checkpoint = torch.load(args.resume)
-        # start_epoch = checkpoint['epoch']
-        # best_prec1 = checkpoint['best_prec1']
-        # model.load_state_dict(checkpoint['state_dict'])
-        # optimizer.load_state_dict(checkpoint['optimizer'])
-        # scheduler.load_state_dict(checkpoint['scheduler'])
+        checkpoint = torch.load(args.resume)
+        start_epoch = checkpoint['epoch']
+        best_prec1 = checkpoint['best_prec1']
+        model.load_state_dict(checkpoint['state_dict'])
+        optimizer.load_state_dict(checkpoint['optimizer'])
+        scheduler.load_state_dict(checkpoint['scheduler'])
         print("=> loaded checkpoint '{}' (epoch {})"
-                .format(args.resume, epoch))
+                .format(args.resume, checkpoint['epoch']))
         
         
     else:
@@ -180,21 +169,17 @@ val_dataset = two_stream_dataloader.ImageFolderDataset(val_dir, transform_ventra
 valloader = torch.utils.data.DataLoader(val_dataset, batch_size=args.batch_size, shuffle=True, num_workers =  args.workers, pin_memory=True, drop_last=True)
 
 trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers = args.workers, pin_memory=True, drop_last=True)
-#trainloader = torch.utils.data.DataLoader(train_dataset,batch_size=4)
         
-#validation_dataloader = accelerator.prepare(valloader)
 
 print('starting training...')
 valid_loss_min = np.Inf # track change in validation loss
 nTrain = 1
 nVal = 1
 
-train_dataloader, eval_dataloader, model, optimizer, scheduler = accelerator.prepare(trainloader, valloader, model, optimizer, scheduler)
- 
-#set up parallelization
-#model, optimizer, training_dataloader, scheduler = accelerator.prepare(model, optimizer, trainloader, scheduler)
 
 for epoch in range(start_epoch, n_epochs+1):
+    #model = torch.nn.DataParallel(model)
+   
     # keep track of training and validation loss
     train_loss = 0.0
     valid_loss = 0.0
@@ -206,13 +191,13 @@ for epoch in range(start_epoch, n_epochs+1):
     model.train()
     n = 0
     
-    for ventral_data,dorsal_data, target in train_dataloader:
+    for ventral_data,dorsal_data, target in trainloader:
         
         n = n + 1
         #data = TF.adjust_saturation(data, saturate)
 
         # move tensors to GPU if CUDA is available       
-        #ventral_data, dorsal_data, target = ventral_data.cuda(), dorsal_data.cuda(), target.cuda()
+        ventral_data, dorsal_data, target = ventral_data.cuda(), dorsal_data.cuda(), target.cuda()
             
         # clear the gradients of all optimized variables
         optimizer.zero_grad()
@@ -227,16 +212,13 @@ for epoch in range(start_epoch, n_epochs+1):
         writer.add_scalar("Supervised Raw Train Loss", loss, nTrain) #write to tensorboard
         writer.flush()
         nTrain = nTrain + 1
-        accelerator.backward(loss)
         # backward pass: compute gradient of the loss with respect to model parameters
-        #loss.backward()
+        loss.backward()
         # perform a single optimization step (parameter update)
         optimizer.step()
         
         # update training loss
         train_loss += loss.item()*ventral_data.size(0)
-
-        #dist.destroy_process_group()
 
 
     
@@ -252,10 +234,10 @@ for epoch in range(start_epoch, n_epochs+1):
     accuracy = 0
     print('starting eval')
     with torch.no_grad():
-        for ventral_data, dorsal_data, target in eval_dataloader:
+        for ventral_data, dorsal_data, target in valloader:
             # move tensors to GPU if CUDA is available
             
-            #ventral_data,dorsal_data, target = ventral_data.cuda(), dorsal_data.cuda(), target.cuda()
+            ventral_data,dorsal_data, target = ventral_data.cuda(), dorsal_data.cuda(), target.cuda()
 
             
             # forward pass: compute predicted outputs by passing inputs to the model
@@ -281,24 +263,31 @@ for epoch in range(start_epoch, n_epochs+1):
 
     
     # calculate average losses
-    train_loss = train_loss/len(train_dataloader.sampler)
-    valid_loss = valid_loss/len(eval_dataloader.sampler)
+    train_loss = train_loss/len(trainloader.sampler)
+    valid_loss = valid_loss/len(valloader.sampler)
 
-    prec1 = accuracy/len(eval_dataloader)
+    prec1 = accuracy/len(valloader)
     is_best = prec1 > best_prec1
     best_prec1 = max(prec1, best_prec1)
 
     # print training/validation statistics 
     print('Epoch: {} \tTraining Loss: {:.6f} \tValidation Loss: {:.6f}'.format(
         epoch, train_loss, valid_loss),
-        "Test Accuracy: {:.3f}".format(accuracy/len(eval_dataloader)))
+        "Test Accuracy: {:.3f}".format(accuracy/len(valloader)))
     writer.add_scalar("Average Train Loss", train_loss, epoch) #write to tensorboard
     writer.add_scalar("Average Validation Loss", valid_loss, epoch) #write to tensorboard
-    writer.add_scalar("Average Acc", accuracy/len(eval_dataloader), epoch) #write to tensorboard
+    writer.add_scalar("Average Acc", accuracy/len(valloader), epoch) #write to tensorboard
     writer.flush()
     
     # save model if validation loss has decreased
-    save_checkpoint(accelerator,filename=f'{model_type}')
+    save_checkpoint({
+                'epoch': epoch,
+                'arch': model_type,
+                'state_dict': model.state_dict(),
+                'best_prec1': best_prec1,
+                'optimizer' : optimizer.state_dict(),
+                'scheduler' : scheduler.state_dict()
+            }, is_best,epoch,filename=f'{model_type}')
 
 
 writer.close()
