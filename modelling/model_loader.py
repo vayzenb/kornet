@@ -1,20 +1,28 @@
-curr_dir = '/user_data/vayzenbe/GitHub_Repos/kornet'
+project_name = 'kornet'
+import os
+#get current working directory
+cwd = os.getcwd()
+git_dir = cwd.split(project_name)[0] + project_name
 import sys
-vone_dir = '/user_data/vayzenbe/GitHub_Repos/vonenet'
-cornet_dir = '/user_data/vayzenbe/GitHub_Repos/CORnet'
-vit_dir = '/user_data/vayzenbe/GitHub_Repos/Cream/EfficientViT'
-sys.path.insert(1, curr_dir)
+sys.path.append(git_dir)
+
+
+vone_dir = f'{cwd.split(project_name)[0]}vonenet'
+#cornet_dir = '/user_data/vayzenbe/GitHub_Repos/CORnet'
+vit_dir = f'{cwd.split(project_name)[0]}Cream/EfficientViT'
+sys.path.insert(1, git_dir)
 sys.path.insert(1, vone_dir)
-sys.path.insert(1, cornet_dir)
+#sys.path.insert(1, cornet_dir)
 sys.path.insert(1, vit_dir)
 
 
 import vonenet
-import cornet
+#import cornet
 from torchvision.models import convnext_large, ConvNeXt_Large_Weights, vit_b_16, ViT_B_16_Weights
 from torchvision.models import resnet50, ResNet50_Weights, resnext50_32x4d, ResNeXt50_32X4D_Weights
 from torchvision.models import alexnet, AlexNet_Weights, vgg19, VGG19_Weights
 import torch
+import two_stream_nn
 
 
 import torchvision
