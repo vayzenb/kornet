@@ -71,9 +71,6 @@ def classify(classifier, train_data, train_labels, test_data, test_labels):
     return score
 
 
-
-
-
 summary_df = pd.DataFrame(columns = ['model','classifier','train_ims','condition', 'animacy','obj1', 'obj2','acc'])
 #load acts
 test_acts = np.load(f'{act_dir}/{model_arch}_{cond}.npy')

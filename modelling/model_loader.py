@@ -22,7 +22,7 @@ from torchvision.models import convnext_large, ConvNeXt_Large_Weights, vit_b_16,
 from torchvision.models import resnet50, ResNet50_Weights, resnext50_32x4d, ResNeXt50_32X4D_Weights
 from torchvision.models import alexnet, AlexNet_Weights, vgg19, VGG19_Weights
 import torch
-import two_stream_nn
+
 
 
 import torchvision
