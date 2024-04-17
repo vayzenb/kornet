@@ -2,11 +2,17 @@
 Train models on ecoset with developmental constraints
 """
 
-curr_dir = '/mnt/DataDrive2/vlad/git_repos/kornet'
+project_name = 'kornet'
+import os
+#get current working directory
+cwd = os.getcwd()
+git_dir = cwd.split(project_name)[0] + project_name
 import sys
 
+#add git_dir to path
+sys.path.append(git_dir)
 import os, argparse, shutil
-os.environ["NCCL_DEBUG"] = "INFO"
+
 from collections import OrderedDict
 
 import torch
@@ -21,7 +27,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 import pdb
-import model_funcs
+import modelling.model_funcs as model_funcs
 
 import random
 from glob import glob as glob
@@ -30,7 +36,7 @@ from datetime import datetime
 
 #from model_loader import load_model as load_model
 import modelling.two_stream.load_folder_twostream as load_folder_twostream
-import two_stream_nn
+import two_stream_nn 
 
 now = datetime.now()
 curr_date=now.strftime("%Y%m%d")
@@ -41,6 +47,7 @@ print('libs loaded')
 #python modelling/train.py --data /user_data/vayzenbe/image_sets/ecoset -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch cornet_s -b 128 --blur True
 #python modelling/train.py --data /lab_data/behrmannlab/image_sets/stylized-ecoset -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --arch cornet_ff --blur True
 #python modelling/train_twostream.py --data /user_data/vayzenbe/image_sets/development_images -o /lab_data/behrmannlab/vlad/kornet/modelling/weights/ --epochs 10
+#python modelling/two_stream/train_twostream.py --data /mnt/DataDrive1/image_sets/ecoset -o /mnt/DataDrive2/vlad/kornet/modelling/weights/ --epochs 30 -b 128 --workers 8
 
 parser = argparse.ArgumentParser(description='Model Training')
 parser.add_argument('--data', required=False,
@@ -59,7 +66,7 @@ parser.add_argument('--rand_seed', default=1, type=int,
 parser.add_argument('--resume', default='', type=str, metavar='PATH',
                     help='path to latest checkpoint (default: none)')
 
-suf=''
+suf='_r'
 
 
 out_dir = '/mnt/DataDrive2/vlad/kornet/modelling/weights'
@@ -70,9 +77,11 @@ args = parser.parse_args()
 
 image_type = args.data
 image_type=image_type.split('/')[-1]
-model_type = f'two_stream_nn{suf}'
+model_type = f'twostream{suf}'
 
-print(image_type)
+model = two_stream_nn.TwoStream('vonenet_r')
+
+print(image_type, model_type)
 
 model_funcs.reproducible_results(args.rand_seed)
 
@@ -90,7 +99,7 @@ n_save = 5 #save model every X epochs
 
 
 print(model_type)
-writer = SummaryWriter(f'{curr_dir}/modelling/runs/{model_type}')
+writer = SummaryWriter(f'{git_dir}/modelling/runs/{model_type}')
 best_prec1 = 0
 
 def save_checkpoint(state, is_best, epoch, filename='checkpoint.pth.tar'):
@@ -102,7 +111,8 @@ def save_checkpoint(state, is_best, epoch, filename='checkpoint.pth.tar'):
 
 #Image directory
 
-model = two_stream_nn.TwoStream()
+
+
 #model = model.cuda()
 #model = torch.nn.DataParallel(model).cuda()
 model = model.cuda()

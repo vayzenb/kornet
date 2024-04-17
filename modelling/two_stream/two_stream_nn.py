@@ -19,16 +19,19 @@ import pdb
 
 
 class TwoStream(nn.Module):
-    def __init__(self):
+    def __init__(self,ventral_model):
         super(TwoStream, self).__init__()
 
         #define dorsal model
         dorsal = EfficientViT_M0()
         dorsal.head = nn.BatchNorm1d(192, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
         
+        if ventral_model == 'vonenet_ff':
+            #define ventral model
+            ventral = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
+        elif ventral_model == 'vonenet_r':
+            ventral = vonenet.get_model(model_arch='cornets', pretrained=False).module
 
-        #define ventral model
-        ventral = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
         ventral.model.decoder = nn.AdaptiveAvgPool2d(output_size=1)
 
 
