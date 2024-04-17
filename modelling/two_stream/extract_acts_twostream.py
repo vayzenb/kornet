@@ -31,11 +31,12 @@ print('libraries loaded...')
 #train_set = 'imagenet_sketch'
 
 #layer = ['avgpool','avgpool','ln',['decoder','avgpool']]
-suf = '_ff'
-model_arch = 'twostream'
-model_name = 'twostream'
+suf = ''
+model_arch = 'twostream_ff'
+model_name = model_arch
 
 stim_dir = sys.argv[1]
+weights_dir = '/mnt/DataDrive2/vlad/kornet/modelling/weights/'
 
 '''
 #specify weights file
@@ -143,6 +144,10 @@ dorsal_model = two_stream_nn.TwoStream()
 
 ventral_model = ventral_model.cuda()
 dorsal_model = dorsal_model.cuda()
+
+checkpoint = torch.load(f'{weights_dir}/{model_name}_best_1.pth.tar')
+ventral_model.load_state_dict(checkpoint['state_dict'])
+dorsal_model.load_state_dict(checkpoint['state_dict'])
 
 transform_ventral = torchvision.transforms.Compose([
                 torchvision.transforms.Resize((224,224)),

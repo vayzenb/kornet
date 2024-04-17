@@ -112,13 +112,14 @@ if acts_script == True:
 
 decode_script = True
 
-model_arch = ['vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
+model_arch = ['twostream_ff','vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
+model_arch= ['twostream_ff']
 
 
 #append '_imagenet_sketch' to each string in model_arch
 #model_arch = model_arch+ [f'{model}_imagenet_sketch' for model in model_arch]
 
-conds = ['Outline_Black', 'Pert_Black', 'IC_Black']
+conds = ['Outline', 'Pert', 'IC']
 
 classifiers = ['SVM', 'Ridge', 'NB', 'KNN', 'logistic', 'NC']
 #classifiers = ['Ridge', 'NB', 'KNN', 'logistic', 'NC']
@@ -145,20 +146,9 @@ if decode_script == True:
                     #os.remove(f"{job_name}.sh")
 
                     script_name = f'python {study_dir}/decode_images.py {model} {train_n} {classifier} {fold_n} {cond}'
-
-                    f = open(f'{study_dir}/{job_name}.sh', 'a')
-                    f.writelines(setup_sbatch_cpu(job_name, script_name))
-                    f.close()
-
-                    subprocess.run(['sbatch', f"{study_dir}/{job_name}.sh"],check=True, capture_output=True, text=True)
-                    os.remove(f"{study_dir}/{job_name}.sh")
-                    n_job += 1
-
-                    if n_job >= pause_crit:
-                        #wait X minutes
-                        time.sleep(pause_time*60)
-                        n_job = 0 
-
+                    subprocess.run(script_name.split(' '),check=True, capture_output=True, text=True)
+                    #os.remove(f"{study_dir}/{job_name}.sh")
+                    
 
 
             
