@@ -10,12 +10,15 @@ cwd = os.getcwd()
 git_dir = cwd.split(project_name)[0] + project_name
 import sys
 sys.path.append(git_dir)
+baby_dir = f'{cwd.split(project_name)[0]}multimodal-baby'
+sys.path.insert(1, baby_dir)
 import torch
 import clip
 from PIL import Image
 import numpy as np
 
 import pandas as pd
+from multimodal.multimodal_lit import MultiModalLitModel
 
 
 stim_dir = f'{git_dir}/stim/test'
@@ -23,10 +26,11 @@ results_dir = f'{git_dir}/results'
 test_label = np.asanyarray([0, 1])
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
-model, preprocess = clip.load("ViT-B/32", device=device)
+#model, preprocess = clip.load("ViT-B/32", device=device)
 
-image = preprocess(Image.open("/mnt/DataDrive2/vlad/git_repos/kornet/stim/test/Pert/OBJ (01)_ripple.png")).unsqueeze(0).to(device)
-text = clip.tokenize(["airplane"]).to(device)
+model, preprocess = MultiModalLitModel.load_model(model_name="cvcl")
+model = model.to(device)
+model.eval()
 
 #load classes from csv
 class_list = pd.read_csv(f'{git_dir}/stim/kornet_classes.csv')
@@ -36,7 +40,7 @@ categories = class_list['category'].unique()
 conditions = ['Outline', 'Pert', 'IC']
 cond_sufs = ['','_ripple','_IC']
 
-summary_df = pd.DataFrame(columns = ['model','classifier','train_ims','condition', 'animacy','obj1', 'obj2','acc'])
+summary_df = pd.DataFrame(columns = ['model','classifier','train_ims','condition', 'animacy','obj1', 'obj2','acc','prob1', 'prob2'])
 
 for condition in conditions:
     cond_suf = cond_sufs[conditions.index(condition)]
@@ -59,13 +63,14 @@ for condition in conditions:
                 if distract_name != target_name:
                     
                     #load text
-                    text = clip.tokenize([target_name, distract_name]).to(device)
+                    text, texts_len = model.tokenize([target_name, distract_name])
+                    text, texts_len = text.to(device), texts_len.to(device)
                     
                     #get similarity score
                     with torch.no_grad():
                         
                         
-                        logits_per_image, logits_per_text = model(image, text)
+                        logits_per_image, logits_per_text = model(image, text,texts_len)
                         probs = logits_per_image.softmax(dim=-1).cpu().numpy()
                         
             
@@ -77,7 +82,8 @@ for condition in conditions:
                         acc = 0
 
                     #add results to summary dataframe using pd concat
-                    summary_df = pd.concat([summary_df,pd.DataFrame({'model':'clip','classifier':'langauge','train_ims':0,'condition':condition, 'animacy':category,'obj1':target_name, 'obj2':distract_name,'acc':acc},index=[0])],ignore_index=True)
+                    summary_df = pd.concat([summary_df,pd.DataFrame({'model':'cvcl','classifier':'langauge','train_ims':0,'condition':condition, 'animacy':category,'obj1':target_name, 'obj2':distract_name,
+                                                                     'acc':acc, 'prob1':probs[0,0], 'prob2': probs[0,1]},index=[0])],ignore_index=True)
                     
     #save results
-    summary_df.to_csv(f'{results_dir}/models/clip_language_train0_test{condition}.csv',index=False)
+    summary_df.to_csv(f'{results_dir}/models/cvcl_language_train0_test{condition}.csv',index=False)
