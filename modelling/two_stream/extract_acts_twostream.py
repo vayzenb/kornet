@@ -20,7 +20,7 @@ import torchvision
 
 #from model_loader import load_model as load_model
 import modelling.two_stream.load_stim_twostream as load_stim_twostream
-import two_stream_nn
+import modelling.two_stream.two_stream_nn as two_stream_nn
 
 print('libraries loaded...')
 
@@ -32,7 +32,7 @@ print('libraries loaded...')
 
 #layer = ['avgpool','avgpool','ln',['decoder','avgpool']]
 suf = ''
-model_arch = 'twostream_ff'
+model_arch = 'twostream_r'
 model_name = model_arch
 
 stim_dir = sys.argv[1]
@@ -139,8 +139,8 @@ def extract_acts(ventral_model, dorsal_model, cat_dir, transform_ventral,transfo
     return acts
 
 
-ventral_model = two_stream_nn.TwoStream()
-dorsal_model = two_stream_nn.TwoStream()
+ventral_model =  two_stream_nn.TwoStream('vonenet_r')
+dorsal_model = two_stream_nn.TwoStream('vonenet_r')
 
 ventral_model = ventral_model.cuda()
 dorsal_model = dorsal_model.cuda()

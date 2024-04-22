@@ -113,7 +113,7 @@ if acts_script == True:
 decode_script = True
 
 model_arch = ['twostream_ff','vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
-model_arch= ['twostream_ff']
+model_arch= ['twostream_r']
 
 
 #append '_imagenet_sketch' to each string in model_arch
