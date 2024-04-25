@@ -14,6 +14,8 @@ sys.path.insert(1, git_dir)
 sys.path.insert(1, vone_dir)
 #sys.path.insert(1, cornet_dir)
 sys.path.insert(1, vit_dir)
+baby_dir = f'{cwd.split(project_name)[0]}multimodal-baby'
+sys.path.insert(1, baby_dir)
 
 
 import vonenet
@@ -22,6 +24,10 @@ from torchvision.models import convnext_large, ConvNeXt_Large_Weights, vit_b_16,
 from torchvision.models import resnet50, ResNet50_Weights, resnext50_32x4d, ResNeXt50_32X4D_Weights
 from torchvision.models import alexnet, AlexNet_Weights, vgg19, VGG19_Weights
 import torch
+
+import clip
+
+from multimodal.multimodal_lit import MultiModalLitModel
 
 
 
@@ -161,11 +167,22 @@ def load_model(model_arch, weights=None):
                         torchvision.transforms.ToTensor(),
                         torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                                             std=[0.229, 0.224, 0.225])])
+        
+    elif model_arch == 'clip_vit':
+        model, transform = clip.load("ViT-B/32")
+        layer_call = ""
 
+    elif model_arch == 'clip_resnet':
+        model, transform = clip.load("RN50")
+        layer_call = ""
+
+    elif model_arch == 'cvcl':
+        model, transform = MultiModalLitModel.load_model(model_name="cvcl")
+        layer_call = ""
 
         
 
-    model = torch.nn.DataParallel(model).cuda()
+    #model = torch.nn.DataParallel(model).cuda()
 
     
     if model_arch == 'vonenet_r_ecoset' or model_arch =='vonenet_r_stylized-ecoset' or model_arch =='vonenet_ff_ecoset' or model_arch =='vonenet_ff_stylized-ecoset':

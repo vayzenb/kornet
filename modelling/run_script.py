@@ -76,6 +76,7 @@ conda activate ml
 
 #base models
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
+model_arch= ['clip_vit','clip_resnet', 'cvcl']
 #model_arch = model_arch + model_arch
 #create list of of len(model_arch) with imagenet_sketch in each element
 #model_weights = [None] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
@@ -113,7 +114,8 @@ if acts_script == True:
 decode_script = True
 
 model_arch = ['twostream_ff','vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
-model_arch= ['clip', 'cvcl']
+model_arch= ['clip_vit','clip_resnet', 'cvcl']
+model_arch= ['clip_resnet']
 
 
 #append '_imagenet_sketch' to each string in model_arch

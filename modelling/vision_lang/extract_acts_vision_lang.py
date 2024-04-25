@@ -27,6 +27,7 @@ import sys
 
 import torch
 import modelling.load_stim as load_stim
+from modelling.model_loader import load_model as load_model
 from glob import glob as glob
 import pdb
 
@@ -47,14 +48,11 @@ stim_dir = sys.argv[2]
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
-if model_arch == 'clip':
-    model, transform = clip.load("ViT-B/32")
-
-elif model_arch == 'cvcl':
-    model, transform = MultiModalLitModel.load_model(model_name="cvcl")
+model, transform, _ = load_model(model_arch)
 
 model = model.to(device)
 model.eval()
+
 
 
 
