@@ -26,6 +26,7 @@ from torchvision.models import alexnet, AlexNet_Weights, vgg19, VGG19_Weights
 import torch
 
 import clip
+import timm
 
 from multimodal.multimodal_lit import MultiModalLitModel
 
@@ -126,6 +127,7 @@ def load_model(model_arch, weights=None):
         model = resnet50(weights=ResNet50_Weights.DEFAULT)
         transform = ResNet50_Weights.DEFAULT.transforms()
         layer_call = "getattr(getattr(model,'module'),'avgpool')"
+        layer_call = "getattr(model,'avgpool')"
     
     elif model_arch == 'resnext50':
         model = resnext50_32x4d(weights=ResNeXt50_32X4D_Weights.DEFAULT)
@@ -179,6 +181,14 @@ def load_model(model_arch, weights=None):
     elif model_arch == 'cvcl':
         model, transform = MultiModalLitModel.load_model(model_name="cvcl")
         layer_call = ""
+
+    elif model_arch == 'resnet50_21k':
+        model = timm.create_model('resnet50', pretrained=False, num_classes=11221)
+        checkpoint = torch.load(f'{git_dir}/modelling/weights/resnet50_miil_21k.pth')
+        model.load_state_dict(checkpoint['state_dict'])
+        transform = ResNet50_Weights.DEFAULT.transforms()
+        layer_call = "getattr(model,'global_pool')"
+
 
         
 

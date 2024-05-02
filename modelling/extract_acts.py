@@ -1,17 +1,19 @@
 '''
 Extract acts for each model
 '''
-curr_dir = '/user_data/vayzenbe/GitHub_Repos/kornet'
-import pandas as pd
-import numpy as np
+project_name = 'kornet'
+import os
+#get current working directory
+cwd = os.getcwd()
+git_dir = cwd.split(project_name)[0] + project_name
 import sys
-
-sys.path.insert(1,curr_dir)
+sys.path.append(git_dir)
 
 import torch
 import load_stim
 from glob import glob as glob
 import pdb
+import numpy as np
 
 from model_loader import load_model as load_model
 
@@ -20,7 +22,7 @@ print('libraries loaded...')
 
 #stim_dir = f'{curr_dir}/stim/test'
 #stim_dir = f'/user_data/vayzenbe/image_sets/kornet_images'
-
+#stim_dir = '/mnt/DataDrive2/vlad/kornet/image_sets/kornet_images'
 #train_set = 'imagenet_sketch'
 
 #layer = ['avgpool','avgpool','ln',['decoder','avgpool']]
@@ -98,7 +100,7 @@ def extract_acts(model, image_dir, transform, layer_call):
     with torch.no_grad():
         
         for data, label in testloader:
-            print(label)
+            #print(label)
             # move tensors to GPU if CUDA is available
             
             data= data.cuda()
@@ -125,7 +127,7 @@ def extract_acts(model, image_dir, transform, layer_call):
 
 
 model, transform, layer_call = load_model(model_arch)
-
+model = model.cuda()
 
 for cat_dir in stim_folder:
     print(cat_dir)
@@ -142,7 +144,7 @@ for cat_dir in stim_folder:
 
     
     
-    np.save(f'{curr_dir}/modelling/acts/{model_name}{suf}_{cat_name}.npy', acts)
+    np.save(f'{git_dir}/modelling/acts/{model_name}{suf}_{cat_name}.npy', acts)
     #clear memory
     del acts
     
