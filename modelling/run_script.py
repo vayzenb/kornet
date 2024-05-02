@@ -77,7 +77,7 @@ conda activate ml
 #base models
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
 model_arch= ['clip_vit','clip_resnet', 'cvcl']
-model_arch= ['resnet50_21K']
+model_arch= ['vit', 'vit_21k', 'resnet50']
 
 #model_arch = model_arch + model_arch
 #create list of of len(model_arch) with imagenet_sketch in each element
@@ -86,30 +86,20 @@ model_arch= ['resnet50_21K']
 
 acts_script = False
 
-stim_dir = f'{git_dir}/stim/test'
-pause_time = 6 #how much time (minutes) to wait between jobs
-pause_crit = 4 #how many jobs to do before pausing
+stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive2/vlad/kornet/image_sets/kornet_images/']
+stim_dirs = ['/mnt/DataDrive2/vlad/kornet/image_sets/kornet_images/']
+
 if acts_script == True:
-    n_job = 0
-    for model in model_arch:
-        
-        job_name = f'extract_acts_{model}_{stim_dir.split("/")[-1]}'
-        print(job_name)
-        #os.remove(f"{job_name}.sh")
+    for stim_dir in stim_dirs:
+        for model in model_arch:
+            
+            #job_name = f'extract_acts_{model}_{stim_dir.split("/")[-1]}'
+            #print(job_name)
+            #os.remove(f"{job_name}.sh")
 
-        script_name = f'python {study_dir}/extract_acts.py {model} {stim_dir}'
-        f = open(f'{study_dir}/{job_name}.sh', 'a')
-        f.writelines(setup_sbatch_gpu(job_name, script_name))
-        f.close()
-
-        subprocess.run(['sbatch', f"{study_dir}/{job_name}.sh"],check=True, capture_output=True, text=True)
-        os.remove(f"{study_dir}/{job_name}.sh")
-        n_job += 1
-
-        if n_job >= pause_crit:
-            #wait X minutes
-            time.sleep(pause_time*60)
-            n_job = 0 
+            script_name = f'python {study_dir}/extract_acts.py {model} {stim_dir}'
+            print(script_name)
+            subprocess.run(script_name.split(' '),check=True, capture_output=True, text=True)
 
 
 
@@ -118,6 +108,7 @@ decode_script = True
 model_arch = ['twostream_ff','vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
 model_arch= ['clip_vit','clip_resnet', 'cvcl']
 model_arch= ['resnet50_21k']
+model_arch= ['vit', 'vit_21k', 'resnet50', 'clip_vit']
 
 
 #append '_imagenet_sketch' to each string in model_arch
@@ -130,6 +121,7 @@ classifiers = ['NB', 'KNN', 'logistic', 'NC','SVM', 'Ridge']
 #classifiers = ['SVM', 'logistic']
 
 train_ns = [5, 10, 25, 50, 100, 150, 200, 250, 300]
+train_ns = [5, 10, 25, 50, 100, 150, 200]
 #train_ns = [100, 150, 200, 250, 300]
 #train_ns = [5, 10, 25, 50, 100]
 fold_n = 20 
@@ -140,10 +132,11 @@ pause_crit = 10 #how many jobs to do before pausing
 if decode_script == True:
     n_job = 0
     for cond in conds:
-            
-        for model in model_arch:
+        for train_n in train_ns:
             for classifier in classifiers:
-                for train_n in train_ns:
+                for model in model_arch:
+            
+                
                 
                     job_name = f'decode_{model}{classifier}_train{train_n}_fold{fold_n}_{cond}'
                     print(job_name)

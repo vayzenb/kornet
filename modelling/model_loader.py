@@ -118,15 +118,14 @@ def load_model(model_arch, weights=None):
         layer_call = "getattr(getattr(model,'module'),'avgpool')"
 
     elif model_arch == 'vit':
-        model = vit_b_16(weights=ViT_B_16_Weights.DEFAULT)
+        model = timm.create_model('vit_base_patch16_224_miil', pretrained=True)
         transform = ViT_B_16_Weights.DEFAULT.transforms()
-        layer_call = "getattr(getattr(getattr(model,'module'),'encoder'),'ln')"
+        layer_call = "getattr(model,'fc_norm')"
         #layer_call = "getattr(getattr(getattr(getattr(getattr(getattr(model,'module'),'encoder'),'layers'),'encoder_layer_11'),'mlp'),'3')"
 
     elif model_arch == 'resnet50':
         model = resnet50(weights=ResNet50_Weights.DEFAULT)
         transform = ResNet50_Weights.DEFAULT.transforms()
-        layer_call = "getattr(getattr(model,'module'),'avgpool')"
         layer_call = "getattr(model,'avgpool')"
     
     elif model_arch == 'resnext50':
@@ -171,7 +170,7 @@ def load_model(model_arch, weights=None):
                                                             std=[0.229, 0.224, 0.225])])
         
     elif model_arch == 'clip_vit':
-        model, transform = clip.load("ViT-B/32")
+        model, transform = clip.load("ViT-B/16")
         layer_call = ""
 
     elif model_arch == 'clip_resnet':
@@ -189,6 +188,10 @@ def load_model(model_arch, weights=None):
         transform = ResNet50_Weights.DEFAULT.transforms()
         layer_call = "getattr(model,'global_pool')"
 
+    elif model_arch == 'vit_21k':
+        model = timm.create_model('vit_base_patch16_224_miil_in21k', pretrained=True)
+        transform = ViT_B_16_Weights.DEFAULT.transforms()
+        layer_call = "getattr(model,'fc_norm')"
 
         
 

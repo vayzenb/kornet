@@ -111,6 +111,7 @@ def extract_acts(model, image_dir, transform, layer_call):
             
             out = np.vstack(_model_feats)
             
+            
 
             if n == 0:
                 acts = out
@@ -132,8 +133,10 @@ model = model.cuda()
 for cat_dir in stim_folder:
     print(cat_dir)
     #VIT runs out of memory quickly, so we delete and reload it after every iteration
-    if model_arch == 'vit':
+    if 'vit' in model_arch:
         model, transform, layer_call = load_model(model_arch)
+        model = model.cuda()
+        
 
     
     cat_name = cat_dir.split('/')[-1]
