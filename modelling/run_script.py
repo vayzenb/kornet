@@ -121,7 +121,7 @@ classifiers = ['NB', 'KNN', 'logistic', 'NC','SVM', 'Ridge']
 #classifiers = ['SVM', 'logistic']
 
 train_ns = [5, 10, 25, 50, 100, 150, 200, 250, 300]
-train_ns = [5, 10, 25, 50, 100, 150, 200]
+train_ns = [250, 300]
 #train_ns = [100, 150, 200, 250, 300]
 #train_ns = [5, 10, 25, 50, 100]
 fold_n = 20 
