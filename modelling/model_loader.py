@@ -193,6 +193,19 @@ def load_model(model_arch, weights=None):
         transform = ViT_B_16_Weights.DEFAULT.transforms()
         layer_call = "getattr(model,'fc_norm')"
 
+    elif model_arch == 'clip_resnet_15m':
+        import open_clip
+        # pretrained also accepts local paths
+        model, _, transform = open_clip.create_model_and_transforms('RN50', pretrained='yfcc15m') 
+        layer_call = "getattr(getattr(getattr(model,'visual'), 'attnpool'),'c_proj')"
+
+    elif model_arch == 'clip_resnet_12m':
+        import open_clip
+        model, _, transform = open_clip.create_model_and_transforms('RN50', pretrained='cc12m') 
+        layer_call = "getattr(getattr(getattr(model,'visual'), 'attnpool'),'c_proj')"
+
+    
+
         
 
     #model = torch.nn.DataParallel(model).cuda()

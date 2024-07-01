@@ -39,6 +39,7 @@ import numpy as np
 
 import pandas as pd
 from multimodal.multimodal_lit import MultiModalLitModel
+import open_clip
 
 print('libraries loaded...')
 
@@ -47,6 +48,7 @@ model_name = model_arch
 stim_dir = sys.argv[2]
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+torch.cuda.set_device(1) 
 
 model, transform, _ = load_model(model_arch)
 
