@@ -204,6 +204,11 @@ def load_model(model_arch, weights=None):
         model, _, transform = open_clip.create_model_and_transforms('RN50', pretrained='cc12m') 
         layer_call = "getattr(getattr(getattr(model,'visual'), 'attnpool'),'c_proj')"
 
+    elif model_arch == 'resnet_1b':
+        model = timm.create_model('ssl_resnet18', pretrained=True)
+        transform = ResNet50_Weights.DEFAULT.transforms()
+        layer_call = "getattr(model,'global_pool')"
+
     
 
         
