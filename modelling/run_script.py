@@ -78,6 +78,8 @@ conda activate ml
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
 model_arch= ['clip_vit','clip_resnet', 'cvcl']
 model_arch= ['clip_resnet_15m', 'clip_resnet_12m']
+model_arch = ['resnet_100m','resnet_1b']
+
 
 #model_arch = model_arch + model_arch
 #create list of of len(model_arch) with imagenet_sketch in each element
@@ -86,8 +88,8 @@ model_arch= ['clip_resnet_15m', 'clip_resnet_12m']
 
 acts_script = True
 
-stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive2/vlad/kornet/image_sets/kornet_images/']
-stim_dirs = [f'{git_dir}/stim/test/']
+stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
+
 
 if acts_script == True:
     for stim_dir in stim_dirs:
@@ -97,8 +99,8 @@ if acts_script == True:
             #print(job_name)
             #os.remove(f"{job_name}.sh")
 
-            #script_name = f'python {study_dir}/extract_acts.py {model} {stim_dir}'
-            script_name = f'python {study_dir}/vision_lang/extract_acts_vision_lang.py {model} {stim_dir}'
+            script_name = f'python {study_dir}/extract_acts.py {model} {stim_dir}'
+            #script_name = f'python {study_dir}/vision_lang/extract_acts_vision_lang.py {model} {stim_dir}'
             print(script_name)
             subprocess.run(script_name.split(' '),check=True, capture_output=True, text=True)
 
@@ -111,7 +113,7 @@ model_arch= ['clip_vit','clip_resnet', 'cvcl']
 model_arch= ['resnet50_21k']
 model_arch= ['vit', 'vit_21k', 'resnet50', 'clip_vit']
 model_arch= ['clip_resnet_15m', 'clip_resnet_12m']
-
+model_arch = ['resnet_100m','resnet_1b']
 
 #append '_imagenet_sketch' to each string in model_arch
 #model_arch = model_arch+ [f'{model}_imagenet_sketch' for model in model_arch]
