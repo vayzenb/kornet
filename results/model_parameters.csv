@@ -1,9 +1,0 @@
-,model,layers,parameters
-0,vonenet_r_ecoset,3,55322856
-1,vonenet_r_stylized-ecoset,3,55322856
-2,vonenet_ff_ecoset,3,55297512
-3,vonenet_ff_stylized-ecoset,3,55297512
-4,ShapeNet,10,25557032
-5,SayCam,10,25028904
-6,convnext,3,197767336
-7,vit,3,86567656
