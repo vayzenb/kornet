@@ -3,14 +3,16 @@ Finetune a pretrained models on imagenet sketch
 """
 
 
+project_name = 'kornet'
+import os
+#get current working directory
+cwd = os.getcwd()
+git_dir = cwd.split(project_name)[0] + project_name
 import sys
-vone_dir = '/user_data/vayzenbe/GitHub_Repos/vonenet'
-
-sys.path.insert(1, vone_dir)
-import os, argparse, shutil
+#add git_dir to path
+sys.path.append(git_dir)
+import argparse, shutil
 from collections import OrderedDict
-import vonenet
-from torchvision.models import convnext_large, ConvNeXt_Large_Weights, vit_b_16, ViT_B_16_Weights
 import torch
 
 import torch.nn as nn
@@ -51,9 +53,9 @@ parser.add_argument('--resume', default='', type=str, metavar='PATH',
 
 suf=''
 
-image_dir= '/scratch/vayzenbe/'
+image_dir= '/mnt/DataDrive3/vlad/kornet/image_sets/'
 #image_dir ='/lab_data/behrmannlab/image_sets/'
-out_dir = '/lab_data/behrmannlab/vlad/kornet/modelling/weights'
+out_dir = '/mnt/DataDrive3/vlad/kornet/modelling/weights/'
 
 
 
@@ -101,6 +103,9 @@ n_classes = len(glob(f'{args.data}/train/*'))
 load model
 '''
 model, transform, _ = load_model(args.arch)
+
+
+model = nn.DataParallel(model).cuda()
 
 optimizer = torch.optim.SGD(model.parameters(),
                                          lr,

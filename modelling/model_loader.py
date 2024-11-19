@@ -35,7 +35,7 @@ from multimodal.multimodal_lit import MultiModalLitModel
 import torchvision
 
 
-weights_dir = f'/lab_data/behrmannlab/vlad/kornet/modelling/weights'
+weights_dir = f'/mnt/DataDrive3/vlad/kornet/modelling/weights'
 def load_model(model_arch, weights=None):    
     """
     load model
@@ -217,13 +217,15 @@ def load_model(model_arch, weights=None):
 
         
 
-    #model = torch.nn.DataParallel(model).cuda()
+    
 
     
     if model_arch == 'vonenet_r_ecoset' or model_arch =='vonenet_r_stylized-ecoset' or model_arch =='vonenet_ff_ecoset' or model_arch =='vonenet_ff_stylized-ecoset':
         checkpoint = torch.load(f'{weights_dir}/{model_arch}_best_1.pth.tar')
+        model = torch.nn.DataParallel(model).cuda()
         model.load_state_dict(checkpoint['state_dict'])
-
+        model = model.module
+        
     if weights is not None:
         checkpoint = torch.load(f'{weights_dir}/{model_arch}_{weights}_best_1.pth.tar')
         model.load_state_dict(checkpoint['state_dict'])

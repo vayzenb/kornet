@@ -75,7 +75,8 @@ conda activate ml
 
 
 #base models
-model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
+model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
+              'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
 model_arch= ['clip_vit','clip_resnet', 'cvcl']
 model_arch= ['clip_resnet_15m', 'clip_resnet_12m']
 model_arch = ['resnet_100m','resnet_1b']
