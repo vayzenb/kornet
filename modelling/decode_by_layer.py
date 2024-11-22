@@ -8,6 +8,8 @@ sys.path.append(git_dir)
 
 import pandas as pd
 import numpy as np
+from sklearnex import patch_sklearn 
+patch_sklearn()
 
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.pipeline import make_pipeline
@@ -22,6 +24,7 @@ import scipy.stats as stats
 from glob import glob as glob
 
 
+
 #load args
 model_arch = sys.argv[1] #which architecture to use
 train_n = int(sys.argv[2]) #how many images to use t otrain the classifier
@@ -29,8 +32,6 @@ classifier = sys.argv[3] #which classifier to use
 k_folds = int(sys.argv[4]) #how many folds to use for cross validation
 cond = sys.argv[5] #which condition to test on
 print(model_arch)
-
-
 
 
 

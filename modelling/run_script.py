@@ -77,9 +77,6 @@ conda activate ml
 #base models
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
               'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
-model_arch= ['clip_vit','clip_resnet', 'cvcl']
-model_arch= ['clip_resnet_15m', 'clip_resnet_12m']
-model_arch = ['resnet_100m','resnet_1b']
 
 
 #model_arch = model_arch + model_arch
@@ -91,6 +88,8 @@ acts_script = True
 
 stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
 
+stim_dirs = ['/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
+
 
 if acts_script == True:
     for stim_dir in stim_dirs:
@@ -100,14 +99,19 @@ if acts_script == True:
             #print(job_name)
             #os.remove(f"{job_name}.sh")
 
-            script_name = f'python {study_dir}/extract_acts.py {model} {stim_dir}'
+            script_name = f'python {study_dir}/extract_acts_layers.py {model} {stim_dir}'
             #script_name = f'python {study_dir}/vision_lang/extract_acts_vision_lang.py {model} {stim_dir}'
-            print(script_name)
-            subprocess.run(script_name.split(' '),check=True, capture_output=True, text=True)
+            print(model, stim_dir)
+            try:
+                subprocess.run(script_name.split(' '),check=True, capture_output=True, text=True)
+            except:
+                print('error for', model, stim_dir)
 
 
 
-decode_script = True
+
+
+decode_script = False
 
 model_arch = ['twostream_ff','vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
 model_arch= ['clip_vit','clip_resnet', 'cvcl']
