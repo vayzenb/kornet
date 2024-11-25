@@ -73,7 +73,7 @@ def classify(classifier, train_data, train_labels, test_data, test_labels):
 
 summary_df = pd.DataFrame(columns = ['model','classifier','train_ims','condition', 'animacy','obj1', 'obj2','acc'])
 #load acts
-test_acts = np.load(f'{act_dir}/{model_arch}_model.decoder.avgpool_{cond}.npy')
+test_acts = np.load(f'{act_dir}/{model_arch}_{cond}.npy')
 
 #loop through superordinate category (animate, inanimate, etc)
 for category in categories:
@@ -85,7 +85,7 @@ for category in categories:
     for cat_name1 in class_list_cat['object']:
         
         #load training acts
-        train_acts1 = np.load(f'{act_dir}/{model_arch}_model.decoder.avgpool_{cat_name1}.npy')
+        train_acts1 = np.load(f'{act_dir}/{model_arch}_{cat_name1}.npy')
         
 
         #create empty test array
@@ -105,7 +105,7 @@ for category in categories:
                 continue
             else:
                 #load second training acts
-                train_acts2 = np.load(f'{act_dir}/{model_arch}_model.decoder.avgpool_{cat_name2}.npy')
+                train_acts2 = np.load(f'{act_dir}/{model_arch}_{cat_name2}.npy')
 
                 fold_acc = []
                 fold_train_acc = []
