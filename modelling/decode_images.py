@@ -106,7 +106,13 @@ for category in categories:
             else:
                 #load second training acts
                 train_acts2 = np.load(f'{act_dir}/{model_arch}_{cat_name2}.npy')
+                #determine image num for test object
+                img_num2 = class_list_cat[class_list_cat['object']==cat_name2].index[0]
+                
 
+                #read test act for that num
+                test_ims[1,:] = test_acts[img_num2,:]
+                
                 fold_acc = []
                 fold_train_acc = []
                 for k in range(0,k_folds):
@@ -127,12 +133,7 @@ for category in categories:
                     label_list = np.hstack((label_list, np.zeros((1,train_n))+1))
                     label_list = label_list.flatten()
                     
-                    #determine image num for test object
-                    img_num2 = class_list_cat[class_list_cat['object']==cat_name2].index[0]
-                    
 
-                    #read test act for that num
-                    test_ims[1,:] = test_acts[img_num2,:]
 
 
                     #run classify in parallel

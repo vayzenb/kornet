@@ -196,7 +196,7 @@ for cat_dir in stim_folder:
     cat_name = cat_dir.split('/')[-1]
 
     
-    #layers = ['visual.attnpool.c_proj']
+    layers = ['model.decoder.avgpool']
     for layer in layers:
         if 'vit' in model_arch:
             model, transform, _ = load_model(model_arch)

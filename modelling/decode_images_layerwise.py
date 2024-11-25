@@ -9,7 +9,7 @@ sys.path.append(git_dir)
 import pandas as pd
 import numpy as np
 from sklearnex import patch_sklearn 
-patch_sklearn()
+#patch_sklearn()
 
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.pipeline import make_pipeline
@@ -114,8 +114,8 @@ summary_df = pd.DataFrame(columns = ['model','layer','classifier','train_ims','c
 #load acts
 
 
-#layers = ['model.decoder.avgpool']
-for layer in layers[1:]:
+layers = ['model.decoder.avgpool']
+for layer in layers:
     test_acts = np.load(f'{act_dir}/{model_arch}_{layer}_{cond}.npy')
     #loop through superordinate category (animate, inanimate, etc)
     for category in categories:
