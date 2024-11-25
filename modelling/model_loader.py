@@ -44,7 +44,7 @@ def load_model(model_arch, weights=None):
 
     if model_arch == 'vonenet_r_ecoset' or model_arch =='vonenet_r_stylized-ecoset':
         model = vonenet.get_model(model_arch='cornets', pretrained=False).module
-        layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
+        layer_call = "getattr(getattr(getattr(model,'model'),'decoder'),'avgpool')"
         transform = torchvision.transforms.Compose([
                 torchvision.transforms.Resize((224,224)),
                 torchvision.transforms.ToTensor(),
@@ -54,7 +54,7 @@ def load_model(model_arch, weights=None):
 
     elif model_arch == 'vonenet_ff_ecoset' or model_arch =='vonenet_ff_stylized-ecoset':
         model = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
-        layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
+        layer_call = "getattr(getattr(getattr(model,'model'),'decoder'),'avgpool')"
         transform = torchvision.transforms.Compose([
                 torchvision.transforms.Resize((224,224)),
                 torchvision.transforms.ToTensor(),

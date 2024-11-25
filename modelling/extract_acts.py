@@ -128,6 +128,7 @@ def extract_acts(model, image_dir, transform, layer_call):
 
 
 model, transform, layer_call = load_model(model_arch)
+
 model = model.cuda()
 
 for cat_dir in stim_folder:

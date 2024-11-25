@@ -240,9 +240,12 @@ for cat_dir in stim_folder:
         #clear cache
         torch.cuda.empty_cache()
 
-        if model_arch == 'vit':
-            del model
+
         #np.savetxt(f'{curr_dir}/modelling/acts/{model_type}_{cat_name}_labels.txt', label_list)
 
+    
+    #if model exists, delete it
+    
     del model
+    
     

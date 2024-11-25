@@ -78,7 +78,7 @@ conda activate ml
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
               'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
 
-
+model_arch = ['vit']
 #model_arch = model_arch + model_arch
 #create list of of len(model_arch) with imagenet_sketch in each element
 #model_weights = [None] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
@@ -88,7 +88,8 @@ acts_script = True
 
 stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
 
-stim_dirs = ['/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
+
+#stim_dirs = ['/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
 
 
 if acts_script == True:
@@ -108,7 +109,9 @@ if acts_script == True:
                 print('error for', model, stim_dir)
 
 
-
+'''
+Whole-model decode script
+'''
 
 
 decode_script = False
@@ -156,5 +159,50 @@ if decode_script == True:
                     #os.remove(f"{study_dir}/{job_name}.sh")
                     
 
+'''Layer-wise decode script'''
+decode_layers = True
+
+model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
+              'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
+
+
+
+conds = ['Outline', 'Pert', 'IC']
+
+conds = ['IC']
+
+classifiers = ['KNN']
+
+
+train_ns = [150]
+#train_ns = [250, 300]
+#train_ns = [100, 150, 200, 250, 300]
+#train_ns = [5, 10, 25, 50, 100]
+fold_n = 10 
+
+pause_time = 5 #how much time (minutes) to wait between jobs
+pause_crit = 10 #how many jobs to do before pausing
+
+if decode_layers == True:
+    n_job = 0
+    for cond in conds:
+        for train_n in train_ns:
+            for classifier in classifiers:
+                for model in model_arch:
+            
+                
+                
+                    job_name = f'decode_{model}{classifier}_train{train_n}_fold{fold_n}_{cond}'
+                    print(job_name)
+                    #os.remove(f"{job_name}.sh")
+
+                    
+                    script_name = f'python {study_dir}/decode_by_layer.py {model} {train_n} {classifier} {fold_n} {cond}'
+                    try:
+                        subprocess.run(script_name.split(' '),check=True, capture_output=True, text=True)
+                    except:
+                        print('error for', job_name)
+                    #os.remove(f"{study_dir}/{job_name}.sh")
+                    
 
             
