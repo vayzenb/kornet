@@ -9,7 +9,7 @@ sys.path.append(git_dir)
 import pandas as pd
 import numpy as np
 from sklearnex import patch_sklearn 
-#patch_sklearn()
+patch_sklearn()
 
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.pipeline import make_pipeline
@@ -33,6 +33,7 @@ k_folds = int(sys.argv[4]) #how many folds to use for cross validation
 cond = sys.argv[5] #which condition to test on
 print(model_arch)
 
+#cause error
 
 
 act_dir = f'{git_dir}/modelling/acts'
@@ -114,7 +115,7 @@ summary_df = pd.DataFrame(columns = ['model','layer','classifier','train_ims','c
 #load acts
 
 
-layers = ['model.decoder.avgpool']
+#layers = ['model.decoder.avgpool']
 for layer in layers:
     test_acts = np.load(f'{act_dir}/{model_arch}_{layer}_{cond}.npy')
     #loop through superordinate category (animate, inanimate, etc)
@@ -142,7 +143,7 @@ for layer in layers:
             
 
             #load second training set
-            for cat_name2 in class_list_cat['object']:
+            for cat_name2 in class_list_cat['object'][cat_n:]:
                 if cat_name1 == cat_name2:
                     continue
                 else:

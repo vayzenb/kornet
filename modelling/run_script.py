@@ -78,13 +78,13 @@ conda activate ml
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
               'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
 
-model_arch = ['vit']
+
 #model_arch = model_arch + model_arch
 #create list of of len(model_arch) with imagenet_sketch in each element
 #model_weights = [None] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
 
 
-acts_script = True
+acts_script = False
 
 stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
 
@@ -93,8 +93,9 @@ stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive3/vlad/kornet/image_sets/ko
 
 
 if acts_script == True:
-    for stim_dir in stim_dirs:
-        for model in model_arch:
+    for model in model_arch:
+        for stim_dir in stim_dirs:
+        
             
             #job_name = f'extract_acts_{model}_{stim_dir.split("/")[-1]}'
             #print(job_name)
@@ -167,9 +168,11 @@ model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset
 
 
 
+
+
 conds = ['Outline', 'Pert', 'IC']
 
-conds = ['IC']
+conds = ['Outline']
 
 classifiers = ['KNN']
 
@@ -178,7 +181,7 @@ train_ns = [150]
 #train_ns = [250, 300]
 #train_ns = [100, 150, 200, 250, 300]
 #train_ns = [5, 10, 25, 50, 100]
-fold_n = 10 
+fold_n = 20 
 
 pause_time = 5 #how much time (minutes) to wait between jobs
 pause_crit = 10 #how many jobs to do before pausing
@@ -195,13 +198,18 @@ if decode_layers == True:
                     job_name = f'decode_{model}{classifier}_train{train_n}_fold{fold_n}_{cond}'
                     print(job_name)
                     #os.remove(f"{job_name}.sh")
-
                     
-                    script_name = f'python {study_dir}/decode_by_layer.py {model} {train_n} {classifier} {fold_n} {cond}'
+                    
+                    script_name = f'python {study_dir}/decode_images_layerwise.py {model} {train_n} {classifier} {fold_n} {cond}'
                     try:
-                        subprocess.run(script_name.split(' '),check=True, capture_output=True, text=True)
+                        proc = subprocess.run(script_name.split(' '),check=True, capture_output=True, text=True)
+                    except subprocess.CalledProcessError as e:
+                        print("Error:", e.stderr)
                     except:
-                        print('error for', job_name)
+                        print("Error:", proc.stdout)
+                        
+                    
+                    
                     #os.remove(f"{study_dir}/{job_name}.sh")
                     
 
