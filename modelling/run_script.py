@@ -172,7 +172,7 @@ model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset
 
 conds = ['Outline', 'Pert', 'IC']
 
-conds = ['Outline']
+conds = ['Pert', 'IC']
 
 classifiers = ['KNN']
 
