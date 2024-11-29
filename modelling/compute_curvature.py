@@ -30,6 +30,9 @@ import pandas as pd
 #set directory
 stimuli_dir = f'{git_dir}/stim/test/Outline_Black_Filled'
 
+#load object labels
+stim_classes = pd.read_csv(f'{git_dir}/stim/kornet_classes.csv')
+
 #load stim files
 all_images = glob(os.path.join(stimuli_dir, '*.png'))
 
@@ -82,8 +85,19 @@ df.columns = ['obj1', 'obj2', 'correlation']
 #remove self-correlations
 df = df[df.obj1 != df.obj2]
 
+
 #zscore the correlation values
 df['zscore'] = (df.correlation - df.correlation.mean()) / df.correlation.std()
+
+#loop through object classes and add object name labels using the number
+#create new columns for object names
+df['obj1_name'] = np.nan
+df['obj2_name'] = np.nan
+for num, label in zip(stim_classes['num'], stim_classes['object']):
+    #if obj1 = OBJ (num).png then obj1_name = label
+    df.loc[df['obj1'] == f'OBJ ({num}).png', 'obj1_name'] = label
+    #if obj2 = OBJ (num).png then obj2_name = label
+    df.loc[df['obj2'] == f'OBJ ({num}).png', 'obj2_name'] = label
 
 #save zscored correlations
 df.to_csv(f'{git_dir}/curvature_correlation_table.csv')
