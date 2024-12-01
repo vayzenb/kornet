@@ -27,7 +27,7 @@ import torch
 
 import clip
 import timm
-
+import pdb
 from multimodal.multimodal_lit import MultiModalLitModel
 
 
@@ -62,55 +62,6 @@ def load_model(model_arch, weights=None):
                                                  std=[0.5, 0.5, 0.5])])
       
 
-    
-
-    if model_arch == 'vonecornet_s':
-        model = vonenet.get_model(model_arch='cornets', pretrained=True).module
-        layer_call = "getattr(getattr(getattr(getattr(model,'module'),'model'),'decoder'),'avgpool')"
-        transform = torchvision.transforms.Compose([
-                torchvision.transforms.Resize((224,224)),
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                                                 std=[0.5, 0.5, 0.5])])
-
-    elif model_arch == 'cornet_s':
-        model = cornet.get_model('s', pretrained=True).module
-        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
-
-        transform = torchvision.transforms.Compose([
-                torchvision.transforms.Resize((224,224)),
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                 std=[0.229, 0.224, 0.225])])
-    elif model_arch == 'cornet_ff':
-        model = cornet.get_model('ff', pretrained=True).module
-        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
-
-        transform = torchvision.transforms.Compose([
-                torchvision.transforms.Resize((224,224)),
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                 std=[0.229, 0.224, 0.225])])
-        
-    elif model_arch == 'cornet_z':
-        model = cornet.get_model('z', pretrained=True).module
-        layer_call = "getattr(getattr(getattr(model,'module'),'decoder'),'avgpool')"
-
-        transform = torchvision.transforms.Compose([
-                torchvision.transforms.Resize((224,224)),
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                    std=[0.229, 0.224, 0.225])])
-        
-
-    if model_arch == 'voneresnet':
-        model = vonenet.get_model(model_arch='resnet50', pretrained=True).module
-        layer_call = "getattr(getattr(getattr(model,'module'),'model'),'avgpool')"
-        transform = torchvision.transforms.Compose([
-                torchvision.transforms.Resize((224,224)),
-                torchvision.transforms.ToTensor(),
-                torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
-                                                 std=[0.5, 0.5, 0.5])])
 
     elif model_arch == 'convnext':
         model = convnext_large(weights=ConvNeXt_Large_Weights.DEFAULT)
@@ -133,16 +84,6 @@ def load_model(model_arch, weights=None):
         transform = ResNeXt50_32X4D_Weights.DEFAULT.transforms()
         layer_call = "getattr(getattr(model,'module'),'avgpool')"
     
-    elif model_arch == 'alexnet':
-        model = alexnet(weights=AlexNet_Weights.DEFAULT)
-        transform = AlexNet_Weights.DEFAULT.transforms()
-        layer_call = "getattr(getattr(getattr(model,'module'),'classifier'),'5')"
-
-    elif model_arch == 'vgg19':
-        model = vgg19(weights=VGG19_Weights.DEFAULT)
-        transform = VGG19_Weights.DEFAULT.transforms()
-        layer_call = "getattr(getattr(getattr(model,'module'),'classifier'),'5')"
-
     elif model_arch == 'ShapeNet':
         model = resnet50(weights=None)
         checkpoint = torch.load(f'{weights_dir}/ShapeNet_ResNet50_Weights.pth.tar')
@@ -157,18 +98,7 @@ def load_model(model_arch, weights=None):
         checkpoint = torch.load(f'{weights_dir}/SayCam_ResNext_Weights.pth.tar')
         model.load_state_dict(checkpoint)
         layer_call = "getattr(getattr(model,'module'),'avgpool')"
-
-    elif model_arch == 'Efficientvit':
-        from classification.model.build import EfficientViT_M0
-        model = EfficientViT_M0()
-
-        layer_call = "getattr(getattr(getattr(model,'module'),'head'),'bn')"
-        transform = torchvision.transforms.Compose([
-                        torchvision.transforms.Resize((224,224)),
-                        torchvision.transforms.ToTensor(),
-                        torchvision.transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                            std=[0.229, 0.224, 0.225])])
-        
+   
     elif model_arch == 'clip_vit':
         model, transform = clip.load("ViT-B/16")
         layer_call = ""
@@ -188,10 +118,6 @@ def load_model(model_arch, weights=None):
         transform = ResNet50_Weights.DEFAULT.transforms()
         layer_call = "getattr(model,'global_pool')"
 
-    elif model_arch == 'vit_21k':
-        model = timm.create_model('vit_base_patch16_224_miil_in21k', pretrained=True)
-        transform = ViT_B_16_Weights.DEFAULT.transforms()
-        layer_call = "getattr(model,'fc_norm')"
 
     elif model_arch == 'clip_resnet_15m':
         import open_clip
@@ -199,27 +125,25 @@ def load_model(model_arch, weights=None):
         model, _, transform = open_clip.create_model_and_transforms('RN50', pretrained='yfcc15m') 
         layer_call = "getattr(getattr(getattr(model,'visual'), 'attnpool'),'c_proj')"
 
-    elif model_arch == 'clip_resnet_12m':
-        import open_clip
-        model, _, transform = open_clip.create_model_and_transforms('RN50', pretrained='cc12m') 
-        layer_call = "getattr(getattr(getattr(model,'visual'), 'attnpool'),'c_proj')"
 
-    elif model_arch == 'resnet_100m':
-        model = timm.create_model('ssl_resnet50', pretrained=True)
-        transform = ResNet50_Weights.DEFAULT.transforms()
-        layer_call = "getattr(model,'global_pool')"
+    elif model_arch == 'vit_dinov2':
+        model = torch.hub.load('facebookresearch/dinov2', 'dinov2_vitb14_reg')
+        transform = ViT_B_16_Weights.DEFAULT.transforms()
+        layer_call = "getattr(model,'head')"
 
-    elif model_arch == 'resnet_1b':
-            model = timm.create_model('swsl_resnet50', pretrained=True)
-            transform = ResNet50_Weights.DEFAULT.transforms()
-            layer_call = "getattr(model,'global_pool')"
-    
-
+    elif model_arch == 'resnet50_imagenet-sketch':
+        model = resnet50(weights=None)
         
+        model = torch.nn.DataParallel(model).cuda()
+        
+        checkpoint = torch.load(f'{weights_dir}/resnet50_imagenet_sketch_best_1.pth.tar')
+        model.load_state_dict(checkpoint['state_dict'])
+        model = model.module
+        transform = ResNet50_Weights.DEFAULT.transforms()
+        layer_call = "getattr(model,'avgpool')"
 
     
 
-    
     if model_arch == 'vonenet_r_ecoset' or model_arch =='vonenet_r_stylized-ecoset' or model_arch =='vonenet_ff_ecoset' or model_arch =='vonenet_ff_stylized-ecoset':
         checkpoint = torch.load(f'{weights_dir}/{model_arch}_best_1.pth.tar')
         model = torch.nn.DataParallel(model).cuda()

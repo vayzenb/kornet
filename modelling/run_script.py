@@ -78,13 +78,13 @@ conda activate ml
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
               'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
 
-
+model_arch = ['vit','vit_dinov2','resnet50_imagenet-sketch']
 #model_arch = model_arch + model_arch
 #create list of of len(model_arch) with imagenet_sketch in each element
 #model_weights = [None] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
 
 
-acts_script = False
+acts_script = True
 
 stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
 
@@ -166,13 +166,15 @@ decode_layers = True
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
               'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
 
+model_arch = ['vit','vit_dinov2','resnet50_imagenet-sketch']
+
 
 
 
 
 conds = ['Outline', 'Pert', 'IC']
 
-conds = ['Pert', 'IC']
+
 
 classifiers = ['KNN']
 
