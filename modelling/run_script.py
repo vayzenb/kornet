@@ -84,7 +84,7 @@ model_arch = ['vit','vit_dinov2','resnet50_imagenet-sketch']
 #model_weights = [None] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
 
 
-acts_script = True
+acts_script = False
 
 stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
 stim_dirs = [f'{git_dir}/stim/test/']
@@ -161,7 +161,7 @@ if decode_script == True:
                     
 
 '''Layer-wise decode script'''
-decode_layers = False
+decode_layers = True
 
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
               'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
