@@ -78,16 +78,16 @@ conda activate ml
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
               'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
 
-model_arch = ['vit','vit_dinov2','resnet50_imagenet-sketch']
+model_arch = ['resnet50_imagenet-sketch','resnet50_dino', 'vit_dinov2']
 #model_arch = model_arch + model_arch
 #create list of of len(model_arch) with imagenet_sketch in each element
 #model_weights = [None] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
 
 
-acts_script = False
+acts_script = True
 
 stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
-stim_dirs = [f'{git_dir}/stim/test/']
+
 
 #stim_dirs = ['/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
 
@@ -101,7 +101,8 @@ if acts_script == True:
             #print(job_name)
             #os.remove(f"{job_name}.sh")
 
-            script_name = f'python {study_dir}/extract_acts_layers.py {model} {stim_dir}'
+            #script_name = f'python {study_dir}/extract_acts_layers.py {model} {stim_dir}'
+            script_name = f'python {study_dir}/extract_acts.py {model} {stim_dir}'
             #script_name = f'python {study_dir}/vision_lang/extract_acts_vision_lang.py {model} {stim_dir}'
             print(model, stim_dir)
             try:
@@ -115,14 +116,11 @@ Whole-model decode script
 '''
 
 
-decode_script = False
+decode_script = True
 
-model_arch = ['twostream_ff','vonenet_r_ecoset','vonenet_r_stylized-ecoset','vonenet_ff_ecoset','vonenet_ff_stylized-ecoset', 'ShapeNet','SayCam', 'convnext','vit']
-model_arch= ['clip_vit','clip_resnet', 'cvcl']
-model_arch= ['resnet50_21k']
-model_arch= ['vit', 'vit_21k', 'resnet50', 'clip_vit']
-model_arch= ['clip_resnet_15m', 'clip_resnet_12m']
-model_arch = ['resnet_100m','resnet_1b']
+
+
+model_arch = ['resnet50_imagenet-sketch','resnet50_dino', 'vit_dinov2']
 
 #append '_imagenet_sketch' to each string in model_arch
 #model_arch = model_arch+ [f'{model}_imagenet_sketch' for model in model_arch]
@@ -161,12 +159,12 @@ if decode_script == True:
                     
 
 '''Layer-wise decode script'''
-decode_layers = True
+decode_layers = False
 
 model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
               'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
 
-model_arch = ['vit','vit_dinov2','resnet50_imagenet-sketch']
+model_arch = ['resnet50_imagenet-sketch','resnet50_dino']
 
 
 

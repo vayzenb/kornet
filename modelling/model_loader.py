@@ -131,6 +131,13 @@ def load_model(model_arch, weights=None):
         transform = ViT_B_16_Weights.DEFAULT.transforms()
         layer_call = "getattr(model,'head')"
 
+    elif model_arch == 'resnet50_dino':
+        model = torch.hub.load('facebookresearch/dino:main', 'dino_resnet50')
+        transform = ResNet50_Weights.DEFAULT.transforms()
+        layer_call = "getattr(model,'avgpool')"
+
+
+
     elif model_arch == 'resnet50_imagenet-sketch':
         model = resnet50(weights=None)
         

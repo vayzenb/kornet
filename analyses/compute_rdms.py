@@ -28,7 +28,11 @@ sub_info = pd.read_csv(f'{data_dir}/sub_info.csv' )
 #remove subjects with 1 in exclude field
 sub_info = sub_info[sub_info['exclude'] != 1]
 
-
+model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 
+              'SayCam', 'cvcl',
+                'convnext', 'vit', 'vit_dinov2','clip_vit',
+                'resnet50', 'resnet50_imagenet-sketch','resnet50_21k', 
+                'resnet50_dino','clip_resnet_15m', 'clip_resnet']
 
 
 conds = ['complete', 'perturbed','deleted']
@@ -115,8 +119,8 @@ def compute_sub_rdm():
 
     n = 0
     #loop through all stim pairs
-    for stim1, cat1 in zip(stim_classes['object'], stim_classes['category']):
-        for stim2, cat2 in zip(stim_classes['object'], stim_classes['category']):
+    for stim_n, (stim1, cat1) in enumerate(zip(stim_classes['object'], stim_classes['category'])):
+        for stim2, cat2 in zip(stim_classes['object'][stim_n+1:], stim_classes['category'][stim_n+1:]):
             if stim1 != stim2 and cat1 == cat2:
                 # set object for that row
                 rdm_summary.loc[n,'obj1'] = stim1
@@ -170,7 +174,42 @@ def compute_sub_rdm():
     rdm_summary.to_csv(f'{results_dir}/rdm_summary.csv', index=False)
                 
 
+def create_confusion_matrix():
+    '''Create model RDMs by calculating the error rate for each object pair'''
+    print('Creating confusion matrix for models')
+    conds = ['Outline','Pert','IC']
+    cond_names = ['complete','perturbed','deleted']
+    classifier = 'KNN'
+    train_n = 150
+    #load rdm_summary
+    rdm_summary = pd.read_csv(f'{results_dir}/rdm_summary.csv')
 
+    for model in model_arch:
+        #loop through objects and calculate correlation between model activations
+
+        #load kornet objects 
+        for cond in conds:
+            #load layerwise acc for model
+            model_data = pd.read_csv(f'{results_dir}/models/{model}_{classifier}_train150_test{cond}_layerwise.csv')
+
+            #extract unique layers
+            layers = model_data['layer'].unique()
+
+            for layer in layers:
+                #extract data for that layer
+                layer_data = model_data[model_data['layer']==layer]
+                model_acc = []
+                for obj1, obj2 in zip(rdm_summary['obj1'], rdm_summary['obj2']):
+                    #extract data for that object pair
+                    pair_data = layer_data[(layer_data['obj1']==obj1) & (layer_data['obj2']==obj2) | (layer_data['obj1']==obj2) & (layer_data['obj2']==obj1)]
+
+                    #calculate mean acc
+                    model_acc.append(pair_data['acc'].mean())
+
+
+                rdm_summary[f'{model}_{cond_names[conds.index(cond)]}_{layer}'] = model_acc
+
+    rdm_summary.to_csv(f'{results_dir}/rdm_summary.csv', index=False)
 
             
 
@@ -225,4 +264,4 @@ def compute_model_rdm():
 
 concat_all_subs()
 compute_sub_rdm()
-compute_model_rdm()
+create_confusion_matrix()
