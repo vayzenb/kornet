@@ -67,7 +67,7 @@ vit_dinov2,NC,300,Outline,inam,flower,lamp,1.0
 vit_dinov2,NC,300,Outline,inam,flower,leaf,1.0
 vit_dinov2,NC,300,Outline,inam,flower,spoon,1.0
 vit_dinov2,NC,300,Outline,inam,flower,tree,1.0
-vit_dinov2,NC,300,Outline,inam,flower,truck,0.6
+vit_dinov2,NC,300,Outline,inam,flower,truck,0.65
 vit_dinov2,NC,300,Outline,inam,flower,umbrella,1.0
 vit_dinov2,NC,300,Outline,inam,fork,airplane,1.0
 vit_dinov2,NC,300,Outline,inam,fork,apple,1.0
@@ -76,7 +76,7 @@ vit_dinov2,NC,300,Outline,inam,fork,chair,1.0
 vit_dinov2,NC,300,Outline,inam,fork,flower,1.0
 vit_dinov2,NC,300,Outline,inam,fork,guitar,1.0
 vit_dinov2,NC,300,Outline,inam,fork,key,1.0
-vit_dinov2,NC,300,Outline,inam,fork,kite,0.975
+vit_dinov2,NC,300,Outline,inam,fork,kite,0.95
 vit_dinov2,NC,300,Outline,inam,fork,lamp,1.0
 vit_dinov2,NC,300,Outline,inam,fork,leaf,1.0
 vit_dinov2,NC,300,Outline,inam,fork,spoon,1.0
@@ -116,7 +116,7 @@ vit_dinov2,NC,300,Outline,inam,kite,apple,0.5
 vit_dinov2,NC,300,Outline,inam,kite,bicycle,0.5
 vit_dinov2,NC,300,Outline,inam,kite,chair,0.5
 vit_dinov2,NC,300,Outline,inam,kite,flower,0.5
-vit_dinov2,NC,300,Outline,inam,kite,fork,0.95
+vit_dinov2,NC,300,Outline,inam,kite,fork,0.9
 vit_dinov2,NC,300,Outline,inam,kite,guitar,0.5
 vit_dinov2,NC,300,Outline,inam,kite,key,0.5
 vit_dinov2,NC,300,Outline,inam,kite,lamp,0.5
@@ -150,7 +150,7 @@ vit_dinov2,NC,300,Outline,inam,leaf,key,1.0
 vit_dinov2,NC,300,Outline,inam,leaf,kite,0.5
 vit_dinov2,NC,300,Outline,inam,leaf,lamp,1.0
 vit_dinov2,NC,300,Outline,inam,leaf,spoon,1.0
-vit_dinov2,NC,300,Outline,inam,leaf,tree,0.925
+vit_dinov2,NC,300,Outline,inam,leaf,tree,0.95
 vit_dinov2,NC,300,Outline,inam,leaf,truck,0.5
 vit_dinov2,NC,300,Outline,inam,leaf,umbrella,1.0
 vit_dinov2,NC,300,Outline,inam,spoon,airplane,1.0
@@ -179,13 +179,13 @@ vit_dinov2,NC,300,Outline,inam,tree,kite,0.5
 vit_dinov2,NC,300,Outline,inam,tree,lamp,1.0
 vit_dinov2,NC,300,Outline,inam,tree,leaf,0.975
 vit_dinov2,NC,300,Outline,inam,tree,spoon,1.0
-vit_dinov2,NC,300,Outline,inam,tree,truck,0.65
+vit_dinov2,NC,300,Outline,inam,tree,truck,0.525
 vit_dinov2,NC,300,Outline,inam,tree,umbrella,1.0
 vit_dinov2,NC,300,Outline,inam,truck,airplane,1.0
 vit_dinov2,NC,300,Outline,inam,truck,apple,1.0
 vit_dinov2,NC,300,Outline,inam,truck,bicycle,1.0
 vit_dinov2,NC,300,Outline,inam,truck,chair,1.0
-vit_dinov2,NC,300,Outline,inam,truck,flower,0.55
+vit_dinov2,NC,300,Outline,inam,truck,flower,0.6
 vit_dinov2,NC,300,Outline,inam,truck,fork,1.0
 vit_dinov2,NC,300,Outline,inam,truck,guitar,1.0
 vit_dinov2,NC,300,Outline,inam,truck,key,0.5
@@ -236,7 +236,7 @@ vit_dinov2,NC,300,Outline,anim,bird,frog,0.5
 vit_dinov2,NC,300,Outline,anim,bird,hand,1.0
 vit_dinov2,NC,300,Outline,anim,bird,rabbit,1.0
 vit_dinov2,NC,300,Outline,anim,bird,squirrel,1.0
-vit_dinov2,NC,300,Outline,anim,bird,turtle,0.95
+vit_dinov2,NC,300,Outline,anim,bird,turtle,1.0
 vit_dinov2,NC,300,Outline,anim,butterfly,bear,1.0
 vit_dinov2,NC,300,Outline,anim,butterfly,bird,1.0
 vit_dinov2,NC,300,Outline,anim,butterfly,cat,1.0

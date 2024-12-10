@@ -19,6 +19,12 @@ from model_loader import load_model as load_model
 
 print('libraries loaded...')
 
+torch.cuda.set_device(1)
+print('gpu #', torch.cuda.current_device())
+device = torch.device('cuda')
+#device = torch.device('cpu')
+
+
 
 #stim_dir = f'{curr_dir}/stim/test'
 #stim_dir = f'/user_data/vayzenbe/image_sets/kornet_images'
@@ -103,7 +109,7 @@ def extract_acts(model, image_dir, transform, layer_call):
             #print(label)
             # move tensors to GPU if CUDA is available
             
-            data= data.cuda()
+            data= data.to(device)
             
             _model_feats = []
             model(data)
@@ -129,14 +135,17 @@ def extract_acts(model, image_dir, transform, layer_call):
 
 model, transform, layer_call = load_model(model_arch)
 
-model = model.cuda()
+model = model.to(device)
+
+#check if model is on gpu or cpu
+print(next(model.parameters()).is_cuda)
 
 for cat_dir in stim_folder:
     print(cat_dir)
     #VIT runs out of memory quickly, so we delete and reload it after every iteration
     if 'vit' in model_arch:
         model, transform, layer_call = load_model(model_arch)
-        model = model.cuda()
+        model = model.to(device)
         
 
     

@@ -34,15 +34,16 @@ from multimodal.multimodal_lit import MultiModalLitModel
 
 import torchvision
 
-
+torch.cuda.set_device(1)
 weights_dir = f'/mnt/DataDrive3/vlad/kornet/modelling/weights'
 def load_model(model_arch, weights=None):    
     """
     load model
     """
     
-
-    if model_arch == 'vonenet_r_ecoset' or model_arch =='vonenet_r_stylized-ecoset':
+    #if vonenet_r is in model_arch, load vonenet_r model
+    
+    if 'vonenet_r' in model_arch:
         model = vonenet.get_model(model_arch='cornets', pretrained=False).module
         layer_call = "getattr(getattr(getattr(model,'model'),'decoder'),'avgpool')"
         transform = torchvision.transforms.Compose([
@@ -52,7 +53,7 @@ def load_model(model_arch, weights=None):
                                                  std=[0.5, 0.5, 0.5])])
         
 
-    elif model_arch == 'vonenet_ff_ecoset' or model_arch =='vonenet_ff_stylized-ecoset':
+    elif 'vonenet_ff' in model_arch:
         model = vonenet.get_model(model_arch='cornets_ff', pretrained=False).module
         layer_call = "getattr(getattr(getattr(model,'model'),'decoder'),'avgpool')"
         transform = torchvision.transforms.Compose([
@@ -151,14 +152,21 @@ def load_model(model_arch, weights=None):
 
     
 
-    if model_arch == 'vonenet_r_ecoset' or model_arch =='vonenet_r_stylized-ecoset' or model_arch =='vonenet_ff_ecoset' or model_arch =='vonenet_ff_stylized-ecoset':
+    if 'vonenet_r' in model_arch or 'vonenet_ff' in model_arch:
+    
         checkpoint = torch.load(f'{weights_dir}/{model_arch}_best_1.pth.tar')
         model = torch.nn.DataParallel(model).cuda()
         model.load_state_dict(checkpoint['state_dict'])
         model = model.module
-        
+
+        print('Loaded', f'{weights_dir}/{model_arch}_best_1.pth.tar')
+    
+    
+
     if weights is not None:
         checkpoint = torch.load(f'{weights_dir}/{model_arch}_{weights}_best_1.pth.tar')
         model.load_state_dict(checkpoint['state_dict'])
+
+        print('Loaded', f'{weights_dir}/{model_arch}_{weights}_best_1.pth.tar')
 
     return model, transform, layer_call

@@ -79,6 +79,8 @@ model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset
               'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
 
 model_arch = ['resnet50_imagenet-sketch','resnet50_dino', 'vit_dinov2']
+model_arch = ['vonenet_ff_ecoset_imagenet_sketch','vonenet_r_ecoset_imagenet_sketch']
+#model_arch = ['vonenet_ff_ecoset','vonenet_r_ecoset']
 #model_arch = model_arch + model_arch
 #create list of of len(model_arch) with imagenet_sketch in each element
 #model_weights = [None] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
@@ -104,7 +106,7 @@ if acts_script == True:
             #script_name = f'python {study_dir}/extract_acts_layers.py {model} {stim_dir}'
             script_name = f'python {study_dir}/extract_acts.py {model} {stim_dir}'
             #script_name = f'python {study_dir}/vision_lang/extract_acts_vision_lang.py {model} {stim_dir}'
-            print(model, stim_dir)
+            print('extract acts', model, stim_dir)
             try:
                 subprocess.run(script_name.split(' '),check=True, capture_output=True, text=True)
             except:
@@ -120,7 +122,7 @@ decode_script = True
 
 
 
-model_arch = ['resnet50_imagenet-sketch','resnet50_dino', 'vit_dinov2']
+
 
 #append '_imagenet_sketch' to each string in model_arch
 #model_arch = model_arch+ [f'{model}_imagenet_sketch' for model in model_arch]
@@ -161,10 +163,6 @@ if decode_script == True:
 '''Layer-wise decode script'''
 decode_layers = False
 
-model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
-              'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
-
-model_arch = ['resnet50_imagenet-sketch','resnet50_dino']
 
 
 
