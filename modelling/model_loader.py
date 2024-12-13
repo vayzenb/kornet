@@ -34,7 +34,7 @@ from multimodal.multimodal_lit import MultiModalLitModel
 
 import torchvision
 
-torch.cuda.set_device(1)
+#torch.cuda.set_device(1)
 weights_dir = f'/mnt/DataDrive3/vlad/kornet/modelling/weights'
 def load_model(model_arch, weights=None):    
     """
@@ -63,6 +63,24 @@ def load_model(model_arch, weights=None):
                                                  std=[0.5, 0.5, 0.5])])
       
 
+    elif 'vonenet_imagenet1k' in model_arch:
+        model = vonenet.get_model(model_arch='cornets', pretrained=True).module
+        layer_call = "getattr(getattr(getattr(model,'model'),'decoder'),'avgpool')"
+        transform = torchvision.transforms.Compose([
+                torchvision.transforms.Resize((224,224)),
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
+                                                 std=[0.5, 0.5, 0.5])])
+        
+    elif 'vonenet_imagenet1k_imagenet_sketch' in model_arch:
+        model = vonenet.get_model(model_arch='cornets', pretrained=False).module
+        layer_call = "getattr(getattr(getattr(model,'model'),'decoder'),'avgpool')"
+        transform = torchvision.transforms.Compose([
+                torchvision.transforms.Resize((224,224)),
+                torchvision.transforms.ToTensor(),
+                torchvision.transforms.Normalize(mean=[0.5, 0.5, 0.5],
+                                                 std=[0.5, 0.5, 0.5])])
+    
 
     elif model_arch == 'convnext':
         model = convnext_large(weights=ConvNeXt_Large_Weights.DEFAULT)
@@ -152,7 +170,7 @@ def load_model(model_arch, weights=None):
 
     
 
-    if 'vonenet_r' in model_arch or 'vonenet_ff' in model_arch:
+    if 'vonenet_r' in model_arch or 'vonenet_ff' in model_arch or 'imagenet_sketch' in model_arch:
     
         checkpoint = torch.load(f'{weights_dir}/{model_arch}_best_1.pth.tar')
         model = torch.nn.DataParallel(model).cuda()
