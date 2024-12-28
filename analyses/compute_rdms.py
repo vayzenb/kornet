@@ -105,8 +105,8 @@ def compute_sub_rdm():
 
     #load sub summary
     sub_summary = pd.read_csv(f'{results_dir}/all_sub_data.csv')
-    #remove .3 duration
-    sub_summary = sub_summary[sub_summary['duration']<.3]
+    #remove durations over .3
+    sub_summary = sub_summary[sub_summary['duration']>.3]
 
     summary_cols = ['overall','complete_overall','perturbed_overall','deleted_overall',
                     'complete_3','complete_4','complete_5','perturbed_3','perturbed_4','perturbed_5','deleted_3','deleted_4','deleted_5',
@@ -262,6 +262,6 @@ def compute_model_rdm():
     rdm_summary.to_csv(f'{results_dir}/rdm_summary.csv', index=False)
 
 
-concat_all_subs()
+#concat_all_subs()
 compute_sub_rdm()
 create_confusion_matrix()
