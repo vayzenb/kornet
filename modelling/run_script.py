@@ -75,20 +75,18 @@ conda activate ml
 
 
 #base models
-model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 'SayCam', 'cvcl', 'convnext','vit','clip_vit',
-              'resnet50','resnet50_21k', 'clip_resnet_15m','clip_resnet']
-
-model_arch = ['resnet50_imagenet-sketch','resnet50_dino', 'vit_dinov2']
-model_arch = ['vonenet_ff_ecoset_imagenet_sketch','vonenet_r_ecoset_imagenet_sketch']
-model_arch = ['vonenet_r_stylized-ecoset_imagenet_sketch','vonenet_r_ecoset_imagenet_sketch']
-model_arch = ['vonenet_imagenet1k_imagenet_sketch']
-#model_arch = ['vonenet_ff_ecoset','vonenet_r_ecoset']
-#model_arch = model_arch + model_arch
-#create list of of len(model_arch) with imagenet_sketch in each element
-#model_weights = [None] *len(model_arch) + ['imagenet_sketch']*len(model_arch)
+model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 
+              'SayCam', 'cvcl',
+                'convnext', 'vit', 'vit_dinov2','clip_vit',
+                'resnet50', 'resnet50_imagenet-sketch','resnet50_21k', 
+                'resnet50_dino','clip_resnet_15m', 'clip_resnet']
 
 
-acts_script = True
+'''
+Extract activations script
+'''
+
+acts_script = False
 
 stim_dirs = [f'{git_dir}/stim/test/', '/mnt/DataDrive3/vlad/kornet/image_sets/kornet_images/']
 
@@ -116,11 +114,10 @@ if acts_script == True:
 
 
 '''
-Whole-model decode script
+Decode test images using penultimate layer script
 '''
 
-
-decode_script = True
+decode_script = False
 
 
 #append '_imagenet_sketch' to each string in model_arch
@@ -159,7 +156,10 @@ if decode_script == True:
                     #os.remove(f"{study_dir}/{job_name}.sh")
                     
 
-'''Layer-wise decode script'''
+'''
+Layer-wise decoding script
+
+'''
 decode_layers = False
 
 
@@ -207,4 +207,42 @@ if decode_layers == True:
                     #os.remove(f"{study_dir}/{job_name}.sh")
                     
 
+'''
+Decode naturalistic images using for training
+'''
+
+model_arch = ['vonenet_ff_ecoset','vonenet_ff_stylized-ecoset','vonenet_r_ecoset','vonenet_r_stylized-ecoset', 
+              'SayCam', 'cvcl',
+                'convnext', 'vit', 'vit_dinov2','clip_vit',
+                'resnet50', 'resnet50_imagenet-sketch','resnet50_21k', 
+                'resnet50_dino','clip_resnet_15m', 'clip_resnet']
+
+
+decode_natural_images = True
+
+fold_n = 20 
+
+pause_time = 5 #how much time (minutes) to wait between jobs
+pause_crit = 10 #how many jobs to do before pausing
+
+if decode_natural_images == True:
+    n_job = 0
+    for cond in conds:
+        for model in model_arch:
+    
+        
+        
+            job_name = f'decode_{model}_fold{fold_n}_{cond} natural_images'
+            print(job_name)
+            #os.remove(f"{job_name}.sh")
+            
+            
+            script_name = f'python {study_dir}/decode_natural_images.py {model} {fold_n} {cond}'
+            try:
+                proc = subprocess.run(script_name.split(' '),check=True, capture_output=True, text=True)
+            except subprocess.CalledProcessError as e:
+                print("Error:", e.stderr)
+            except:
+                print("Error:", proc.stdout)
+                
             
