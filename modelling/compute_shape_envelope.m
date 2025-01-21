@@ -5,7 +5,7 @@ close all;
 git_folder = 'C:\Users\Vlad\Desktop\git_repos/kornet/';
 
 % read in stim names
-stim_folder = [git_folder,'stim/test/Outline_Black_Filled/'];
+stim_folder = [git_folder,'stim/test/completed_silhouette/'];
 stim_classes = readtable("stim\kornet_classes.csv");
 num_items = size(stim_classes);
 
@@ -35,5 +35,5 @@ for kk = 1:num_items(1)
 end
 
 %save
-writetable(stim_classes,[git_folder,'results/stim_size.csv'],'Delimiter',',')
+writetable(stim_classes,[git_folder,'results/stim_envelope.csv'],'Delimiter',',')
 

@@ -28,7 +28,7 @@ import pdb
 import pandas as pd
 
 #set directory
-stimuli_dir = f'{git_dir}/stim/test/Outline_Black_Filled'
+stimuli_dir = f'{git_dir}/stim/test/completed_silhouette'
 
 #load object labels
 stim_classes = pd.read_csv(f'{git_dir}/stim/kornet_classes.csv')

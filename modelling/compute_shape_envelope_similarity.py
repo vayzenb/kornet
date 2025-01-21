@@ -46,5 +46,5 @@ size_table['conv_hull_z'] = (size_table['conv_hull'] - size_table['conv_hull'].m
 size_table['ratio_diff_z'] = (size_table['ratio_diff'] - size_table['ratio_diff'].mean())/size_table['ratio_diff'].std()
 
 #save table
-size_table.to_csv(f'{git_dir}/results/size_similarity.csv',index=False)
+size_table.to_csv(f'{git_dir}/results/envelope_similarity.csv',index=False)
 
