@@ -7,14 +7,14 @@ Slightly different naming conventions were used as shorthand for the tasks stimu
 
 The repo name KorNet stands for "Kid Object Recognition Networks" -- a play on the CORnet family of models
 
-###### Tasks 
+#### Tasks 
 Complete contour conditions is sometimes referred to as 'Outline' 
 
 Perturbed contour condition is sometimes referred to as 'Pert' or 'ripple'
 
 Deleted contour condition is sometimes referred to as 'IC' for illusory contours
 
-##### Model Names
+#### Model Names
 
 Models were often renamed for the main-text to more precisly specify their architecture and training or for readability. See the model_comparison.ipynb notebook and the modelling/model_loader.py for all model info
 
