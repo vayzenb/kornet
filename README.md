@@ -2,7 +2,7 @@
 
 Data, code, and stimuli repository for "Fast and robust visual object recognition in young children"
 
-### Naming Conventions
+## Naming Conventions
 Slightly different naming conventions were used as shorthand for the tasks stimuli and analyses. These do not always line up with the labels used in the manuscript.
 
 The repo name KorNet stands for "Kid Object Recognition Networks" -- a play on the CORnet family of models
@@ -17,7 +17,6 @@ Deleted contour condition is sometimes referred to as 'IC' for illusory contours
 ##### Model Names
 
 Models were often renamed for the main-text to more precisly specify their architecture and training or for readability. See the model_comparison.ipynb notebook and the modelling/model_loader.py for all model info
-
 
 ## Folder Structure
 
