@@ -2,6 +2,8 @@
 
 Data, code, and stimuli repository for "Fast and robust visual object recognition in young children"
 
+The same files, as well as the images used to train model classifiers can be found at: https://osf.io/y6m5a/
+
 ## Naming Conventions
 Slightly different naming conventions were used as shorthand for the tasks stimuli and analyses. These do not always line up with the labels used in the manuscript.
 
