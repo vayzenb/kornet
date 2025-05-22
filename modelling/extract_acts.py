@@ -24,7 +24,9 @@ print('gpu #', torch.cuda.current_device())
 device = torch.device('cuda')
 #device = torch.device('cpu')
 
-
+#create acts folder if it doesn't exist
+if not os.path.exists(f'{git_dir}/modelling/acts'):
+    os.makedirs(f'{git_dir}/modelling/acts')
 
 #stim_dir = f'{curr_dir}/stim/test'
 #stim_dir = f'/user_data/vayzenbe/image_sets/kornet_images'
